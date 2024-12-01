@@ -1,0 +1,89 @@
+{
+  "name": "ts-swc-transform",
+  "version": "0.0.0",
+  "description": "Typescript transformers for swc. Supports Node >= 0.8",
+  "keywords": [
+    "matcher",
+    "swc",
+    "typescript",
+    "transform",
+    "transformSync",
+    "transformDirectory",
+    "directory",
+    "transformFile",
+    "file"
+  ],
+  "homepage": "https://github.com/kmalakoff/ts-swc-transform",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kmalakoff/ts-swc-transform.git"
+  },
+  "license": "MIT",
+  "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./*": "./*"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "bin": {
+    "tst": "bin/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsds build",
+    "depcheck": "depcheck",
+    "deploy": "tsds deploy",
+    "format": "biome check --write --unsafe src/ test/",
+    "test": "tsds test:node --timeout=20000",
+    "test:engines": "nvu engines npm test",
+    "version": "tsds version"
+  },
+  "dependencies": {
+    "@swc/core": "*",
+    "call-once-fn": "^1.0.1",
+    "exit": "^0.1.2",
+    "get-tsconfig-compat": "^0.1.0",
+    "minimatch": "^3.1.2",
+    "mkdirp": "^0.5.6",
+    "node-version-call": "^1.1.0",
+    "path-posix": "^1.0.0",
+    "slash": "^1.0.0",
+    "ts-node": "*",
+    "typescript": "*"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@swc/core": "^1.9.3",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.10.1",
+    "core-js": "^3.39.0",
+    "cr": "^0.1.0",
+    "cross-spawn-cb": "^1.1.1",
+    "fs-iterator": "^5.1.1",
+    "queue-cb": "^1.2.1",
+    "react": "^18.3.1",
+    "rimraf2": "^2.8.2",
+    "ts-dev-stack": "^0.17.1",
+    "ts-node": "^10.8.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "tsds": {
+    "source": "src/index.mjs",
+    "targets": [
+      "cjs",
+      "esm"
+    ]
+  }
+}
