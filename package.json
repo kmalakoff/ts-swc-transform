@@ -72,7 +72,7 @@
     "queue-cb": "^1.2.1",
     "react": "^18.3.1",
     "rimraf2": "^2.8.2",
-    "ts-dev-stack": "^0.17.1",
+    "ts-dev-stack": "^0.18.0",
     "ts-node": "^10.8.2",
     "typescript": "^5.7.2"
   },
