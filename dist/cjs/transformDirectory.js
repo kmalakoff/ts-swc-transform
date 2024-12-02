@@ -82,11 +82,11 @@ function transformDirectoryCallback(src, dest, type, options, callback) {
         callback = options;
         options = {};
     }
+    options = options || {};
     if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
     if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
-    var cwd = options.cwd || process.cwd();
-    var config = options.confg ? options.confg : _gettsconfigcompat.default.getTsconfig(_path.default.resolve(cwd, 'tsconfig.json'));
+    var config = options.confg ? options.confg : _gettsconfigcompat.default.getTsconfig(src);
     var matcher = (0, _createMatcher.default)(config);
     options = _object_spread_props(_object_spread({}, options), {
         config: config
@@ -114,4 +114,4 @@ function transformDirectory(src, dest, type, options, callback) {
         });
     });
 }
-/* CJS INTEROP */ if (exports.__esModule && exports.default) { if(typeof exports.default === 'object') Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) { if (key !== 'default') exports.default[key] = exports[key]; }; module.exports = exports.default; }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { try { Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) { exports.default[key] = exports[key]; }; module.exports = exports.default; } catch (_) {} }

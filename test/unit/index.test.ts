@@ -14,7 +14,7 @@ import fileCount from '../lib/fileCount.cjs';
 import __dirname from '../lib/unitDirname.cjs';
 
 const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
-const DATA_DIR = path.resolve(__dirname, '..', 'data');
+const _DATA_DIR = path.resolve(__dirname, '..', 'data');
 const SRC_DIR = path.resolve(__dirname, '..', 'data', 'src');
 const FILE_COUNT = 5;
 const hasPromise = typeof Promise !== 'undefined';
@@ -24,8 +24,8 @@ function tests({ transformDirectory, type, ext, packageType, expectedCount, opti
   it(`transformDirectory (${type} options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
     const queue = new Queue(1);
     queue.defer((cb) => {
-      if (!promise) return transformDirectory(SRC_DIR, TMP_DIR, type, { cwd: DATA_DIR, ...(options || {}) }, cb);
-      transformDirectory(SRC_DIR, TMP_DIR, type, { cwd: DATA_DIR, ...(options || {}) })
+      if (!promise) return transformDirectory(SRC_DIR, TMP_DIR, type, options, cb);
+      transformDirectory(SRC_DIR, TMP_DIR, type, options)
         .then(() => cb())
         .catch(cb);
     });

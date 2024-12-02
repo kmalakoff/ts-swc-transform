@@ -54,6 +54,7 @@ function transformFileCallback(src, dest, type, options, callback) {
         callback = options;
         options = {};
     }
+    options = options || {};
     if (typeof src !== 'string') throw new Error('transformFile: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformFile: unexpected destination directory');
     if (typeof type !== 'string') throw new Error('transformFile: unexpected type');
@@ -61,8 +62,7 @@ function transformFileCallback(src, dest, type, options, callback) {
         if (err) return callback(err);
         callback = once(callback);
         try {
-            const cwd = options.cwd || process.cwd();
-            let config = options.confg ? options.confg : getTS.getTsconfig(path.resolve(cwd, 'tsconfig.json'));
+            let config = options.confg ? options.confg : getTS.getTsconfig(src);
             // overrides for cjs
             if (type === 'cjs') {
                 config = {

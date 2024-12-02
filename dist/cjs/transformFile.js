@@ -107,6 +107,7 @@ function transformFileCallback(src, dest, type, options, callback) {
         callback = options;
         options = {};
     }
+    options = options || {};
     if (typeof src !== 'string') throw new Error('transformFile: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformFile: unexpected destination directory');
     if (typeof type !== 'string') throw new Error('transformFile: unexpected type');
@@ -114,8 +115,7 @@ function transformFileCallback(src, dest, type, options, callback) {
         if (err) return callback(err);
         callback = (0, _calloncefn.default)(callback);
         try {
-            var cwd = options.cwd || process.cwd();
-            var config = options.confg ? options.confg : _gettsconfigcompat.default.getTsconfig(_path.default.resolve(cwd, 'tsconfig.json'));
+            var config = options.confg ? options.confg : _gettsconfigcompat.default.getTsconfig(src);
             // overrides for cjs
             if (type === 'cjs') {
                 config = _object_spread({}, config);
@@ -165,4 +165,4 @@ function transformFile(src, dest, type, options, callback) {
         });
     });
 }
-/* CJS INTEROP */ if (exports.__esModule && exports.default) { if(typeof exports.default === 'object') Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) { if (key !== 'default') exports.default[key] = exports[key]; }; module.exports = exports.default; }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { try { Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) { exports.default[key] = exports[key]; }; module.exports = exports.default; } catch (_) {} }

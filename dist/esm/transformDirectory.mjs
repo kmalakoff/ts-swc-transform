@@ -8,11 +8,11 @@ function transformDirectoryCallback(src, dest, type, options, callback) {
         callback = options;
         options = {};
     }
+    options = options || {};
     if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
     if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
-    const cwd = options.cwd || process.cwd();
-    const config = options.confg ? options.confg : getTS.getTsconfig(path.resolve(cwd, 'tsconfig.json'));
+    const config = options.confg ? options.confg : getTS.getTsconfig(src);
     const matcher = createMatcher(config);
     options = {
         ...options,
