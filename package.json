@@ -1,6 +1,6 @@
 {
   "name": "ts-swc-transform",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Typescript transformers for swc. Supports Node >= 0.8",
   "keywords": [
     "matcher",
