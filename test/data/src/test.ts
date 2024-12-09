@@ -2,6 +2,7 @@ import './polyfills.cjs';
 import exit from 'exit';
 import assert from 'assert';
 
+// @ts-ignore
 import App from './lib/App.tsx';
 import string from './lib/string.mjs';
 import stringNoExtension from './lib/string.mjs';

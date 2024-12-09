@@ -7,7 +7,6 @@ updates:
     ignore:
       - dependency-name: 'mkdirp'
       - dependency-name: 'minimatch'
-      - dependency-name: 'slash'
       - dependency-name: 'ts-node'
   - package-ecosystem: 'github-actions'
     directory: '/'
