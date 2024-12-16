@@ -2,8 +2,10 @@ import path from 'path';
 import Iterator from 'fs-iterator';
 import getTS from 'get-tsconfig-compat';
 
-import createMatcher from './createMatcher.mjs';
-import transformFile from './transformFile.mjs';
+// @ts-ignore
+import createMatcher from './createMatcher.ts';
+// @ts-ignore
+import transformFile from './transformFile.ts';
 
 function transformDirectoryCallback(src, dest, type, options, callback) {
   if (typeof options === 'function') {
