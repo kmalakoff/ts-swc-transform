@@ -2,13 +2,16 @@ import './polyfills.cjs';
 import exit from 'exit';
 import assert from 'assert';
 
-import App from './lib/App.tsx';
-import string from './lib/string.mjs';
-import stringNoExtension from './lib/string.mjs';
+// @ts-ignore
+import App from './lib/App.js';
+import stringCTS from './lib/stringCTS.cjs';
+import stringMJS from './lib/stringMJS.mjs';
+import stringMTS from './lib/stringMJS.mjs';
 
 assert.ok(App, 'App not loaded');
-assert.equal(string, 'string', 'String not equal to string');
-assert.equal(stringNoExtension, 'string', 'stringNoExtension not equal to string');
+assert.equal(stringCTS, 'string', 'String not equal to string');
+assert.equal(stringMJS, 'string', 'String not equal to string');
+assert.equal(stringMTS, 'string', 'String not equal to string');
 
 console.log('Success!');
 
