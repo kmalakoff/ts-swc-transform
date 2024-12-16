@@ -19,13 +19,13 @@ _export(exports, {
         return _transformFile.default;
     },
     transformSync: function() {
-        return _transformSynccjs.default;
+        return _transformSync.default;
     }
 });
 var _createMatcher = /*#__PURE__*/ _interop_require_default(require("./createMatcher.js"));
 var _transformFile = /*#__PURE__*/ _interop_require_default(require("./transformFile.js"));
 var _transformDirectory = /*#__PURE__*/ _interop_require_default(require("./transformDirectory.js"));
-var _transformSynccjs = /*#__PURE__*/ _interop_require_default(require("./transformSync.js"));
+var _transformSync = /*#__PURE__*/ _interop_require_default(require("./transformSync.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj

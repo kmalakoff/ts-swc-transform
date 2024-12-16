@@ -21,8 +21,7 @@ var _calloncefn = /*#__PURE__*/ _interop_require_default(require("call-once-fn")
 var _gettsconfigcompat = /*#__PURE__*/ _interop_require_default(require("get-tsconfig-compat"));
 var _mkdirp = /*#__PURE__*/ _interop_require_default(require("mkdirp"));
 var _queuecb = /*#__PURE__*/ _interop_require_default(require("queue-cb"));
-var _regexDependencies = /*#__PURE__*/ _interop_require_default(require("./lib/regexDependencies.js"));
-var _transformSynccjs = /*#__PURE__*/ _interop_require_default(require("./transformSync.js"));
+var _transformSyncts = /*#__PURE__*/ _interop_require_default(require("./transformSync.js"));
 function _define_property(obj, key, value) {
     if (key in obj) {
         Object.defineProperty(obj, key, {
@@ -56,8 +55,10 @@ function _object_spread(target) {
     }
     return target;
 }
-var regexESM = (0, _regexDependencies.default)(true);
-var regexCJS = (0, _regexDependencies.default)();
+var matchingDeps = '\\s*[\'"`]([^\'"`]+)[\'"`]\\s*';
+var matchingName = '\\s*(?:[\\w${},\\s*]+)\\s*';
+var regexCJS = new RegExp("(?:(?:var|const|let)".concat(matchingName, "=\\s*)?require\\(").concat(matchingDeps, "\\);?"), 'g');
+var regexESM = new RegExp("".concat(regexCJS, "|import(?:").concat(matchingName, "from\\s*)?").concat(matchingDeps, ";?|export(?:").concat(matchingName, "from\\s*)?").concat(matchingDeps, ";?"), 'g');
 var importReplaceMJS = [
     '.js',
     '.ts',
@@ -125,7 +126,7 @@ function transformFileCallback(src, dest, type, options, callback) {
                 config.config.compilerOptions.target = 'ES5';
             }
             var basename = _path.default.basename(src);
-            var output = (0, _transformSynccjs.default)(contents, basename, config);
+            var output = (0, _transformSyncts.default)(contents, basename, config);
             // infer extension and patch .mjs imports
             var ext = _path.default.extname(basename);
             if (type === 'esm') {

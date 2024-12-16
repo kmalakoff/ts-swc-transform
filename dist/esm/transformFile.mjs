@@ -4,10 +4,12 @@ import once from 'call-once-fn';
 import getTS from 'get-tsconfig-compat';
 import mkdirp from 'mkdirp';
 import Queue from 'queue-cb';
-import regexDependencies from './lib/regexDependencies.mjs';
-import transformSync from './transformSync.cjs';
-const regexESM = regexDependencies(true);
-const regexCJS = regexDependencies();
+// @ts-ignore
+import transformSync from './transformSync.mjs';
+const matchingDeps = '\\s*[\'"`]([^\'"`]+)[\'"`]\\s*';
+const matchingName = '\\s*(?:[\\w${},\\s*]+)\\s*';
+const regexCJS = new RegExp(`(?:(?:var|const|let)${matchingName}=\\s*)?require\\(${matchingDeps}\\);?`, 'g');
+const regexESM = new RegExp(`${regexCJS}|import(?:${matchingName}from\\s*)?${matchingDeps};?|export(?:${matchingName}from\\s*)?${matchingDeps};?`, 'g');
 const importReplaceMJS = [
     '.js',
     '.ts',

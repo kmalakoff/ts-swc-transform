@@ -6,6 +6,4 @@
  * @param {(err: Error | null, destFilePath: string) =>} [callback] Optional callback returing the path to the transformed file. Uses promise if callback not provided.
  * @returns {void | Promise<string>} Optional promise returing the path to the transformed file if callback not provided.
  */
-export default function transformFile(src: string, dest: string, type: string, options: {
-    sourceMaps: boolean;
-}, callback?: (err: Error | null, destFilePath: string) => any): void | Promise<string>;
+export default function transformFile(src: any, dest: any, type: any, options: any, callback: any): void | Promise<unknown>;

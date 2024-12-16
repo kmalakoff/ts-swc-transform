@@ -52,15 +52,16 @@
     "call-once-fn": "^1.0.1",
     "exit": "^0.1.2",
     "fs-iterator": "^5.1.1",
-    "get-tsconfig-compat": "^0.1.0",
+    "get-tsconfig-compat": "^1.1.0",
+    "lazy-cache": "^2.0.2",
     "minimatch": "^3.1.2",
     "mkdirp": "^0.5.6",
     "node-version-call": "^1.1.0",
     "path-posix": "^1.0.0",
     "queue-cb": "^1.2.1",
-    "slash": "^1.0.0",
     "ts-node": "*",
-    "typescript": "*"
+    "typescript": "*",
+    "unixify": "^1.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -70,9 +71,9 @@
     "core-js": "^3.39.0",
     "cr": "^0.1.0",
     "cross-spawn-cb": "^1.1.2",
-    "react": "^18.3.1",
+    "react": "^19.0.0",
     "rimraf2": "^2.8.2",
-    "ts-dev-stack": "^1.0.1",
+    "ts-dev-stack": "^1.2.1",
     "ts-node": "^10.8.2",
     "typescript": "^5.7.2"
   },
@@ -80,7 +81,7 @@
     "node": ">=0.8"
   },
   "tsds": {
-    "source": "src/index.mjs",
+    "source": "src/index.ts",
     "targets": [
       "cjs",
       "esm"

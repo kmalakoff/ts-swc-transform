@@ -18,8 +18,8 @@ Object.defineProperty(exports, /**
 var _path = /*#__PURE__*/ _interop_require_default(require("path"));
 var _fsiterator = /*#__PURE__*/ _interop_require_default(require("fs-iterator"));
 var _gettsconfigcompat = /*#__PURE__*/ _interop_require_default(require("get-tsconfig-compat"));
-var _createMatcher = /*#__PURE__*/ _interop_require_default(require("./createMatcher.js"));
-var _transformFile = /*#__PURE__*/ _interop_require_default(require("./transformFile.js"));
+var _createMatcherts = /*#__PURE__*/ _interop_require_default(require("./createMatcher.js"));
+var _transformFilets = /*#__PURE__*/ _interop_require_default(require("./transformFile.js"));
 function _define_property(obj, key, value) {
     if (key in obj) {
         Object.defineProperty(obj, key, {
@@ -87,7 +87,7 @@ function transformDirectoryCallback(src, dest, type, options, callback) {
     if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
     if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
     var config = options.confg ? options.confg : _gettsconfigcompat.default.getTsconfig(src);
-    var matcher = (0, _createMatcher.default)(config);
+    var matcher = (0, _createMatcherts.default)(config);
     options = _object_spread_props(_object_spread({}, options), {
         config: config
     });
@@ -95,7 +95,7 @@ function transformDirectoryCallback(src, dest, type, options, callback) {
     iterator.forEach(function(entry, cb) {
         if (!entry.stats.isFile()) return cb();
         if (!matcher(entry.fullPath)) return cb();
-        (0, _transformFile.default)(entry.fullPath, _path.default.dirname(_path.default.join(dest, entry.path)), type, options, cb);
+        (0, _transformFilets.default)(entry.fullPath, _path.default.dirname(_path.default.join(dest, entry.path)), type, options, cb);
     }, {
         callbacks: true,
         concurrency: options.concurrency || 1024

@@ -6,6 +6,4 @@
  * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
  * @returns {void | Promise<any>} Optional promise if callback not provided.
  */
-export default function transformDirectory(src: string, dest: string, type: string, options: {
-    sourceMaps: boolean;
-}, callback?: (err?: Error) => any): void | Promise<any>;
+export default function transformDirectory(src: any, dest: any, type: any, options: any, callback: any): void | Promise<unknown>;

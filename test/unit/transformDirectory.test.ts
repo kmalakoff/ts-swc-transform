@@ -1,4 +1,5 @@
 import path from 'path';
+import url from 'url';
 import rimraf2 from 'rimraf2';
 
 import assert from 'assert';
@@ -11,12 +12,11 @@ import Queue from 'queue-cb';
 import { transformDirectory } from 'ts-swc-transform';
 
 import fileCount from '../lib/fileCount.cjs';
-import __dirname from '../lib/unitDirname.cjs';
 
-const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
-const _DATA_DIR = path.resolve(__dirname, '..', 'data');
-const SRC_DIR = path.resolve(__dirname, '..', 'data', 'src');
-const FILE_COUNT = 5;
+const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(url.fileURLToPath(import.meta.url));
+const TMP_DIR = path.resolve(dirname, '..', '..', '.tmp');
+const SRC_DIR = path.resolve(dirname, '..', 'data', 'src');
+const FILE_COUNT = 6;
 const hasPromise = typeof Promise !== 'undefined';
 const hasRequire = typeof require !== 'undefined';
 
