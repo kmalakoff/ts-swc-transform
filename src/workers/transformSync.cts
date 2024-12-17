@@ -1,5 +1,11 @@
 const path = require('path');
-const swc = require('@swc/core');
+let swc: string;
+try {
+  swc = require('@swc/core');
+} catch (_) {
+  require('../lib/installBindings.cjs');
+  swc = require('@swc/core');
+}
 const ts = require('typescript');
 const swcTranspiler = require('ts-node/transpilers/swc');
 

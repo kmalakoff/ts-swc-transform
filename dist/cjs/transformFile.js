@@ -116,17 +116,17 @@ function transformFileCallback(src, dest, type, options, callback) {
         if (err) return callback(err);
         callback = (0, _calloncefn.default)(callback);
         try {
-            var config = options.confg ? options.confg : _gettsconfigcompat.default.getTsconfig(src);
+            var tsconfig = options.tsconfig ? options.tsconfig : _gettsconfigcompat.default.getTsconfig(src);
             // overrides for cjs
             if (type === 'cjs') {
-                config = _object_spread({}, config);
-                config.config = _object_spread({}, config.config || {});
-                config.config.compilerOptions = _object_spread({}, config.config.compilerOptions || {});
-                config.config.compilerOptions.module = 'CommonJS';
-                config.config.compilerOptions.target = 'ES5';
+                tsconfig = _object_spread({}, tsconfig);
+                tsconfig.tsconfig = _object_spread({}, tsconfig.config || {});
+                tsconfig.config.compilerOptions = _object_spread({}, tsconfig.config.compilerOptions || {});
+                tsconfig.config.compilerOptions.module = 'CommonJS';
+                tsconfig.config.compilerOptions.target = 'ES5';
             }
             var basename = _path.default.basename(src);
-            var output = (0, _transformSyncts.default)(contents, basename, config);
+            var output = (0, _transformSyncts.default)(contents, basename, tsconfig);
             // infer extension and patch .mjs imports
             var ext = _path.default.extname(basename);
             if (type === 'esm') {

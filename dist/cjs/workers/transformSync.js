@@ -1,6 +1,12 @@
 "use strict";
 var path = require('path');
-var swc = require('@swc/core');
+var swc;
+try {
+    swc = require('@swc/core');
+} catch (_) {
+    require('../lib/installBindings.js');
+    swc = require('@swc/core');
+}
 var ts = require('typescript');
 var swcTranspiler = require('ts-node/transpilers/swc');
 module.exports = function transformSync(contents, fileName, config) {

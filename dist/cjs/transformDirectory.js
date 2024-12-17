@@ -86,10 +86,10 @@ function transformDirectoryCallback(src, dest, type, options, callback) {
     if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
     if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
-    var config = options.confg ? options.confg : _gettsconfigcompat.default.getTsconfig(src);
-    var matcher = (0, _createMatcherts.default)(config);
+    var tsconfig = options.tsconfig ? options.tsconfig : _gettsconfigcompat.default.getTsconfig(src);
+    var matcher = (0, _createMatcherts.default)(tsconfig);
     options = _object_spread_props(_object_spread({}, options), {
-        config: config
+        tsconfig: tsconfig
     });
     var iterator = new _fsiterator.default(src);
     iterator.forEach(function(entry, cb) {

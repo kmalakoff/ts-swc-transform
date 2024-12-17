@@ -18,10 +18,10 @@ function transformDirectoryCallback(src, dest, type, options, callback) {
   if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
   if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
 
-  const config = options.confg ? options.confg : getTS.getTsconfig(src);
-  const matcher = createMatcher(config);
+  const tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
+  const matcher = createMatcher(tsconfig);
 
-  options = { ...options, config };
+  options = { ...options, tsconfig };
   const iterator = new Iterator(src);
   iterator.forEach(
     (entry, cb) => {
