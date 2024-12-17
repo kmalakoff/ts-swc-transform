@@ -55,19 +55,19 @@ function transformFileCallback(src, dest, type, options, callback) {
     callback = once(callback);
 
     try {
-      let config = options.confg ? options.confg : getTS.getTsconfig(src);
+      let tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
 
       // overrides for cjs
       if (type === 'cjs') {
-        config = { ...config };
-        config.config = { ...(config.config || {}) };
-        config.config.compilerOptions = { ...(config.config.compilerOptions || {}) };
-        config.config.compilerOptions.module = 'CommonJS';
-        config.config.compilerOptions.target = 'ES5';
+        tsconfig = { ...tsconfig };
+        tsconfig.tsconfig = { ...(tsconfig.config || {}) };
+        tsconfig.config.compilerOptions = { ...(tsconfig.config.compilerOptions || {}) };
+        tsconfig.config.compilerOptions.module = 'CommonJS';
+        tsconfig.config.compilerOptions.target = 'ES5';
       }
 
       const basename = path.basename(src);
-      const output = transformSync(contents, basename, config);
+      const output = transformSync(contents, basename, tsconfig);
 
       // infer extension and patch .mjs imports
       let ext = path.extname(basename);
