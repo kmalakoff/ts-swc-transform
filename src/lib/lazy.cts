@@ -1,1 +1,1 @@
-module.exports = require('lazy-cache')(require);
+export default require('lazy-cache')(require);
