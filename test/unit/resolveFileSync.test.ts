@@ -6,11 +6,6 @@ import assert from 'assert';
 // @ts-ignore
 import { resolveFileSync } from 'ts-swc-transform';
 
-// // @ts-ignore
-// import process from '../../src/lib/process.cts';
-// const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
-// const filePrefix = isWindows ? 'file:\\' : 'file://'
-
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(url.fileURLToPath(import.meta.url));
 const SRC_DIR = path.resolve(dirname, '..', 'data', 'src');
 
