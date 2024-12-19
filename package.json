@@ -1,6 +1,6 @@
 {
   "name": "ts-swc-transform",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Typescript transformers for swc. Supports Node >= 0.8",
   "keywords": [
     "matcher",
@@ -43,7 +43,7 @@
     "depcheck": "depcheck",
     "deploy": "tsds deploy",
     "format": "biome check --write --unsafe src/ test/",
-    "test": "tsds test:node --timeout=20000",
+    "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines npm test",
     "version": "tsds version"
   },
@@ -54,13 +54,15 @@
     "exit": "^0.1.2",
     "fs-access-sync-compat": "^1.0.2",
     "fs-iterator": "^5.1.1",
-    "get-tsconfig-compat": "^1.1.0",
+    "get-tsconfig-compat": "^1.1.1",
+    "is-absolute": "^1.0.0",
     "lazy-cache": "^2.0.2",
     "minimatch": "^3.1.2",
     "mkdirp": "^0.5.6",
     "node-version-call": "^1.1.1",
     "path-posix": "^1.0.0",
-    "queue-cb": "^1.4.2",
+    "queue-cb": "^1.4.3",
+    "resolve": "^1.22.9",
     "temp-suffix": "^0.1.1",
     "ts-node": "*",
     "typescript": "*",
@@ -75,7 +77,7 @@
     "cr": "^0.1.0",
     "react": "^19.0.0",
     "rimraf2": "^2.8.2",
-    "ts-dev-stack": "^1.2.1",
+    "ts-dev-stack": "^1.2.2",
     "ts-node": "^10.8.2",
     "typescript": "^5.7.2"
   },
