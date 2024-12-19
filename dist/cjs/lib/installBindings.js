@@ -1,7 +1,7 @@
 "use strict";
 var path = require('path');
 var existsSync = require('./existsSync.js');
-var lazy = require('../lazy.js');
+var lazy = require('./lazy.js');
 var major = +process.versions.node.split('.')[0];
 var version = major >= 14 ? 'local' : 'lts';
 var worker = path.resolve(path.dirname(__dirname), 'workers', "installBinding".concat(path.extname(__filename)));

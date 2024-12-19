@@ -1,10 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import isAbsolute from 'is-absolute';
-import process from 'process';
 import resolve from 'resolve';
 import { moduleRegEx } from './constants.js';
 import fileURLToPath from './lib/fileURLToPath.js';
+// @ts-ignore
+import process from './lib/process.cjs';
 import type { Context } from './types.js';
 
 function getParentPath(context: Context) {

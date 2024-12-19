@@ -11,10 +11,10 @@ Object.defineProperty(exports, "default", {
 var _fs = /*#__PURE__*/ _interop_require_default(require("fs"));
 var _path = /*#__PURE__*/ _interop_require_default(require("path"));
 var _isabsolute = /*#__PURE__*/ _interop_require_default(require("is-absolute"));
-var _process = /*#__PURE__*/ _interop_require_default(require("process"));
 var _resolve = /*#__PURE__*/ _interop_require_default(require("resolve"));
 var _constants = require("./constants.js");
 var _fileURLToPath = /*#__PURE__*/ _interop_require_default(require("./lib/fileURLToPath.js"));
+var _processcjs = /*#__PURE__*/ _interop_require_default(require("./lib/process.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj
@@ -22,17 +22,17 @@ function _interop_require_default(obj) {
 }
 function getParentPath(context) {
     if (context.parentPath) return _path.default.dirname(context.parentPath);
-    return context.parentURL ? _path.default.dirname(toPath(context.parentURL)) : _process.default.cwd();
+    return context.parentURL ? _path.default.dirname(toPath(context.parentURL)) : _processcjs.default.cwd();
 }
 function toPath(specifier, context) {
     if (specifier.startsWith('file:')) return (0, _fileURLToPath.default)(specifier);
     if ((0, _isabsolute.default)(specifier)) return specifier;
     if (specifier[0] === '.') {
-        var parentPath = context ? getParentPath(context) : _process.default.cwd();
+        var parentPath = context ? getParentPath(context) : _processcjs.default.cwd();
         return _path.default.resolve(parentPath, specifier);
     }
     if (_constants.moduleRegEx.test(specifier)) {
-        var parentPath1 = context ? getParentPath(context) : _process.default.cwd();
+        var parentPath1 = context ? getParentPath(context) : _processcjs.default.cwd();
         var pkg = null;
         var main = _resolve.default.sync(specifier, {
             basedir: parentPath1,
