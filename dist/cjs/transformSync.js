@@ -14,14 +14,14 @@ Object.defineProperty(exports, /**
 });
 var _path = /*#__PURE__*/ _interop_require_default(require("path"));
 var _url = /*#__PURE__*/ _interop_require_default(require("url"));
+var _process = /*#__PURE__*/ _interop_require_default(require("process"));
 var _lazycjs = /*#__PURE__*/ _interop_require_default(require("./lib/lazy.js"));
-var _processcjs = /*#__PURE__*/ _interop_require_default(require("./lib/process.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj
     };
 }
-var major = +_processcjs.default.versions.node.split('.')[0];
+var major = +_process.default.versions.node.split('.')[0];
 var version = major >= 14 ? 'local' : 'lts';
 var filename = typeof __filename !== 'undefined' ? __filename : _url.default.fileURLToPath(require("url").pathToFileURL(__filename).toString());
 var worker = _path.default.resolve(_path.default.dirname(filename), 'workers', "transformSync".concat(_path.default.extname(filename) === '.mjs' ? '.cjs' : '.js'));

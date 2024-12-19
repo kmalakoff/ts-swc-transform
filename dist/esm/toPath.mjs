@@ -1,11 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import isAbsolute from 'is-absolute';
+import process from 'process';
 import resolve from 'resolve';
-import fileURLToPath from './lib/fileURLToPath.mjs';
-// @ts-ignore
-import process from './lib/process.cjs';
 import { moduleRegEx } from './constants.mjs';
+import fileURLToPath from './lib/fileURLToPath.mjs';
 function getParentPath(context) {
     if (context.parentPath) return path.dirname(context.parentPath);
     return context.parentURL ? path.dirname(toPath(context.parentURL)) : process.cwd();

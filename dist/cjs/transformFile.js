@@ -21,7 +21,7 @@ var _calloncefn = /*#__PURE__*/ _interop_require_default(require("call-once-fn")
 var _gettsconfigcompat = /*#__PURE__*/ _interop_require_default(require("get-tsconfig-compat"));
 var _mkdirp = /*#__PURE__*/ _interop_require_default(require("mkdirp"));
 var _queuecb = /*#__PURE__*/ _interop_require_default(require("queue-cb"));
-var _transformSyncts = /*#__PURE__*/ _interop_require_default(require("./transformSync.js"));
+var _transformSync = /*#__PURE__*/ _interop_require_default(require("./transformSync.js"));
 function _define_property(obj, key, value) {
     if (key in obj) {
         Object.defineProperty(obj, key, {
@@ -126,7 +126,7 @@ function transformFileCallback(src, dest, type, options, callback) {
                 tsconfig.config.compilerOptions.target = 'ES5';
             }
             var basename = _path.default.basename(src);
-            var output = (0, _transformSyncts.default)(contents, basename, tsconfig);
+            var output = (0, _transformSync.default)(contents, basename, tsconfig);
             // infer extension and patch .mjs imports
             var ext = _path.default.extname(basename);
             if (type === 'esm') {
