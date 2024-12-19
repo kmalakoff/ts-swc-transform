@@ -1,9 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import extensions from './extensions.js';
-import toPath from './lib/toPath.js';
-
-import type { Context } from './types';
+import toPath from './toPath.js';
+import type { Context } from './types.js';
 
 const moduleRegEx = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
 const typeFileRegEx = /^[^.]+\.d\.[cm]?ts$/;
