@@ -7,7 +7,6 @@ export default [
     '.tsx',
     '.cts',
     '.mts',
-    '.json',
     '.es6',
     '.es'
 ];
