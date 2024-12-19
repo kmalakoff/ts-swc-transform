@@ -1,11 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import { moduleRegEx, typeFileRegEx } from './constants.js';
 import extensions from './extensions.js';
 import toPath from './toPath.js';
 import type { Context } from './types.js';
 
-const moduleRegEx = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
-const typeFileRegEx = /^[^.]+\.d\.[cm]?ts$/;
 const indexExtensions = extensions.map((x) => `index${x}`);
 
 export default function resolveFileSync(specifier: string, context?: Context) {
