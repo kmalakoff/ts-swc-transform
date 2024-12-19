@@ -4,14 +4,14 @@ import url from 'url';
 import isAbsolute from 'is-absolute';
 import resolve from 'resolve';
 // @ts-ignore
-import process from './process.cjs';
+import process from './lib/process.cjs';
 const moduleRegEx = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
 function getParentPath(context) {
     if (context.parentPath) return path.dirname(context.parentPath);
     return context.parentURL ? path.dirname(toPath(context.parentURL)) : process.cwd();
 }
 export default function toPath(specifier, context) {
-    if (specifier.startsWith('file:')) return url.parse(specifier).pathname;
+    if (specifier.startsWith('file://')) return url.parse(specifier).pathname;
     if (isAbsolute(specifier)) return specifier;
     if (specifier[0] === '.') {
         const parentPath = context ? getParentPath(context) : process.cwd();

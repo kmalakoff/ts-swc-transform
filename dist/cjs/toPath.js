@@ -13,7 +13,7 @@ var _path = /*#__PURE__*/ _interop_require_default(require("path"));
 var _url = /*#__PURE__*/ _interop_require_default(require("url"));
 var _isabsolute = /*#__PURE__*/ _interop_require_default(require("is-absolute"));
 var _resolve = /*#__PURE__*/ _interop_require_default(require("resolve"));
-var _processcjs = /*#__PURE__*/ _interop_require_default(require("./process.js"));
+var _processcjs = /*#__PURE__*/ _interop_require_default(require("./lib/process.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj
@@ -25,7 +25,7 @@ function getParentPath(context) {
     return context.parentURL ? _path.default.dirname(toPath(context.parentURL)) : _processcjs.default.cwd();
 }
 function toPath(specifier, context) {
-    if (specifier.startsWith('file:')) return _url.default.parse(specifier).pathname;
+    if (specifier.startsWith('file://')) return _url.default.parse(specifier).pathname;
     if ((0, _isabsolute.default)(specifier)) return specifier;
     if (specifier[0] === '.') {
         var parentPath = context ? getParentPath(context) : _processcjs.default.cwd();

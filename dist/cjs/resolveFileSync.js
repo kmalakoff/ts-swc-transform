@@ -11,7 +11,7 @@ Object.defineProperty(exports, "default", {
 var _fs = /*#__PURE__*/ _interop_require_default(require("fs"));
 var _path = /*#__PURE__*/ _interop_require_default(require("path"));
 var _extensions = /*#__PURE__*/ _interop_require_default(require("./extensions.js"));
-var _toPath = /*#__PURE__*/ _interop_require_default(require("./lib/toPath.js"));
+var _toPath = /*#__PURE__*/ _interop_require_default(require("./toPath.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj
