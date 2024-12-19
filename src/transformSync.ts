@@ -1,9 +1,9 @@
 import path from 'path';
 import url from 'url';
+
+import process from 'process';
 // @ts-ignore
 import lazy from './lib/lazy.cjs';
-// @ts-ignore
-import process from './lib/process.cjs';
 
 const major = +process.versions.node.split('.')[0];
 const version = major >= 14 ? 'local' : 'lts';

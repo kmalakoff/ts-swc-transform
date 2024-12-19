@@ -5,8 +5,7 @@ import getTS from 'get-tsconfig-compat';
 import mkdirp from 'mkdirp';
 import Queue from 'queue-cb';
 
-// @ts-ignore
-import transformSync from './transformSync.ts';
+import transformSync from './transformSync.js';
 
 const matchingDeps = '\\s*[\'"`]([^\'"`]+)[\'"`]\\s*';
 const matchingName = '\\s*(?:[\\w${},\\s*]+)\\s*';
