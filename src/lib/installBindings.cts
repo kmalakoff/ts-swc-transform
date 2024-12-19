@@ -1,6 +1,6 @@
 const path = require('path');
 const existsSync = require('./existsSync.cjs');
-const lazy = require('../lazy.cjs');
+const lazy = require('./lazy.cjs');
 
 const major = +process.versions.node.split('.')[0];
 const version = major >= 14 ? 'local' : 'lts';
