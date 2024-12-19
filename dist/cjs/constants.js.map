@@ -1,0 +1,1 @@
+{"version":3,"sources":["constants.ts"],"sourcesContent":["export const moduleRegEx = /^[^.\\/]|^\\.[^.\\/]|^\\.\\.[^\\/]/;\nexport const typeFileRegEx = /^[^.]+\\.d\\.[cm]?ts$/;\n"],"names":["moduleRegEx","typeFileRegEx"],"mappings":";;;;;;;;;;;IAAaA,WAAW;eAAXA;;IACAC,aAAa;eAAbA;;;AADN,IAAMD,cAAc;AACpB,IAAMC,gBAAgB"}

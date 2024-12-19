@@ -1,4 +1,4 @@
-export * from './types.js';
+export type { Context } from './types.js';
 export { default as createMatcher } from './createMatcher.js';
 export { default as extensions } from './extensions.js';
 export { default as resolveFileSync } from './resolveFileSync.js';

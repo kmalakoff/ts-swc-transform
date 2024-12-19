@@ -1,4 +1,3 @@
-export * from './types.mjs';
 export { default as createMatcher } from './createMatcher.mjs';
 export { default as extensions } from './extensions.mjs';
 export { default as resolveFileSync } from './resolveFileSync.mjs';

@@ -1,17 +1,17 @@
 import fs from 'fs';
 import path from 'path';
-import url from 'url';
 import isAbsolute from 'is-absolute';
 import resolve from 'resolve';
+import fileURLToPath from './lib/fileURLToPath.mjs';
 // @ts-ignore
 import process from './lib/process.cjs';
-const moduleRegEx = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
+import { moduleRegEx } from './constants.mjs';
 function getParentPath(context) {
     if (context.parentPath) return path.dirname(context.parentPath);
     return context.parentURL ? path.dirname(toPath(context.parentURL)) : process.cwd();
 }
 export default function toPath(specifier, context) {
-    if (specifier.startsWith('file://')) return url.parse(specifier).pathname;
+    if (specifier.startsWith('file:')) return fileURLToPath(specifier);
     if (isAbsolute(specifier)) return specifier;
     if (specifier[0] === '.') {
         const parentPath = context ? getParentPath(context) : process.cwd();

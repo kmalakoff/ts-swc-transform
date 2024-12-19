@@ -10,6 +10,7 @@ Object.defineProperty(exports, "default", {
 });
 var _fs = /*#__PURE__*/ _interop_require_default(require("fs"));
 var _path = /*#__PURE__*/ _interop_require_default(require("path"));
+var _constants = require("./constants.js");
 var _extensions = /*#__PURE__*/ _interop_require_default(require("./extensions.js"));
 var _toPath = /*#__PURE__*/ _interop_require_default(require("./toPath.js"));
 function _interop_require_default(obj) {
@@ -17,8 +18,6 @@ function _interop_require_default(obj) {
         default: obj
     };
 }
-var moduleRegEx = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
-var typeFileRegEx = /^[^.]+\.d\.[cm]?ts$/;
 var indexExtensions = _extensions.default.map(function(x) {
     return "index".concat(x);
 });
@@ -36,11 +35,11 @@ function resolveFileSync(specifier, context) {
             return indexExtensions.indexOf(x) >= 0;
         });
         if (item) return _path.default.join(filePath, item);
-    } else if (!stats || !ext && !moduleRegEx.test(specifier)) {
+    } else if (!stats || !ext && !_constants.moduleRegEx.test(specifier)) {
         var fileName = _path.default.basename(filePath).replace(/(\.[^/.]+)+$/, '');
         var items1 = _fs.default.readdirSync(_path.default.dirname(filePath));
         var item1 = items1.find(function(x) {
-            return x.startsWith(fileName) && !typeFileRegEx.test(x) && _extensions.default.indexOf(_path.default.extname(x)) >= 0;
+            return x.startsWith(fileName) && !_constants.typeFileRegEx.test(x) && _extensions.default.indexOf(_path.default.extname(x)) >= 0;
         });
         if (item1) return _path.default.join(_path.default.dirname(filePath), item1);
     }
