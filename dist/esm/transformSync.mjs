@@ -1,9 +1,9 @@
 import path from 'path';
 import url from 'url';
 // @ts-ignore
-import lazy from './lazy.cjs';
+import lazy from './lib/lazy.cjs';
 // @ts-ignore
-import process from './process.cjs';
+import process from './lib/process.cjs';
 const major = +process.versions.node.split('.')[0];
 const version = major >= 14 ? 'local' : 'lts';
 const filename = typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url);

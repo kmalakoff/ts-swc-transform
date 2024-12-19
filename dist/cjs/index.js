@@ -12,6 +12,12 @@ _export(exports, {
     createMatcher: function() {
         return _createMatcher.default;
     },
+    extensions: function() {
+        return _extensions.default;
+    },
+    resolveFileSync: function() {
+        return _resolveFileSync.default;
+    },
     transformDirectory: function() {
         return _transformDirectory.default;
     },
@@ -22,10 +28,26 @@ _export(exports, {
         return _transformSync.default;
     }
 });
+_export_star(require("./types.js"), exports);
 var _createMatcher = /*#__PURE__*/ _interop_require_default(require("./createMatcher.js"));
+var _extensions = /*#__PURE__*/ _interop_require_default(require("./extensions.js"));
+var _resolveFileSync = /*#__PURE__*/ _interop_require_default(require("./resolveFileSync.js"));
 var _transformFile = /*#__PURE__*/ _interop_require_default(require("./transformFile.js"));
 var _transformDirectory = /*#__PURE__*/ _interop_require_default(require("./transformDirectory.js"));
 var _transformSync = /*#__PURE__*/ _interop_require_default(require("./transformSync.js"));
+function _export_star(from, to) {
+    Object.keys(from).forEach(function(k) {
+        if (k !== "default" && !Object.prototype.hasOwnProperty.call(to, k)) {
+            Object.defineProperty(to, k, {
+                enumerable: true,
+                get: function() {
+                    return from[k];
+                }
+            });
+        }
+    });
+    return from;
+}
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj

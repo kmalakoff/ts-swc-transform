@@ -14,18 +14,18 @@ Object.defineProperty(exports, /**
 });
 var _path = /*#__PURE__*/ _interop_require_default(require("path"));
 var _url = /*#__PURE__*/ _interop_require_default(require("url"));
-var _lazycts = /*#__PURE__*/ _interop_require_default(require("./lazy.js"));
-var _processcts = /*#__PURE__*/ _interop_require_default(require("./process.js"));
+var _lazycjs = /*#__PURE__*/ _interop_require_default(require("./lib/lazy.js"));
+var _processcjs = /*#__PURE__*/ _interop_require_default(require("./lib/process.js"));
 function _interop_require_default(obj) {
     return obj && obj.__esModule ? obj : {
         default: obj
     };
 }
-var major = +_processcts.default.versions.node.split('.')[0];
+var major = +_processcjs.default.versions.node.split('.')[0];
 var version = major >= 14 ? 'local' : 'lts';
 var filename = typeof __filename !== 'undefined' ? __filename : _url.default.fileURLToPath(require("url").pathToFileURL(__filename).toString());
 var worker = _path.default.resolve(_path.default.dirname(filename), 'workers', "transformSync".concat(_path.default.extname(filename) === '.mjs' ? '.cjs' : '.js'));
-var call = (0, _lazycts.default)('node-version-call');
+var call = (0, _lazycjs.default)('node-version-call');
 function transformSync(contents, fileName, config) {
     return call()(version, worker, contents, fileName, config);
 }
