@@ -1,8 +1,11 @@
+import fs from 'fs';
 import path from 'path';
+import existsSync from './existsSync.js';
 
-export default function packageRoot(dir, packageName) {
-  if (path.basename(dir) === packageName) return dir;
+export default function packageRoot(dir) {
+  const packagePath = path.join(dir, 'package.json');
+  if (existsSync(packagePath) && JSON.parse(fs.readFileSync(packagePath, 'utf8')).name) return dir;
   const nextDir = path.dirname(dir);
-  if (nextDir === dir) throw new Error(`${packageName} not found`);
-  return packageRoot(nextDir, packageName);
+  if (nextDir === dir) throw new Error('Package root not found');
+  return packageRoot(nextDir);
 }

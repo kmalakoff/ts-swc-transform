@@ -33,7 +33,7 @@ export default function installBindings(callback) {
         try {
           const tmp = path.join(os.tmpdir(), 'ts-swc-transform', tempSuffix());
           const source = path.join(tmp, 'node_modules', ...installParts);
-          const dest = path.join(path.dirname(path.dirname(path.dirname(require.resolve('@swc/core/package.json')))), ...installParts);
+          const dest = path.join(path.dirname(path.dirname(path.dirname(resolve.sync('@swc/core/package.json')))), ...installParts);
 
           const queue = new Queue(1);
           queue.defer(mkdirp.bind(null, tmp));
