@@ -3,7 +3,7 @@ import os from 'os';
 import path from 'path';
 import once from 'call-once-fn';
 import spawn from 'cross-spawn-cb';
-import mkdirp from 'mkdirp';
+import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import resolve from 'resolve';
 import rimraf2 from 'rimraf2';
