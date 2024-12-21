@@ -1,3 +1,9 @@
+// remove NODE_OPTIONS from ts-dev-stack
+// @ts-ignore
+import process from '../lib/process.cjs';
+// biome-ignore lint/performance/noDelete: <explanation>
+delete process.env.NODE_OPTIONS;
+
 import '../lib/removeBindings.cjs';
 import path from 'path';
 import url from 'url';
@@ -11,7 +17,6 @@ import Queue from 'queue-cb';
 
 // @ts-ignore
 import { transformDirectory } from 'ts-swc-transform';
-
 import fileCount from '../lib/fileCount.cjs';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
