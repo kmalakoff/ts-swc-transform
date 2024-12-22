@@ -59,7 +59,7 @@
     "lazy-cache": "^2.0.2",
     "minimatch": "^3.1.2",
     "mkdirp-classic": "^0.5.3",
-    "node-version-call": "^1.2.2",
+    "node-version-call": "^1.2.4",
     "path-posix": "^1.0.0",
     "queue-cb": "^1.4.4",
     "resolve": "^1.22.10",
@@ -77,7 +77,7 @@
     "core-js": "^3.39.0",
     "cr": "^0.1.0",
     "react": "^19.0.0",
-    "ts-dev-stack": "^1.4.3",
+    "ts-dev-stack": "^1.4.4",
     "ts-node": "^10.8.2",
     "typescript": "^5.7.2"
   },

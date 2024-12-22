@@ -1,35 +1,23 @@
 import path from 'path';
-import Iterator from 'fs-iterator';
-import getTS from 'get-tsconfig-compat';
+import url from 'url';
 
-import createMatcher from './createMatcher.js';
-import transformFile from './transformFile.js';
+// @ts-ignore
+import lazy from './lib/lazy.cjs';
+import packageRoot from './lib/packageRoot.js';
+import version from './lib/transformVersion.js';
+
+const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
+const root = packageRoot(__dirname);
+const worker = path.resolve(root, 'dist', 'cjs', 'workers', 'transformDirectory.js');
+const call = lazy('node-version-call');
 
 function transformDirectoryCallback(src, dest, type, options, callback) {
-  if (typeof options === 'function') {
-    callback = options;
-    options = {};
+  try {
+    const res = call()({ version, callbacks: true }, worker, src, dest, type, options);
+    return callback(null, res);
+  } catch (err) {
+    return callback(err);
   }
-  options = options || {};
-
-  if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
-  if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
-  if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
-
-  const tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
-  const matcher = createMatcher(tsconfig);
-
-  options = { ...options, tsconfig };
-  const iterator = new Iterator(src);
-  iterator.forEach(
-    (entry, cb) => {
-      if (!entry.stats.isFile()) return cb();
-      if (!matcher(entry.fullPath)) return cb();
-      transformFile(entry.fullPath, path.dirname(path.join(dest, entry.path)), type, options, cb);
-    },
-    { callbacks: true, concurrency: options.concurrency || 1024 },
-    callback
-  );
 }
 
 /**
@@ -46,6 +34,9 @@ export default function transformDirectory(src, dest, type, options, callback) {
     options = null;
   }
   options = options || {};
+  if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
+  if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
+  if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
 
   if (typeof callback === 'function') return transformDirectoryCallback(src, dest, type, options, callback);
   return new Promise((resolve, reject) => {
