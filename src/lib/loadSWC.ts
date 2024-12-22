@@ -1,10 +1,23 @@
 import installBindings from './installBindings.js';
 // @ts-ignore
 import lazy from './lazy.cjs';
-const swc = lazy('@swc/core');
+const lazySWC = lazy('@swc/core');
 
+let swc = null;
+let err: Error = null;
 export default function loadSWC(callback) {
-  installBindings((err) => {
-    err ? callback(err) : callback(null, swc());
+  if (swc) return callback(null, swc);
+  if (err) return callback(err);
+
+  installBindings((err_) => {
+    err = err || err_;
+    if (err) return callback(err);
+    try {
+      swc = swc || lazySWC();
+      return callback(null, swc);
+    } catch (err_) {
+      err = err || err_;
+      return callback(err);
+    }
   });
 }
