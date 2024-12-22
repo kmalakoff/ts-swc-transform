@@ -1,6 +1,4 @@
 // remove NODE_OPTIONS from ts-dev-stack
-// @ts-ignore
-import process from '../lib/process.cjs';
 // biome-ignore lint/performance/noDelete: <explanation>
 delete process.env.NODE_OPTIONS;
 
@@ -52,8 +50,8 @@ function tests({ transformDirectory, type, ext, packageType, expectedCount, opti
         });
       });
     queue.await((err) => {
-      assert.ok(!err, err ? err.message : '');
-      done();
+      !err || console.error(err);
+      done(err);
     });
   });
 }
