@@ -10,7 +10,7 @@ import process from './lib/process.cjs';
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? '14' : 'local';
-const root = packageRoot(__dirname, 'ts-swc-transform');
+const root = packageRoot(__dirname);
 const worker = path.resolve(root, 'dist', 'cjs', 'workers', 'transformSync.js');
 const call = lazy('node-version-call');
 
