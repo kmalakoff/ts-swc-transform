@@ -6,7 +6,7 @@ import rimraf2 from 'rimraf2';
 import { SKIPS, typeFileRegEx } from '../constants.js';
 import createMatcher from '../createMatcher.js';
 
-export default function types(src, dest, options, callback) {
+export default function transformTypesWorker(src, dest, options, callback) {
   const tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
   const matcher = createMatcher(tsconfig);
 

@@ -1,24 +1,12 @@
 import path from 'path';
 import url from 'url';
-
-// @ts-ignore
-import lazy from '../lib/lazy.cjs';
-import packageRoot from '../lib/packageRoot.js';
-
+import wrapWorker from './lib/wrapWorker.js';
+import worker from './workers/transformFile.js';
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const root = packageRoot(__dirname);
-const worker = path.resolve(root, 'dist', 'cjs', 'workers', 'transformFile.js');
-const version = 'lts';
-const call = lazy('node-version-call');
-
-function transformFileCallback(src, dest, type, options, callback) {
-  try {
-    const res = call()({ version, callbacks: true }, worker, src, dest, type, options);
-    return callback(null, res);
-  } catch (err) {
-    return callback(err);
-  }
-}
+const workerPath = path.resolve(__dirname, '..', 'cjs', 'transformFile.js');
+const major = +process.versions.node.split('.')[0];
+const version = major < 14 ? 'lts' : 'local';
+const workerWrapper = wrapWorker(worker, workerPath, version);
 
 /**
  * @param {string} src The source directory to traverse.
@@ -38,9 +26,9 @@ export default function transformFile(src, dest, type, options, callback) {
   if (typeof dest !== 'string') throw new Error('transformFile: unexpected destination directory');
   if (typeof type !== 'string') throw new Error('transformFile: unexpected type');
 
-  if (typeof callback === 'function') return transformFileCallback(src, dest, type, options, callback);
+  if (typeof callback === 'function') return workerWrapper(src, dest, type, options, callback);
   return new Promise((resolve, reject) => {
-    transformFileCallback(src, dest, type, options, function compileCallback(err, result) {
+    workerWrapper(src, dest, type, options, (err, result) => {
       err ? reject(err) : resolve(result);
     });
   });
