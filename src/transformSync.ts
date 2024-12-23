@@ -1,17 +1,12 @@
 import path from 'path';
 import url from 'url';
-import type { TsConfigResult } from 'get-tsconfig-compat';
-
-// @ts-ignore
-import lazy from '../lib/lazy.cjs';
-import packageRoot from '../lib/packageRoot.js';
-
+import wrapWorker from './lib/wrapWorker.js';
+import worker from './workers/transformSync.js';
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const root = packageRoot(__dirname);
-const worker = path.resolve(root, 'dist', 'cjs', 'workers', 'transformSync.js');
-const version = 'lts';
-const call = lazy('node-version-call');
+const workerPath = path.resolve(__dirname, '..', 'cjs', 'transformSync.js');
+const workerWrapper = wrapWorker(worker, workerPath, 'lts', true);
 
+import type { TsConfigResult } from 'get-tsconfig-compat';
 /**
  * @param {string} contents The file contents.
  * @param {string} fileName The filename.
@@ -19,5 +14,7 @@ const call = lazy('node-version-call');
  * @returns {{ code: string, map?: string }} Returns object with the transformed code and source map if option sourceMaps was provided.
  */
 export default function transformSync(contents: string, fileName: string, tsconfig: TsConfigResult) {
-  return call()({ version, callbacks: true }, worker, contents, fileName, tsconfig);
+  // biome-ignore lint/style/noArguments: <explanation>
+  if (arguments.length === 4) return workerWrapper(contents, fileName, tsconfig, arguments[3]);
+  return workerWrapper(contents, fileName, tsconfig);
 }
