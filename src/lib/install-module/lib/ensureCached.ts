@@ -6,8 +6,6 @@ import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
-// @ts-ignore
-import process from '../../process.cjs';
 import parseInstallString from './parseInstallString.js';
 
 export type EnsureCachedCallback = (err?: Error) => void;
