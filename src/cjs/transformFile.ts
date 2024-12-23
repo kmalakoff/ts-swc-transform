@@ -2,13 +2,13 @@ import path from 'path';
 import url from 'url';
 
 // @ts-ignore
-import lazy from './lib/lazy.cjs';
-import packageRoot from './lib/packageRoot.js';
-import version from './lib/transformVersion.js';
+import lazy from '../lib/lazy.cjs';
+import packageRoot from '../lib/packageRoot.js';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const root = packageRoot(__dirname);
 const worker = path.resolve(root, 'dist', 'cjs', 'workers', 'transformFile.js');
+const version = 'lts';
 const call = lazy('node-version-call');
 
 function transformFileCallback(src, dest, type, options, callback) {
