@@ -30,10 +30,11 @@ export default function transformTypesWorker(src, dest, options, callback) {
       },
       (err) => {
         if (err) return callback(err);
+        if (entries.length === 0) return callback();
 
         const files = entries.map((entry) => entry.fullPath);
         const args = ['tsc', ...files, '--declaration', '--emitDeclarationOnly', '--outDir', dest, ...tsArgs];
-        spawn(args[0], args.slice(1), { cwd: src }, callback);
+        spawn(args[0], args.slice(1), { cwd: src, stdio: 'inherit' }, callback);
       }
     );
   });
