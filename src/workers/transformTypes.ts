@@ -33,7 +33,7 @@ export default function types(src, dest, options, callback) {
 
         const files = entries.map((entry) => entry.fullPath);
         const args = ['tsc', ...files, '--declaration', '--emitDeclarationOnly', '--outDir', dest, ...tsArgs];
-        spawn(args[0], args.slice(1), { encoding: 'utf8' }, callback);
+        spawn(args[0], args.slice(1), { cwd: src }, callback);
       }
     );
   });
