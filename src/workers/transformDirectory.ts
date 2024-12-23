@@ -7,6 +7,8 @@ import { typeFileRegEx } from '../constants.js';
 import createMatcher from '../createMatcher.js';
 import transformFile from './transformFile.js';
 
+const SKIPS = ['.DS_Store'];
+
 export default function transformDirectoryWorker(src, dest, type, options, callback) {
   const tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
   const matcher = createMatcher(tsconfig);
@@ -18,6 +20,7 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
       if (!entry.stats.isFile()) return;
       if (!matcher(entry.fullPath)) return;
       if (typeFileRegEx.test(entry.basename)) return;
+      if (SKIPS.indexOf(entry.basename) >= 0) return;
       entries.push(entry);
     },
     (err) => {
