@@ -6,7 +6,9 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 const workerPath = path.resolve(__dirname, '..', 'cjs', 'transformTypes.js');
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'lts' : 'local';
-const workerWrapper = wrapWorker(worker, workerPath, version);
+const workerWrapper = wrapWorker(worker, workerPath);
+
+import type { TransformTypesCallback, TransformTypesOptions } from './types.js';
 
 /**
  * @param {string} src The source directory to traverse.
@@ -15,7 +17,7 @@ const workerWrapper = wrapWorker(worker, workerPath, version);
  * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
  * @returns {void | Promise<any>} Optional promise if callback not provided.
  */
-export default function transformTypes(src, dest, _type, options, callback) {
+export default function transformTypes(src: string, dest: string, options?: TransformTypesOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<undefined> {
   if (typeof options === 'function') {
     callback = options;
     options = null;
@@ -24,9 +26,9 @@ export default function transformTypes(src, dest, _type, options, callback) {
   if (typeof src !== 'string') throw new Error('transformTypes: unexpected source');
   if (typeof dest !== 'string') throw new Error('transformTypes: unexpected destination directory');
 
-  if (typeof callback === 'function') return workerWrapper(src, dest, options, callback);
+  if (typeof callback === 'function') return workerWrapper(version, src, dest, options, callback);
   return new Promise((resolve, reject) => {
-    workerWrapper(src, dest, options, (err, result) => {
+    workerWrapper(version, src, dest, options, (err, result) => {
       err ? reject(err) : resolve(result);
     });
   });
