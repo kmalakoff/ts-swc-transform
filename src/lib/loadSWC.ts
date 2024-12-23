@@ -1,23 +1,18 @@
+import resolveOnce from 'resolve-once-cb';
 import installBindings from './installBindings.js';
 // @ts-ignore
 import lazy from './lazy.cjs';
-const lazySWC = lazy('@swc/core');
+const swc = lazy('@swc/core');
 
-let swc = null;
-let err: Error = null;
-export default function loadSWC(callback) {
-  if (swc) return callback(null, swc);
-  if (err) return callback(err);
-
-  installBindings((err_) => {
-    err = err || err_;
+function loadSWC(callback) {
+  installBindings((err) => {
     if (err) return callback(err);
     try {
-      swc = swc || lazySWC();
-      return callback(null, swc);
-    } catch (err_) {
-      err = err || err_;
+      return callback(null, swc());
+    } catch (err) {
       return callback(err);
     }
   });
 }
+
+export default resolveOnce(loadSWC);
