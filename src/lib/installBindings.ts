@@ -3,9 +3,6 @@ import path from 'path';
 import Queue from 'queue-cb';
 import resolve from 'resolve';
 import installModule from './install-module/index.js';
-// @ts-ignore
-import process from './process.cjs';
-
 export default function installBindings(callback) {
   const swcPackagePath = resolve.sync('@swc/core/package.json');
   const swcDir = path.dirname(path.dirname(swcPackagePath));
