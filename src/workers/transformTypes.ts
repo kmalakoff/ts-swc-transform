@@ -1,16 +1,21 @@
-import path from 'path';
+import spawn from 'cross-spawn-cb';
 import Iterator from 'fs-iterator';
 import getTS from 'get-tsconfig-compat';
-import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 
 import { SKIPS, typeFileRegEx } from '../constants.js';
 import createMatcher from '../createMatcher.js';
-import transformFile from './transformFile.js';
 
-export default function transformDirectoryWorker(src, dest, type, options, callback) {
+export default function types(src, dest, options, callback) {
   const tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
   const matcher = createMatcher(tsconfig);
+
+  const tsArgs = [];
+  for (const key in tsconfig.config.compilerOptions) {
+    const value = tsconfig.config.compilerOptions[key];
+    tsArgs.push(`--${key}`);
+    tsArgs.push(Array.isArray(value) ? value.join(',') : value);
+  }
 
   rimraf2(dest, { disableGlob: true }, () => {
     const entries = [];
@@ -26,10 +31,9 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
       (err) => {
         if (err) return callback(err);
 
-        options = { ...options, tsconfig };
-        const queue = new Queue();
-        entries.forEach((entry) => queue.defer(transformFile.bind(null, entry.fullPath, path.dirname(path.join(dest, entry.path)), type, options)));
-        queue.await(callback);
+        const files = entries.map((entry) => entry.fullPath);
+        const args = ['tsc', ...files, '--declaration', '--emitDeclarationOnly', '--outDir', dest, ...tsArgs];
+        spawn(args[0], args.slice(1), { encoding: 'utf8' }, callback);
       }
     );
   });
