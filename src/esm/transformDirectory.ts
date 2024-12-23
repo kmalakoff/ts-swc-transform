@@ -1,23 +1,14 @@
-import path from 'path';
-import url from 'url';
+import transformDirectoryCallbackCJS from '../cjs/transformDirectory.js';
+import transformDirectoryCallbackWorker from '../workers/transformDirectory.js';
 
 // @ts-ignore
-import lazy from './lib/lazy.cjs';
-import packageRoot from './lib/packageRoot.js';
-import version from './lib/transformVersion.js';
-
-const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const root = packageRoot(__dirname);
-const worker = path.resolve(root, 'dist', 'cjs', 'workers', 'transformDirectory.js');
-const call = lazy('node-version-call');
-
-function transformDirectoryCallback(src, dest, type, options, callback) {
-  try {
-    const res = call()({ version, callbacks: true }, worker, src, dest, type, options);
-    return callback(null, res);
-  } catch (err) {
-    return callback(err);
-  }
+import lazy from '../lib/lazy.cjs';
+let transformDirectoryCallback = transformDirectoryCallbackWorker;
+try {
+  // typescript cannot be loaded so run in lts
+  lazy('typescript')();
+} catch {
+  transformDirectoryCallback = transformDirectoryCallbackCJS;
 }
 
 /**
