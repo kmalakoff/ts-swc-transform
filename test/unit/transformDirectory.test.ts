@@ -57,8 +57,8 @@ function tests({ transformDirectory, type, ext, packageType, expectedCount, opti
 }
 
 describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
-  beforeEach((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
-  after((cb) => rimraf2(TMP_DIR, { disableGlob: true }, cb.bind(null, null)));
+  beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+  after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
   tests({ transformDirectory, type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: FILE_COUNT + 1, options: {}, promise: false });
   tests({ transformDirectory, type: 'esm', ext: '.mjs', packageType: 'module', expectedCount: FILE_COUNT + 1, options: {}, promise: false });
