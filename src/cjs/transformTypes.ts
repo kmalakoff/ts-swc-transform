@@ -7,13 +7,13 @@ import packageRoot from '../lib/packageRoot.js';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const root = packageRoot(__dirname);
-const worker = path.resolve(root, 'dist', 'cjs', 'workers', 'transformDirectory.js');
+const worker = path.resolve(root, 'dist', 'cjs', 'workers', 'transformTypes.js');
 const version = 'lts';
 const call = lazy('node-version-call');
 
-function transformDirectoryCallback(src, dest, type, options, callback) {
+function transformTypesCallback(src, dest, options, callback) {
   try {
-    const res = call()({ version, callbacks: true }, worker, src, dest, type, options);
+    const res = call()({ version, callbacks: true }, worker, src, dest, options);
     return callback(null, res);
   } catch (err) {
     return callback(err);
@@ -23,24 +23,22 @@ function transformDirectoryCallback(src, dest, type, options, callback) {
 /**
  * @param {string} src The source directory to traverse.
  * @param {string} dest The output directory to write files to.
- * @param {string} type The type of transform ('esm' or 'cjs').
- * @param {{sourceMaps: boolean, tsconfig: TsConfigResult}} options Options to pass to swc.
+ * @param {{tsconfig: TsConfigResult}} options Options.
  * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
  * @returns {void | Promise<any>} Optional promise if callback not provided.
  */
-export default function transformDirectory(src, dest, type, options, callback) {
+export default function transformTypes(src, dest, options, callback) {
   if (typeof options === 'function') {
     callback = options;
     options = null;
   }
   options = options || {};
-  if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
-  if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
-  if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
+  if (typeof src !== 'string') throw new Error('transformTypes: unexpected source');
+  if (typeof dest !== 'string') throw new Error('transformTypes: unexpected destination directory');
 
-  if (typeof callback === 'function') return transformDirectoryCallback(src, dest, type, options, callback);
+  if (typeof callback === 'function') return transformTypesCallback(src, dest, options, callback);
   return new Promise((resolve, reject) => {
-    transformDirectoryCallback(src, dest, type, options, function compileCallback(err, result) {
+    transformTypesCallback(src, dest, options, function compileCallback(err, result) {
       err ? reject(err) : resolve(result);
     });
   });
