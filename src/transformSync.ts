@@ -15,6 +15,6 @@ import type { TsConfigResult } from 'get-tsconfig-compat';
  */
 export default function transformSync(contents: string, fileName: string, tsconfig: TsConfigResult) {
   // biome-ignore lint/style/noArguments: <explanation>
-  if (arguments.length === 4) return workerWrapper(contents, fileName, tsconfig, arguments[3]);
+  if (arguments.length === 4) return worker(contents, fileName, tsconfig, arguments[3]);
   return workerWrapper(contents, fileName, tsconfig);
 }
