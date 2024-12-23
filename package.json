@@ -23,14 +23,14 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.mjs",
+      "import": "./dist/esm/index.esm.mjs",
       "require": "./dist/cjs/index.cjs.js",
       "types": "./dist/types/index.d.ts"
     },
     "./*": "./*"
   },
   "main": "dist/cjs/index.cjs.js",
-  "module": "dist/dist/esm/index.mjs",
+  "module": "dist/dist/esm/index.esm.mjs",
   "types": "dist/types/index.d.ts",
   "bin": {
     "tst": "bin/cli.js"
@@ -86,7 +86,7 @@
     "node": ">=0.8"
   },
   "tsds": {
-    "source": "src/index.ts",
+    "source": "src/index.esm.ts",
     "targets": [
       "cjs",
       "esm"
