@@ -3,23 +3,27 @@ import path from 'path-posix';
 import unixify from 'unixify';
 
 /**
- * @param {{path: string, config: Object}} config The path to the loaded TS config and typescript config.
+ * @param {{path: string, tsconfig: Object}} tsconfig The path to the loaded TS tsconfig and typescript tsconfig.
  * @returns {(filePath:string) => boolean} The function to test for typescript files being included or excluded
  */
-export default function createMatcher(config) {
-  const configPath = path.dirname(unixify(config.path));
+export default function createMatcher(tsconfig) {
+  if (tsconfig === undefined) throw new Error('createMatcher: missing tsconfig');
+  if (tsconfig.path === undefined) throw new Error('createMatcher: expecting tsconfig.path');
+  if (tsconfig.config === undefined) throw new Error('createMatcher: expecting tsconfig.config');
+
+  const tsconfigPath = path.dirname(unixify(tsconfig.path));
 
   function matchFn(condition) {
     let pattern = unixify(condition);
-    if (!path.isAbsolute(pattern) && !pattern.startsWith('*')) pattern = path.join(configPath, pattern);
+    if (!path.isAbsolute(pattern) && !pattern.startsWith('*')) pattern = path.join(tsconfigPath, pattern);
 
     return function match(filePath) {
       return filePath.startsWith(pattern) || minimatch(filePath, pattern);
     };
   }
 
-  const includes = (config.config.include || []).map(matchFn);
-  const excludes = (config.config.exclude || []).map(matchFn);
+  const includes = (tsconfig.config.include || []).map(matchFn);
+  const excludes = (tsconfig.config.exclude || []).map(matchFn);
 
   return function matcher(filePath) {
     if (filePath.endsWith('.json')) return false;
