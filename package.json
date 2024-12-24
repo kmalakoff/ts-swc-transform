@@ -45,8 +45,7 @@
     "format": "biome check --write --unsafe src/ test/",
     "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines npm test",
-    "version": "",
-    "version2": "tsds version"
+    "version": "tsds version"
   },
   "dependencies": {
     "@swc/core": "*",
@@ -78,7 +77,7 @@
     "core-js": "^3.39.0",
     "cr": "^0.1.0",
     "react": "^19.0.0",
-    "ts-dev-stack": "^1.4.10",
+    "ts-dev-stack": "^1.5.1",
     "ts-node": "^10.8.2",
     "typescript": "^5.7.2"
   },
@@ -87,10 +86,6 @@
     "node": ">=0.8"
   },
   "tsds": {
-    "source": "src/index.ts",
-    "targets": [
-      "cjs",
-      "esm"
-    ]
+    "source": "src/index.ts"
   }
 }
