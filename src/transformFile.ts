@@ -1,12 +1,10 @@
 import path from 'path';
 import url from 'url';
 import wrapWorker from './lib/wrapWorker.js';
-import worker from './workers/transformFile.js';
-const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const workerPath = path.resolve(__dirname, '..', 'cjs', 'transformFile.js');
 const major = +process.versions.node.split('.')[0];
-const version = major < 14 ? 'lts' : 'local';
-const workerWrapper = wrapWorker(worker, workerPath);
+const version = major < 14 ? 'stable' : 'local';
+const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
+const workerWrapper = wrapWorker(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformFile.js'));
 
 import type { TransformFileCallback, TransformFileOptions } from './types.js';
 
