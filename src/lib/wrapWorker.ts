@@ -2,9 +2,9 @@
 import lazy from './lazy.cjs';
 const call = lazy('node-version-call');
 
-export default function wrapWorker(worker, workerPath: string, sync?: boolean) {
-  function workerWrapperAsync(version, ...args) {
-    if (version === 'local') return worker.apply(null, args);
+export default function wrapWorker(workerPath: string) {
+  return function workerWrapper(version, ...args) {
+    if (version === 'local') return lazy(workerPath)().apply(null, args);
 
     const callback = args.pop();
     try {
@@ -12,11 +12,5 @@ export default function wrapWorker(worker, workerPath: string, sync?: boolean) {
     } catch (err) {
       callback(err);
     }
-  }
-
-  function workerWrapperSync(version, ...args) {
-    if (version === 'local') return worker.apply(null, args);
-    return call()({ version, callbacks: true }, workerPath, ...args);
-  }
-  return sync ? workerWrapperSync : workerWrapperAsync;
+  };
 }
