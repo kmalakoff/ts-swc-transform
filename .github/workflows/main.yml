@@ -21,7 +21,7 @@ jobs:
       - run: git config --global user.email "actions@users.noreply.github.com"
       - run: npm uninstall node-version-use depcheck -g
       - run: npm install node-version-use depcheck -g
-      - run: nvu lts npm ci
+      - run: npm ci
       - run: depcheck
       - run: npm run version
       - run: npm run build
