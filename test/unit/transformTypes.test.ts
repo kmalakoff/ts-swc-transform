@@ -1,5 +1,4 @@
 // remove NODE_OPTIONS from ts-dev-stack
-// biome-ignore lint/performance/noDelete: <explanation>
 delete process.env.NODE_OPTIONS;
 
 import '../lib/removeBindings.cjs';
@@ -18,7 +17,6 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.resolve(__dirname, '..', 'data', 'src');
 const FILE_COUNT = 6;
-const hasPromise = typeof Promise !== 'undefined';
 
 function tests({ transformTypes, expectedCount, options, promise }) {
   it(`transformTypes (options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
@@ -48,5 +46,5 @@ describe('transformTypes', () => {
   // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
   tests({ transformTypes, expectedCount: FILE_COUNT, options: {}, promise: false });
-  !hasPromise || tests({ transformTypes, expectedCount: FILE_COUNT, options: {}, promise: true });
+  tests({ transformTypes, expectedCount: FILE_COUNT, options: {}, promise: true });
 });
