@@ -1,6 +1,6 @@
 import spawn from 'cross-spawn-cb';
 import Iterator from 'fs-iterator';
-import getTS from 'get-tsconfig-compat';
+import * as getTS from 'get-tsconfig-compat';
 import rimraf2 from 'rimraf2';
 
 import { SKIPS, typeFileRegEx } from '../constants.js';
