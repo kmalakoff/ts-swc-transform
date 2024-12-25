@@ -18,7 +18,7 @@ import type { TransformDirectoryCallback, TransformDirectoryOptions } from './ty
  * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
  * @returns {void | Promise<any>} Optional promise if callback not provided.
  */
-export default function transformDirectory(src: string, dest: string, type: string, options?: TransformDirectoryOptions | TransformDirectoryCallback, callback?: TransformDirectoryCallback): undefined | Promise<string> {
+export default function transformDirectory(src: string, dest: string, type: string, options?: TransformDirectoryOptions | TransformDirectoryCallback, callback?: TransformDirectoryCallback): undefined | Promise<string[]> {
   if (typeof options === 'function') {
     callback = options;
     options = null;

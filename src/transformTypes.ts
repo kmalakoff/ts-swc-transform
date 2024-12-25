@@ -17,7 +17,7 @@ import type { TransformTypesCallback, TransformTypesOptions } from './types.js';
  * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
  * @returns {void | Promise<any>} Optional promise if callback not provided.
  */
-export default function transformTypes(src: string, dest: string, options?: TransformTypesOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<string> {
+export default function transformTypes(src: string, dest: string, options?: TransformTypesOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<string[]> {
   if (typeof options === 'function') {
     callback = options;
     options = null;
