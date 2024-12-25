@@ -1,5 +1,4 @@
 // remove NODE_OPTIONS from ts-dev-stack
-// biome-ignore lint/performance/noDelete: <explanation>
 delete process.env.NODE_OPTIONS;
 
 import '../lib/removeBindings.cjs';
@@ -21,7 +20,6 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.resolve(__dirname, '..', 'data', 'src');
 const FILE_COUNT = 6;
-const hasPromise = typeof Promise !== 'undefined';
 const hasRequire = typeof require !== 'undefined';
 
 function tests({ transformDirectory, type, ext, packageType, expectedCount, options, promise }) {
@@ -64,5 +62,5 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   tests({ transformDirectory, type: 'esm', ext: '.mjs', packageType: 'module', expectedCount: FILE_COUNT + 1, options: {}, promise: false });
   tests({ transformDirectory, type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: 2 * FILE_COUNT + 1, options: { sourceMaps: true }, promise: false });
   tests({ transformDirectory, type: 'esm', ext: '.mjs', packageType: 'module', expectedCount: 2 * FILE_COUNT + 1, options: { sourceMaps: true }, promise: false });
-  !hasPromise || tests({ transformDirectory, type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: FILE_COUNT + 1, options: {}, promise: true });
+  tests({ transformDirectory, type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: FILE_COUNT + 1, options: {}, promise: true });
 });
