@@ -1,6 +1,6 @@
 import path from 'path';
 import Iterator from 'fs-iterator';
-import getTS from 'get-tsconfig-compat';
+import * as getTS from 'get-tsconfig-compat';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 
