@@ -21,9 +21,9 @@ function tests({ expectedCount, options, promise }) {
   it(`transformTypes (options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
     const queue = new Queue(1);
     queue.defer((cb) => {
-      if (!promise) return transformTypes(SRC_DIR, TMP_DIR, options, (err, files) => (err ? cb(err) : checkFiles(TMP_DIR, files, expectedCount, options, cb)));
+      if (!promise) return transformTypes(SRC_DIR, TMP_DIR, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results, expectedCount, options, cb)));
       transformTypes(SRC_DIR, TMP_DIR, options)
-        .then((files) => checkFiles(TMP_DIR, files, expectedCount, options, cb))
+        .then((results) => checkFiles(TMP_DIR, results, expectedCount, options, cb))
         .catch(cb);
     });
     queue.await((err) => {

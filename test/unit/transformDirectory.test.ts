@@ -26,9 +26,9 @@ function tests({ type, ext, packageType, expectedCount, options, promise }) {
   it(`transformDirectory (${type} options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
     const queue = new Queue(1);
     queue.defer((cb) => {
-      if (!promise) return transformDirectory(SRC_DIR, TMP_DIR, type, options, (err, files) => (err ? cb(err) : checkFiles(TMP_DIR, files, expectedCount, options, cb)));
+      if (!promise) return transformDirectory(SRC_DIR, TMP_DIR, type, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results, expectedCount, options, cb)));
       transformDirectory(SRC_DIR, TMP_DIR, type, options)
-        .then((files) => checkFiles(TMP_DIR, files, expectedCount, options, cb))
+        .then((results) => checkFiles(TMP_DIR, results, expectedCount, options, cb))
         .catch(cb);
     });
     queue.defer(fs.writeFile.bind(null, path.join(TMP_DIR, 'package.json'), `{"type":"${packageType}"}`, 'utf8'));
