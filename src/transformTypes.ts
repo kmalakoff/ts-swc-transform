@@ -17,7 +17,7 @@ import type { TransformTypesCallback, TransformTypesOptions } from './types.js';
  * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
  * @returns {void | Promise<any>} Optional promise if callback not provided.
  */
-export default function transformTypes(src: string, dest: string, options?: TransformTypesOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<undefined> {
+export default function transformTypes(src: string, dest: string, options?: TransformTypesOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<string> {
   if (typeof options === 'function') {
     callback = options;
     options = null;
@@ -28,8 +28,8 @@ export default function transformTypes(src: string, dest: string, options?: Tran
 
   if (typeof callback === 'function') return workerWrapper(version, src, dest, options, callback);
   return new Promise((resolve, reject) => {
-    workerWrapper(version, src, dest, options, (err, result) => {
-      err ? reject(err) : resolve(result);
+    workerWrapper(version, src, dest, options, (err, filePaths) => {
+      err ? reject(err) : resolve(filePaths);
     });
   });
 }
