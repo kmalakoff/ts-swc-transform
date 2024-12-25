@@ -77,7 +77,7 @@ export default function transformFileWorker(src, dest, type, options, callback) 
           const queue = new Queue();
           queue.defer(fs.writeFile.bind(null, destFilePath, output.code, 'utf8'));
           !options.sourceMaps || queue.defer(fs.writeFile.bind(null, `${destFilePath}.map`, output.map, 'utf8'));
-          queue.await(() => (err ? callback(err) : callback(null, destFilePath)));
+          queue.await(() => (err ? callback(err) : callback(null, path.relative(dest, destFilePath))));
         });
       });
     } catch (err) {
