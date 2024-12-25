@@ -50,7 +50,7 @@
   "dependencies": {
     "@swc/core": "*",
     "call-once-fn": "^1.0.1",
-    "cross-spawn-cb": "^1.1.3",
+    "cross-spawn-cb": "^1.3.0",
     "exit": "^0.1.2",
     "fs-iterator": "^5.1.1",
     "get-tsconfig-compat": "^1.1.1",
