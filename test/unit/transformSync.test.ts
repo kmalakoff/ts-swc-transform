@@ -5,7 +5,7 @@ delete process.env.NODE_OPTIONS;
 import fs from 'fs';
 import path from 'path';
 import url from 'url';
-import getTS from 'get-tsconfig-compat';
+import * as getTS from 'get-tsconfig-compat';
 
 import assert from 'assert';
 

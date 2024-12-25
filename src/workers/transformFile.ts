@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import once from 'call-once-fn';
-import getTS from 'get-tsconfig-compat';
+import * as getTS from 'get-tsconfig-compat';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 

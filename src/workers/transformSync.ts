@@ -1,5 +1,4 @@
 import path from 'path';
-import type { TsConfigResult } from 'get-tsconfig-compat';
 // @ts-ignore
 import lazy from '../lib/lazy.cjs';
 // @ts-ignore
@@ -7,6 +6,7 @@ import loadSWC from '../lib/loadSWC.js';
 const lazyTS = lazy('typescript');
 const lazyTranspiler = lazy('ts-node/transpilers/swc');
 
+import type { TsConfigResult } from 'get-tsconfig-compat';
 export default function transformSyncWorker(contents: string, fileName: string, tsconfig: TsConfigResult, callback) {
   loadSWC((err, swc) => {
     if (err) return callback(err);
