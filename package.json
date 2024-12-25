@@ -45,7 +45,8 @@
     "format": "biome check --write --unsafe src/ test/",
     "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines npm test",
-    "version": "tsds version"
+    "version": "",
+    "version2": "tsds version"
   },
   "dependencies": {
     "@swc/core": "*",
@@ -54,7 +55,7 @@
     "exit": "^0.1.2",
     "fs-iterator": "^5.2.0",
     "get-tsconfig-compat": "^2.0.1",
-    "install-module-linked": "^0.1.0",
+    "install-module-linked": "^0.2.0",
     "is-absolute": "^1.0.0",
     "lazy-cache": "^2.0.2",
     "minimatch": "^3.1.2",
@@ -80,7 +81,7 @@
     "es6-symbol": "^3.1.4",
     "object-assign": "^4.1.1",
     "react": "^19.0.0",
-    "ts-dev-stack": "^1.5.4",
+    "ts-dev-stack": "^1.5.5",
     "ts-node": "^10.8.2",
     "typescript": "^5.7.2"
   },

@@ -29,7 +29,14 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
         options = { ...options, tsconfig };
         const queue = new Queue();
         entries.forEach((entry) => queue.defer(transformFile.bind(null, entry.fullPath, path.dirname(path.join(dest, entry.path)), type, options)));
-        queue.await(callback);
+        queue.await((err) =>
+          err
+            ? callback(err)
+            : callback(
+                null,
+                entries.map((entry) => entry.path)
+              )
+        );
       }
     );
   });
