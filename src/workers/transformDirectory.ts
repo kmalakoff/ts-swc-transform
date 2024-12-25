@@ -25,18 +25,21 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
       },
       (err) => {
         if (err) return callback(err);
-
+        const results = [];
         options = { ...options, tsconfig };
+
         const queue = new Queue();
-        entries.forEach((entry) => queue.defer(transformFile.bind(null, entry.fullPath, path.dirname(path.join(dest, entry.path)), type, options)));
-        queue.await((err) =>
-          err
-            ? callback(err)
-            : callback(
-                null,
-                entries.map((entry) => entry.path)
-              )
+        entries.forEach((entry) =>
+          queue.defer((cb) =>
+            transformFile(entry.fullPath, path.dirname(path.join(dest, entry.path)), type, options, (err, to) => {
+              if (err) return cb(err);
+              results.push({ from: entry, to: path.join(path.relative(src, path.dirname(entry.fullPath)), to) });
+              if (options.sourceMaps) results.push({ from: entry, to: `${path.join(path.relative(src, path.dirname(entry.fullPath)), to)}.map` });
+              cb();
+            })
+          )
         );
+        queue.await((err) => (err ? callback(err) : callback(null, results)));
       }
     );
   });
