@@ -35,7 +35,7 @@ function tests({ expectedCount, options, promise }) {
 
 describe('transformTypes', () => {
   beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-  // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+  after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
   tests({ expectedCount: FILE_COUNT, options: {}, promise: false });
   tests({ expectedCount: FILE_COUNT, options: {}, promise: true });

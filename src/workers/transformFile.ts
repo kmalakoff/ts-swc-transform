@@ -5,7 +5,11 @@ import * as getTS from 'get-tsconfig-compat';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 
-import transformSync from './transformSync.js';
+import swcPrepareOptions from '../lib/swcPrepareOptions.js';
+
+// @ts-ignore
+import lazy from '../lib/lazy.cjs';
+const lazySWC = lazy('@swc/core');
 
 const matchingDeps = '\\s*[\'"`]([^\'"`]+)[\'"`]\\s*';
 const matchingName = '\\s*(?:[\\w${},\\s*]+)\\s*';
@@ -39,26 +43,28 @@ function makeReplacements(code, regex, extensions, extension) {
 const interopClientDefaultExport = "/* CJS INTEROP */ if (exports.__esModule && exports.default) { try { Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) { exports.default[key] = exports[key]; } } catch (_) {}; module.exports = exports.default; }";
 
 export default function transformFileWorker(src, dest, type, options, callback) {
-  fs.readFile(src, 'utf8', (err, contents) => {
+  let tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
+
+  // overrides for cjs
+  if (type === 'cjs') {
+    tsconfig = { ...tsconfig };
+    tsconfig.tsconfig = { ...(tsconfig.config || {}) };
+    tsconfig.config.compilerOptions = { ...(tsconfig.config.compilerOptions || {}) };
+    tsconfig.config.compilerOptions.module = 'CommonJS';
+    tsconfig.config.compilerOptions.target = 'ES5';
+  }
+
+  swcPrepareOptions(tsconfig, (err, swcOptions) => {
     if (err) return callback(err);
-    callback = once(callback);
+    const swc = lazySWC();
 
-    try {
-      let tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
-
-      // overrides for cjs
-      if (type === 'cjs') {
-        tsconfig = { ...tsconfig };
-        tsconfig.tsconfig = { ...(tsconfig.config || {}) };
-        tsconfig.config.compilerOptions = { ...(tsconfig.config.compilerOptions || {}) };
-        tsconfig.config.compilerOptions.module = 'CommonJS';
-        tsconfig.config.compilerOptions.target = 'ES5';
-      }
-
-      const basename = path.basename(src);
-      transformSync(contents, basename, tsconfig, (err, output) => {
-        if (err) return callback(err);
-
+    const basename = path.basename(src);
+    swc
+      .transformFile(src, {
+        ...(basename.endsWith('.tsx') || basename.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
+        filename: basename,
+      })
+      .then((output) => {
         // infer extension and patch .mjs imports
         let ext = path.extname(basename);
         if (type === 'esm') {
@@ -79,9 +85,7 @@ export default function transformFileWorker(src, dest, type, options, callback) 
           !options.sourceMaps || queue.defer(fs.writeFile.bind(null, `${destFilePath}.map`, output.map, 'utf8'));
           queue.await(() => (err ? callback(err) : callback(null, path.relative(dest, destFilePath))));
         });
-      });
-    } catch (err) {
-      callback(err);
-    }
+      })
+      .catch(callback);
   });
 }
