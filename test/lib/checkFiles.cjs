@@ -17,13 +17,7 @@ module.exports = function checkFiles(dir, results, expectedCount, options, callb
 
       assert.equal(results.length, fullyExpected);
       assert.equal(found.length, fullyExpected);
-      assert.deepEqual(
-        difference(
-          results.map((x) => x.to),
-          found
-        ),
-        []
-      );
+      assert.deepEqual(difference(results.map((x) => x.to).sort(), found.sort()), []);
       callback();
     }
   );
