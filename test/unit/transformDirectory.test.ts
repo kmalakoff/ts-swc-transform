@@ -35,6 +35,7 @@ function tests({ type, ext, packageType, expectedCount, options, promise }) {
     hasRequire ||
       queue.defer((cb) => {
         spawn(process.execPath, [`./test${ext}`, 'arg'], { cwd: TMP_DIR, encoding: 'utf8' }, (err, res) => {
+          if (err) console.log(err, res);
           assert.ok(!err, err ? err.message : '');
           assert.equal(cr(res.stdout).split('\n').slice(-2)[0], 'Success!');
           cb();
