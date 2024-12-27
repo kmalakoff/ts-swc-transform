@@ -5,6 +5,7 @@ updates:
     schedule:
       interval: weekly
     ignore:
+      - dependency-name: 'which'
       - dependency-name: 'minimatch'
       - dependency-name: 'ts-node'
       - dependency-name: '@types/mocha'
