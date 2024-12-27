@@ -1,1 +1,1 @@
-ignores: ["ts-swc-transform", "depcheck", "ts-dev-stack", "@types/*", "@biomejs/*", "regenerator-runtime", "react", "getopts-compat", "node-version-call", "ts-node", "typescript", "exit", "es6-map", "es6-map", "object-assign"]
+ignores: ["ts-swc-transform", "depcheck", "@types/*", "@biomejs/*", "regenerator-runtime", "react", "getopts-compat", "node-version-call", "ts-node", "typescript", "exit", "es6-map", "es6-map", "object-assign"]

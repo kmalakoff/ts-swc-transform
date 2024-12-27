@@ -14,7 +14,6 @@ module.exports = function checkFiles(dir, results, expectedCount, options, callb
     (err) => {
       if (err) return callback(err);
       const fullyExpected = options.sourceMaps ? 2 * expectedCount : expectedCount;
-
       assert.equal(results.length, fullyExpected);
       assert.equal(found.length, fullyExpected);
       assert.deepEqual(difference(results.map((x) => x.to).sort(), found.sort()), []);
