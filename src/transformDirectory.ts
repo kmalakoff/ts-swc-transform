@@ -1,7 +1,5 @@
 import path from 'path';
 import url from 'url';
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
 import wrapWorker from './lib/wrapWorker.js';
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
