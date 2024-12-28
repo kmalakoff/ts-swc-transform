@@ -1,6 +1,9 @@
 // remove NODE_OPTIONS from ts-dev-stack
 delete process.env.NODE_OPTIONS;
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import Promise from 'pinkie-promise';
+
 import '../lib/removeBindings.cjs';
 import path from 'path';
 import url from 'url';
@@ -25,11 +28,11 @@ const hasRequire = typeof require !== 'undefined';
 function tests({ type, ext, packageType, expectedCount, options, promise }) {
   it(`transformDirectory (${type} options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
     const queue = new Queue(1);
-    queue.defer((cb) => {
+    queue.defer(async (cb) => {
       if (!promise) return transformDirectory(SRC_DIR, TMP_DIR, type, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results, expectedCount, options, cb)));
-      transformDirectory(SRC_DIR, TMP_DIR, type, options)
-        .then((results) => checkFiles(TMP_DIR, results, expectedCount, options, cb))
-        .catch(cb);
+      const results = await transformDirectory(SRC_DIR, TMP_DIR, type, options);
+      await checkFiles(TMP_DIR, results, expectedCount, options);
+      cb();
     });
     queue.defer(fs.writeFile.bind(null, path.join(TMP_DIR, 'package.json'), `{"type":"${packageType}"}`, 'utf8'));
     hasRequire ||
@@ -49,12 +52,26 @@ function tests({ type, ext, packageType, expectedCount, options, promise }) {
 }
 
 describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
-  beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-  after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+  (() => {
+    // patch and restore promise
+    let rootPromise: Promise;
+    before(() => {
+      rootPromise = global.Promise;
+      global.Promise = Promise;
+    });
+    after(() => {
+      global.Promise = rootPromise;
+    });
+  })();
 
-  tests({ type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: FILE_COUNT, options: {}, promise: false });
-  tests({ type: 'esm', ext: '.mjs', packageType: 'module', expectedCount: FILE_COUNT, options: {}, promise: false });
-  tests({ type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: FILE_COUNT, options: { sourceMaps: true }, promise: false });
-  tests({ type: 'esm', ext: '.mjs', packageType: 'module', expectedCount: FILE_COUNT, options: { sourceMaps: true }, promise: false });
-  tests({ type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: FILE_COUNT, options: {}, promise: true });
+  describe('clean directory', () => {
+    beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+
+    tests({ type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: FILE_COUNT, options: {}, promise: false });
+    tests({ type: 'esm', ext: '.mjs', packageType: 'module', expectedCount: FILE_COUNT, options: {}, promise: false });
+    tests({ type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: FILE_COUNT, options: { sourceMaps: true }, promise: false });
+    tests({ type: 'esm', ext: '.mjs', packageType: 'module', expectedCount: FILE_COUNT, options: { sourceMaps: true }, promise: false });
+    tests({ type: 'cjs', ext: '.js', packageType: 'commonjs', expectedCount: FILE_COUNT, options: {}, promise: true });
+  });
 });
