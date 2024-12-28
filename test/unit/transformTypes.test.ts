@@ -1,6 +1,9 @@
 // remove NODE_OPTIONS from ts-dev-stack
 delete process.env.NODE_OPTIONS;
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import Promise from 'pinkie-promise';
+
 import '../lib/removeBindings.cjs';
 import path from 'path';
 import url from 'url';
@@ -20,11 +23,11 @@ const FILE_COUNT = 6;
 function tests({ expectedCount, options, promise }) {
   it(`transformTypes (options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
     const queue = new Queue(1);
-    queue.defer((cb) => {
+    queue.defer(async (cb) => {
       if (!promise) return transformTypes(SRC_DIR, TMP_DIR, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results, expectedCount, options, cb)));
-      transformTypes(SRC_DIR, TMP_DIR, options)
-        .then((results) => checkFiles(TMP_DIR, results, expectedCount, options, cb))
-        .catch(cb);
+      const results = await transformTypes(SRC_DIR, TMP_DIR, options);
+      await checkFiles(TMP_DIR, results, expectedCount, options, cb);
+      cb();
     });
     queue.await((err) => {
       !err || console.error(err);
@@ -34,9 +37,23 @@ function tests({ expectedCount, options, promise }) {
 }
 
 describe('transformTypes', () => {
-  beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-  after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+  (() => {
+    // patch and restore promise
+    let rootPromise: Promise;
+    before(() => {
+      rootPromise = global.Promise;
+      global.Promise = Promise;
+    });
+    after(() => {
+      global.Promise = rootPromise;
+    });
+  })();
 
-  tests({ expectedCount: FILE_COUNT, options: {}, promise: false });
-  tests({ expectedCount: FILE_COUNT, options: {}, promise: true });
+  describe('clean directory', () => {
+    beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+
+    tests({ expectedCount: FILE_COUNT, options: {}, promise: false });
+    tests({ expectedCount: FILE_COUNT, options: {}, promise: true });
+  });
 });
