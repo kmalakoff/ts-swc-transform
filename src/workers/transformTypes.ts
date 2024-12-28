@@ -2,8 +2,8 @@ import path from 'path';
 import spawn from 'cross-spawn-cb';
 import Iterator from 'fs-iterator';
 import * as getTS from 'get-tsconfig-compat';
+import which from 'module-which';
 import rimraf2 from 'rimraf2';
-import which from '../lib/which.js';
 
 import { SKIPS, typeFileRegEx } from '../constants.js';
 import createMatcher from '../createMatcher.js';
