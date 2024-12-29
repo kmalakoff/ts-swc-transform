@@ -27,9 +27,9 @@ export default function transformFile(src: string, dest: string, type: string, o
   if (typeof type !== 'string') throw new Error('transformFile: unexpected type');
 
   if (typeof callback === 'function') return workerWrapper(version, src, dest, type, options, callback);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) =>
     workerWrapper(version, src, dest, type, options, (err?: Error, result?: string) => {
       err ? reject(err) : resolve(result);
-    });
-  });
+    })
+  );
 }
