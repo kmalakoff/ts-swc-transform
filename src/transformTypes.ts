@@ -25,9 +25,9 @@ export default function transformTypes(src: string, dest: string, options?: Tran
   if (typeof dest !== 'string') throw new Error('transformTypes: unexpected destination directory');
 
   if (typeof callback === 'function') return workerWrapper(version, src, dest, options, callback);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) =>
     workerWrapper(version, src, dest, options, (err, result) => {
       err ? reject(err) : resolve(result);
-    });
-  });
+    })
+  );
 }
