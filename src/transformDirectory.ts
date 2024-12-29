@@ -27,9 +27,9 @@ export default function transformDirectory(src: string, dest: string, type: stri
   if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
 
   if (typeof callback === 'function') return workerWrapper(version, src, dest, type, options, callback);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) =>
     workerWrapper(version, src, dest, type, options, (err, result) => {
       err ? reject(err) : resolve(result);
-    });
-  });
+    })
+  );
 }
