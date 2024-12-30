@@ -1,7 +1,7 @@
 import path from 'path';
 import url from 'url';
 import wrapWorkerSync from './lib/wrapWorkerSync.js';
-const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
+const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
 const workerWrapper = wrapWorkerSync(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformSync.js'));
 
 import type { Output } from '@swc/core';
