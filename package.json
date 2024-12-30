@@ -50,11 +50,10 @@
   },
   "dependencies": {
     "@swc/core": "*",
-    "call-once-fn": "^1.0.1",
     "cross-spawn-cb": "^1.5.7",
     "exit": "^0.1.2",
     "fs-iterator": "^5.2.1",
-    "get-tsconfig-compat": "^2.0.2",
+    "get-tsconfig-compat": "^2.0.3",
     "install-module-linked": "^0.2.0",
     "is-absolute": "^1.0.0",
     "lazy-cache": "^2.0.2",
