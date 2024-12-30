@@ -1,6 +1,5 @@
 import path from 'path';
 import Iterator from 'fs-iterator';
-import * as getTS from 'get-tsconfig-compat';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 
@@ -9,7 +8,7 @@ import createMatcher from '../createMatcher.js';
 import transformFile from './transformFile.js';
 
 export default function transformDirectoryWorker(src, dest, type, options, callback) {
-  const tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
+  const tsconfig = options.tsconfig;
   const matcher = createMatcher(tsconfig);
 
   rimraf2(dest, { disableGlob: true }, () => {
