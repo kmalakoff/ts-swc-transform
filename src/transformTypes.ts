@@ -3,7 +3,7 @@ import url from 'url';
 import wrapWorker from './lib/wrapWorker.js';
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
-const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
+const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
 const workerWrapper = wrapWorker(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformTypes.js'));
 
 import type { TransformResult, TransformTypesCallback, TransformTypesOptions } from './types.js';

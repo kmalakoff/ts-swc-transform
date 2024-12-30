@@ -1,15 +1,15 @@
 import fs from 'fs';
 import path from 'path';
-import once from 'call-once-fn';
 import * as getTS from 'get-tsconfig-compat';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 
 import swcPrepareOptions from '../lib/swcPrepareOptions.js';
 
-// @ts-ignore
-import lazy from '../lib/lazy.cjs';
-const lazySWC = lazy('@swc/core');
+import Module from 'module';
+import lazy from 'lazy-cache';
+const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
+const swcLazy = lazy(_require)('@swc/core');
 
 const matchingDeps = '\\s*[\'"`]([^\'"`]+)[\'"`]\\s*';
 const matchingName = '\\s*(?:[\\w${},\\s*]+)\\s*';
@@ -56,7 +56,7 @@ export default function transformFileWorker(src, dest, type, options, callback) 
 
   swcPrepareOptions(tsconfig, (err, swcOptions) => {
     if (err) return callback(err);
-    const swc = lazySWC();
+    const swc = swcLazy();
 
     const basename = path.basename(src);
     swc

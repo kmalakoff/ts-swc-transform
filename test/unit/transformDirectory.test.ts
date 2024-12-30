@@ -1,6 +1,3 @@
-// remove NODE_OPTIONS from ts-dev-stack
-delete process.env.NODE_OPTIONS;
-
 // biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 import Promise from 'pinkie-promise';
 
