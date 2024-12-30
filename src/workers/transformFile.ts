@@ -43,7 +43,7 @@ function makeReplacements(code, regex, extensions, extension) {
 const interopClientDefaultExport = "/* CJS INTEROP */ if (exports.__esModule && exports.default) { try { Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) { exports.default[key] = exports[key]; } } catch (_) {}; module.exports = exports.default; }";
 
 export default function transformFileWorker(src, dest, type, options, callback) {
-  let tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
+  let tsconfig = options.tsconfig;
 
   // overrides for cjs
   if (type === 'cjs') {

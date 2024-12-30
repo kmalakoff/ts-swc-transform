@@ -1,12 +1,14 @@
 import path from 'path';
 import url from 'url';
-import wrapWorker from './lib/wrapWorker.js';
+import loadTsConfig from './loadTsConfig.js';
+
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
+import wrapWorker from './lib/wrapWorker.js';
 const workerWrapper = wrapWorker(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformDirectory.js'));
 
-import type { TransformDirectoryCallback, TransformDirectoryOptions, TransformResult } from './types.js';
+import type { ConfigOptions, TransformDirectoryCallback, TransformResult } from './types.js';
 /**
  * @param {string} src The source directory to traverse.
  * @param {string} dest The output directory to write files to.
@@ -15,20 +17,29 @@ import type { TransformDirectoryCallback, TransformDirectoryOptions, TransformRe
  * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
  * @returns {void | Promise<any>} Optional promise if callback not provided.
  */
-export default function transformDirectory(src: string, dest: string, type: string, options?: TransformDirectoryOptions | TransformDirectoryCallback, callback?: TransformDirectoryCallback): undefined | Promise<TransformResult[]> {
-  if (typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  options = options || {};
-  if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
-  if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
-  if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
+export default function transformDirectory(src: string, dest: string, type: string, options?: ConfigOptions | TransformDirectoryCallback, callback?: TransformDirectoryCallback): undefined | Promise<TransformResult[]> {
+  try {
+    if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
+    if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
+    if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
 
-  if (typeof callback === 'function') return workerWrapper(version, src, dest, type, options, callback);
-  return new Promise((resolve, reject) =>
-    workerWrapper(version, src, dest, type, options, (err, result) => {
-      err ? reject(err) : resolve(result);
-    })
-  );
+    if (typeof options === 'function') {
+      callback = options as TransformDirectoryCallback;
+      options = null;
+    }
+    options = options || {};
+    const tsconfig = loadTsConfig({ cwd: src, ...options }, 'transformDirectory');
+    options = { tsconfig, ...options };
+
+    if (typeof callback === 'function') return workerWrapper(version, src, dest, type, options, callback);
+    return new Promise((resolve, reject) =>
+      workerWrapper(version, src, dest, type, options, (err, result) => {
+        err ? reject(err) : resolve(result);
+      })
+    );
+  } catch (err) {
+    console.log(err);
+    if (callback) callback(err);
+    else return Promise.reject(err);
+  }
 }

@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import Iterator from 'fs-iterator';
-import * as getTS from 'get-tsconfig-compat';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 import resolveOnceMap from 'resolve-once-map-cb';
@@ -17,7 +16,7 @@ import { SKIPS, typeFileRegEx } from '../constants.js';
 import createMatcher from '../createMatcher.js';
 
 export default function transformTypesWorker(src, dest, options, callback) {
-  const tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
+  const tsconfig = options.tsconfig;
   const matcher = createMatcher(tsconfig);
   const existingTypes = [];
 
@@ -101,7 +100,6 @@ export default function transformTypesWorker(src, dest, options, callback) {
 // import createMatcher from '../createMatcher.js';
 
 // export default function transformTypesWorker(src, dest, options, callback) {
-//   const tsconfig = options.tsconfig ? options.tsconfig : getTS.getTsconfig(src);
 //   const matcher = createMatcher(tsconfig);
 
 //   const tsArgs = [];

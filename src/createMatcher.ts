@@ -1,16 +1,14 @@
 import minimatch from 'minimatch';
 import path from 'path-posix';
 import unixify from 'unixify';
+import loadTsConfig from './loadTsConfig.js';
 
 /**
  * @param {{path: string, tsconfig: Object}} tsconfig The path to the loaded TS tsconfig and typescript tsconfig.
  * @returns {(filePath:string) => boolean} The function to test for typescript files being included or excluded
  */
-export default function createMatcher(tsconfig) {
-  if (tsconfig === undefined) throw new Error('createMatcher: missing tsconfig');
-  if (tsconfig.path === undefined) throw new Error('createMatcher: expecting tsconfig.path');
-  if (tsconfig.config === undefined) throw new Error('createMatcher: expecting tsconfig.config');
-
+export default function createMatcher(tsconfig_) {
+  const tsconfig = loadTsConfig({ tsconfig: tsconfig_ }, 'transformTypes');
   const tsconfigPath = path.dirname(unixify(tsconfig.path));
 
   function matchFn(condition) {
