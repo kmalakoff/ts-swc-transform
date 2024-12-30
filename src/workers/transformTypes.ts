@@ -8,9 +8,10 @@ import resolveOnceMap from 'resolve-once-map-cb';
 import rimraf2 from 'rimraf2';
 import type { SourceFile, WriteFileCallbackData } from 'typescript';
 
-// @ts-ignore
-import lazy from '../lib/lazy.cjs';
-const lazyTS = lazy('typescript');
+import Module from 'module';
+import lazy from 'lazy-cache';
+const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
+const tsLazy = lazy(_require)('typescript');
 
 import { SKIPS, typeFileRegEx } from '../constants.js';
 import createMatcher from '../createMatcher.js';
@@ -65,7 +66,7 @@ export default function transformTypesWorker(src, dest, options, callback) {
         const queue = new Queue();
         existingTypes.map((filePath) => queue.defer(writeType.bind(null, filePath)));
 
-        const ts = lazyTS();
+        const ts = tsLazy();
         const options = {
           ...(tsconfig.compilerOptions || {}),
           allowJs: true,
