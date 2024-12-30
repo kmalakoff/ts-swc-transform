@@ -28,7 +28,7 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
         options = { ...options, tsconfig };
 
         const queue = new Queue();
-        entries.forEach((entry) =>
+        entries.forEach((entry) => {
           queue.defer((cb) =>
             transformFile(entry.fullPath, path.dirname(path.join(dest, entry.path)), type, options, (err, to) => {
               if (err) return cb(err);
@@ -36,8 +36,8 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
               if (options.sourceMaps) results.push({ from: entry, to: `${path.join(path.relative(src, path.dirname(entry.fullPath)), to)}.map` });
               cb();
             })
-          )
-        );
+          );
+        });
         queue.await((err) => (err ? callback(err) : callback(null, results)));
       }
     );
