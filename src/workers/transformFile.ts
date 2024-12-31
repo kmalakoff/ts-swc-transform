@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import * as getTS from 'get-tsconfig-compat';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 
@@ -54,38 +53,36 @@ export default function transformFileWorker(src, dest, type, options, callback) 
     tsconfig.config.compilerOptions.target = 'ES5';
   }
 
-  swcPrepareOptions(tsconfig, (err, swcOptions) => {
-    if (err) return callback(err);
-    const swc = swcLazy();
+  const swcOptions = swcPrepareOptions(tsconfig);
+  const swc = swcLazy();
 
-    const basename = path.basename(src);
-    swc
-      .transformFile(src, {
-        ...(basename.endsWith('.tsx') || basename.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
-        filename: basename,
-      })
-      .then((output) => {
-        // infer extension and patch .mjs imports
-        let ext = path.extname(basename);
-        if (type === 'esm') {
-          ext = importReplaceMJS.indexOf(ext) >= 0 ? '.mjs' : ext;
-          output.code = makeReplacements(output.code, regexESM, importReplaceMJS, '.mjs');
-          ext = importReplaceCJS.indexOf(ext) >= 0 ? '.cjs' : ext;
-          output.code = makeReplacements(output.code, regexESM, importReplaceCJS, '.cjs');
-        } else {
-          ext = requireReplaceJS.indexOf(ext) >= 0 ? '.js' : ext;
-          output.code = makeReplacements(output.code, regexCJS, requireReplaceJS, '.js');
-          output.code += interopClientDefaultExport;
-        }
-        const destFilePath = path.join(dest, basename.replace(/\.[^/.]+$/, '') + ext);
+  const basename = path.basename(src);
+  swc
+    .transformFile(src, {
+      ...(basename.endsWith('.tsx') || basename.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
+      filename: basename,
+    })
+    .then((output) => {
+      // infer extension and patch .mjs imports
+      let ext = path.extname(basename);
+      if (type === 'esm') {
+        ext = importReplaceMJS.indexOf(ext) >= 0 ? '.mjs' : ext;
+        output.code = makeReplacements(output.code, regexESM, importReplaceMJS, '.mjs');
+        ext = importReplaceCJS.indexOf(ext) >= 0 ? '.cjs' : ext;
+        output.code = makeReplacements(output.code, regexESM, importReplaceCJS, '.cjs');
+      } else {
+        ext = requireReplaceJS.indexOf(ext) >= 0 ? '.js' : ext;
+        output.code = makeReplacements(output.code, regexCJS, requireReplaceJS, '.js');
+        output.code += interopClientDefaultExport;
+      }
+      const destFilePath = path.join(dest, basename.replace(/\.[^/.]+$/, '') + ext);
 
-        mkdirp(path.dirname(destFilePath), () => {
-          const queue = new Queue();
-          queue.defer(fs.writeFile.bind(null, destFilePath, output.code, 'utf8'));
-          !options.sourceMaps || queue.defer(fs.writeFile.bind(null, `${destFilePath}.map`, output.map, 'utf8'));
-          queue.await(() => (err ? callback(err) : callback(null, path.relative(dest, destFilePath))));
-        });
-      })
-      .catch(callback);
-  });
+      mkdirp(path.dirname(destFilePath), () => {
+        const queue = new Queue();
+        queue.defer(fs.writeFile.bind(null, destFilePath, output.code, 'utf8'));
+        !options.sourceMaps || queue.defer(fs.writeFile.bind(null, `${destFilePath}.map`, output.map, 'utf8'));
+        queue.await((err) => (err ? callback(err) : callback(null, path.relative(dest, destFilePath))));
+      });
+    })
+    .catch(callback);
 }
