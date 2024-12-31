@@ -1,23 +1,24 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const path = require('path');
-const installModule = require('install-module-linked');
-const Queue = require('queue-cb');
-const resolve = require('resolve');
+
+var fs = require('fs');
+var path = require('path');
+var installModule = require('install-module-linked');
+var Queue = require('queue-cb');
+var resolve = require('resolve');
 
 function patch(callback) {
-  const swcPackagePath = resolve.sync('@swc/core/package.json');
-  const swcDir = path.dirname(path.dirname(swcPackagePath));
-  const { optionalDependencies } = JSON.parse(fs.readFileSync(swcPackagePath, 'utf8'));
-  const depKey = `${process.platform}-${process.arch}`;
+  var swcPackagePath = resolve.sync('@swc/core/package.json');
+  var swcDir = path.dirname(path.dirname(swcPackagePath));
+  var optionalDependencies = JSON.parse(fs.readFileSync(swcPackagePath, 'utf8')).optionalDependencies;
+  var depKey = process.platform + "-" + process.arch;
 
-  const queue = new Queue();
+  var queue = new Queue();
   Object.keys(optionalDependencies)
-    .filter((name) => name.indexOf(depKey) >= 0)
-    .map((name) => {
-      queue.defer((callback) => {
-        const version = optionalDependencies[name];
-        const installString = `${name}${version ? `@${version}` : ''}`;
+    .filter(function (name) { return name.indexOf(depKey) >= 0 })
+    .map(function (name) {
+      queue.defer(function (callback) {
+        var version = optionalDependencies[name];
+        var installString = version ? name + "@" + version : name;
         installModule(installString, path.dirname(swcDir), callback);
       });
     });
@@ -25,7 +26,12 @@ function patch(callback) {
 }
 
 // run patch
-patch((err) => {
-  !err || console.log(err.message);
-  process.exit(0);
+patch(function (err) {
+  if (err) {
+    console.log("postinstall failed. Error: " + err.message)
+    process.exit(-1);
+  } else {
+    console.log("postinstall succeeded")
+    process.exit(0);
+  }
 });
