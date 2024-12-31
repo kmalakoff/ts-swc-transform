@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { moduleRegEx, typeFileRegEx } from './constants.js';
-import extensions from './extensions.js';
-import toPath from './toPath.js';
-import type { Context } from './types.js';
+import { moduleRegEx, typeFileRegEx } from './constants';
+import extensions from './extensions';
+import toPath from './toPath';
+import type { Context } from './types';
 
 const indexExtensions = extensions.map((x) => `index${x}`);
 
