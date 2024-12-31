@@ -23,7 +23,7 @@ function patch(callback) {
         var installString = version ? name + '@' + version : name;
         installModule(installString, nodeModules, function (err) {
           if (err) return callback(err);
-          console.log('installed ' + path.join(nodeModules, installString));
+          console.log('installed ' + path.join(nodeModules, name));
           callback();
         });
       });
