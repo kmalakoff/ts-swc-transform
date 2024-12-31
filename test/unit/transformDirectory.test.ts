@@ -1,7 +1,6 @@
 // biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 import Promise from 'pinkie-promise';
 
-import '../lib/removeBindings.cjs';
 import path from 'path';
 import url from 'url';
 import rimraf2 from 'rimraf2';

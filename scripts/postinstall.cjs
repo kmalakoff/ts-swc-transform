@@ -1,11 +1,11 @@
-import fs from 'fs';
-import path from 'path';
-import installModule from 'install-module-linked';
-import Queue from 'queue-cb';
-import resolve from 'resolve';
-import resolveOnce from 'resolve-once-cb';
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+const installModule = require('install-module-linked');
+const Queue = require('queue-cb');
+const resolve = require('resolve');
 
-function installSWCBindings(callback) {
+function patch(callback) {
   const swcPackagePath = resolve.sync('@swc/core/package.json');
   const swcDir = path.dirname(path.dirname(swcPackagePath));
   const { optionalDependencies } = JSON.parse(fs.readFileSync(swcPackagePath, 'utf8'));
@@ -24,4 +24,8 @@ function installSWCBindings(callback) {
   queue.await(callback);
 }
 
-export default resolveOnce(installSWCBindings);
+// run patch
+patch((err) => {
+  !err || console.log(err.message);
+  process.exit(0);
+});

@@ -36,13 +36,14 @@
     "tst": "bin/cli.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "scripts"
   ],
   "scripts": {
     "build": "tsds build",
-    "depcheck": "depcheck",
     "deploy": "tsds deploy",
-    "format": "biome check --write --unsafe src/ test/",
+    "format": "biome check --write --unsafe src/ test/ scripts/",
+    "postinstall": "node ./scripts/postinstall.cjs",
     "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines npm test",
     "version": "",
@@ -63,7 +64,6 @@
     "path-posix": "^1.0.0",
     "queue-cb": "^1.4.4",
     "resolve": "^1.22.10",
-    "resolve-once-cb": "^0.1.2",
     "resolve-once-map-cb": "^0.1.0",
     "rimraf2": "^2.8.2",
     "ts-node": "*",
