@@ -3,9 +3,9 @@ import path from 'path';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 
-import patchCJS from '../lib/patchCJS.js';
-import patchESM from '../lib/patchESM.js';
-import swcPrepareOptions from '../lib/swcPrepareOptions.js';
+import patchCJS from '../lib/patchCJS';
+import patchESM from '../lib/patchESM';
+import swcPrepareOptions from '../lib/swcPrepareOptions';
 
 import Module from 'module';
 import lazy from 'lazy-cache';

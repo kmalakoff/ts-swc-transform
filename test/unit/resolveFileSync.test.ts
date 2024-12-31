@@ -19,7 +19,7 @@ describe('resolveFileSync', () => {
     });
 
     it('test.js parentPath', () => {
-      const file = resolveFileSync('./test.js', context);
+      const file = resolveFileSync('./test', context);
       assert.equal(file, path.join(SRC_DIR, 'test.ts'));
     });
 
@@ -37,8 +37,8 @@ describe('resolveFileSync', () => {
       assert.equal(file, path.join(SRC_DIR, 'test.ts'));
     });
 
-    it('test.js', () => {
-      const file = resolveFileSync('./test.js', context);
+    it('test', () => {
+      const file = resolveFileSync('./test', context);
       assert.equal(file, path.join(SRC_DIR, 'test.ts'));
     });
 
