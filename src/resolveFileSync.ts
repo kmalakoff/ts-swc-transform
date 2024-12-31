@@ -16,8 +16,7 @@ export default function resolveFileSync(specifier: string, context?: Context) {
     stats = fs.statSync(filePath);
   } catch (_err) {}
 
-  // biome-ignore lint/complexity/useOptionalChain: <explanation>
-  if ((stats && stats.isDirectory()) || specifier.endsWith('/')) {
+  if (stats?.isDirectory() || specifier.endsWith('/')) {
     const items = fs.readdirSync(filePath);
     const item = items.find((x) => indexExtensions.indexOf(x) >= 0);
     if (item) return path.join(filePath, item);
