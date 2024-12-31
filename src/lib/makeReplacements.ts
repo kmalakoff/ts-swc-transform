@@ -1,5 +1,5 @@
 import path from 'path';
-import { moduleRegEx } from '../constants.js';
+import { moduleRegEx } from '../constants';
 
 export default function makeReplacements(code, regex, extensions, extension) {
   let matches = [];

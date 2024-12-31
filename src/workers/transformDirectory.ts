@@ -3,9 +3,9 @@ import Iterator from 'fs-iterator';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 
-import { SKIPS, typeFileRegEx } from '../constants.js';
-import createMatcher from '../createMatcher.js';
-import transformFile from './transformFile.js';
+import { SKIPS, typeFileRegEx } from '../constants';
+import createMatcher from '../createMatcher';
+import transformFile from './transformFile';
 
 export default function transformDirectoryWorker(src, dest, type, options, callback) {
   const tsconfig = options.tsconfig;
