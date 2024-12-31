@@ -1,6 +1,6 @@
 import path from 'path';
-import { importRegEx } from '../constants.js';
-import makeReplacements from './makeReplacements.js';
+import { importRegEx } from '../constants';
+import makeReplacements from './makeReplacements';
 
 const cjsExtensions = ['.cjs', '.cts'];
 const esmExtensions = ['.js', '.ts', '.tsx', '.mts', '.mjs'];
