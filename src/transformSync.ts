@@ -2,9 +2,9 @@ import path from 'path';
 import url from 'url';
 import * as getTS from 'get-tsconfig-compat';
 
-import wrapWorkerSync from './lib/wrapWorkerSync.js';
+import wrapWorkerSync from './lib/wrapWorkerSync';
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
-const workerWrapper = wrapWorkerSync(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformSync.js'));
+const workerWrapper = wrapWorkerSync(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformSync.cjs'));
 
 import type { Output } from '@swc/core';
 import type { TsConfigResult } from 'get-tsconfig-compat';

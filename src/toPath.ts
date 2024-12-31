@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import isAbsolute from 'is-absolute';
 import resolve from 'resolve';
-import { moduleRegEx } from './constants.js';
-import fileURLToPath from './lib/fileURLToPath.js';
-import type { Context } from './types.js';
+import { moduleRegEx } from './constants';
+import fileURLToPath from './lib/fileURLToPath';
+import type { Context } from './types';
 
 function getParentPath(context: Context) {
   if (context.parentPath) return path.dirname(context.parentPath);

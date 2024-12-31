@@ -1,14 +1,14 @@
 import path from 'path';
 import url from 'url';
-import loadTsConfig from './loadTsConfig.js';
+import loadTsConfig from './loadTsConfig';
 
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
-import wrapWorker from './lib/wrapWorker.js';
-const workerWrapper = wrapWorker(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformTypes.js'));
+import wrapWorker from './lib/wrapWorker';
+const workerWrapper = wrapWorker(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformTypes.cjs'));
 
-import type { ConfigOptions, TransformResult, TransformTypesCallback } from './types.js';
+import type { ConfigOptions, TransformTypesCallback } from './types';
 
 /**
  * @param {string} src The source directory to traverse.
@@ -17,7 +17,7 @@ import type { ConfigOptions, TransformResult, TransformTypesCallback } from './t
  * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
  * @returns {void | Promise<any>} Optional promise if callback not provided.
  */
-export default function transformTypes(src: string, dest: string, options?: ConfigOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<TransformResult[]> {
+export default function transformTypes(src: string, dest: string, options?: ConfigOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<string[]> {
   try {
     if (typeof src !== 'string') throw new Error('transformTypes: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformTypes: unexpected destination directory');

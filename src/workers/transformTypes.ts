@@ -6,8 +6,8 @@ import lazy from 'lazy-cache';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const tsLazy = lazy(_require)('typescript');
 
-import { SKIPS, typeFileRegEx } from '../constants.js';
-import createMatcher from '../createMatcher.js';
+import { SKIPS, typeFileRegEx } from '../constants';
+import createMatcher from '../createMatcher';
 
 export default function transformTypesWorker(src, dest, options, callback) {
   const tsconfig = options.tsconfig;

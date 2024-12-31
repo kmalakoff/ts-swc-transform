@@ -2,8 +2,8 @@ import './polyfills.cjs';
 import assert from 'assert';
 import exit from 'exit';
 
-import App from './lib/App.js';
-import string from './lib/string.js';
+import App from './lib/App';
+import string from './lib/string';
 import stringInfer from './lib/string';
 // @ts-ignore
 import stringCTS from './lib/stringCTS.cjs';

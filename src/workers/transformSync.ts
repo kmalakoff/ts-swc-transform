@@ -1,4 +1,4 @@
-import swcPrepareOptions from '../lib/swcPrepareOptions.js';
+import swcPrepareOptions from '../lib/swcPrepareOptions';
 
 import Module from 'module';
 import lazy from 'lazy-cache';

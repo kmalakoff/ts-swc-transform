@@ -1,14 +1,14 @@
 import path from 'path';
 import url from 'url';
-import loadTsConfig from './loadTsConfig.js';
+import loadTsConfig from './loadTsConfig';
 
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
-import wrapWorker from './lib/wrapWorker.js';
-const workerWrapper = wrapWorker(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformFile.js'));
+import wrapWorker from './lib/wrapWorker';
+const workerWrapper = wrapWorker(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformFile.cjs'));
 
-import type { ConfigOptions, TransformFileCallback } from './types.js';
+import type { ConfigOptions, TransformFileCallback } from './types';
 
 /**
  * @param {string} src The source directory to traverse.
