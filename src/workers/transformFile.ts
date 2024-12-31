@@ -75,13 +75,13 @@ export default function transformFileWorker(src, dest, type, options, callback) 
         output.code = makeReplacements(output.code, regexCJS, requireReplaceJS, '.js');
         output.code += interopClientDefaultExport;
       }
-      const destFilePath = path.join(dest, basename.replace(/\.[^/.]+$/, '') + ext);
+      const outPath = path.join(dest, basename.replace(/\.[^/.]+$/, '') + ext);
 
-      mkdirp(path.dirname(destFilePath), () => {
+      mkdirp(path.dirname(outPath), () => {
         const queue = new Queue();
-        queue.defer(fs.writeFile.bind(null, destFilePath, output.code, 'utf8'));
-        !options.sourceMaps || queue.defer(fs.writeFile.bind(null, `${destFilePath}.map`, output.map, 'utf8'));
-        queue.await((err) => (err ? callback(err) : callback(null, path.relative(dest, destFilePath))));
+        queue.defer(fs.writeFile.bind(null, outPath, output.code, 'utf8'));
+        !options.sourceMaps || queue.defer(fs.writeFile.bind(null, `${outPath}.map`, output.map, 'utf8'));
+        queue.await((err) => (err ? callback(err) : callback(null, outPath)));
       });
     })
     .catch(callback);
