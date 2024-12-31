@@ -1,17 +1,17 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "extends": ["./biome.json"],
- "linter": {
+  "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "complexity": {
-        "useOptionalChain": "off",
         "useArrowFunction": "off"
-       },
+      },
       "style": {
-       "noVar": "off"
-       }
+        "noVar": "off",
+        "useTemplate": "off"
+      }
     }
   }}
 
