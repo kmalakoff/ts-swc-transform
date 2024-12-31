@@ -1,6 +1,6 @@
 import './polyfills.cjs';
-import exit from 'exit';
 import assert from 'assert';
+import exit from 'exit';
 
 import App from './lib/App.js';
 // @ts-ignore
