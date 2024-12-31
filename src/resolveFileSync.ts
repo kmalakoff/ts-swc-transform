@@ -9,27 +9,25 @@ const indexExtensions = extensions.map((x) => `index${x}`);
 
 export default function resolveFileSync(specifier: string, context?: Context) {
   const filePath = toPath(specifier, context);
-  const ext = path.extname(filePath);
-
-  let stats: fs.Stats | undefined;
+  let stat: fs.Stats;
   try {
-    stats = fs.statSync(filePath);
+    stat = fs.statSync(filePath);
   } catch (_err) {}
 
-  if (stats?.isDirectory() || specifier.endsWith('/')) {
-    const items = fs.readdirSync(filePath);
-    const item = items.find((x) => indexExtensions.indexOf(x) >= 0);
-    if (item) return path.join(filePath, item);
+  try {
+    if (stat?.isDirectory() || specifier.endsWith('/')) {
+      const items = fs.readdirSync(filePath);
+      const item = items.find((x) => indexExtensions.indexOf(x) >= 0);
+      if (item) return path.join(filePath, item);
+    } else if (!stat && !moduleRegEx.test(specifier)) {
+      const fileName = path.basename(filePath).replace(/(\.[^/.]+)+$/, '');
+      const items = fs.readdirSync(path.dirname(filePath));
+      const item = items.find((x) => x.startsWith(fileName) && !typeFileRegEx.test(x) && extensions.indexOf(path.extname(x)) >= 0);
+      if (item) return path.join(path.dirname(filePath), item);
+    }
+    // return what was found
+    return stat ? filePath : null;
+  } catch (_err) {
+    return null;
   }
-
-  // look up the extension
-  else if (!stats || (!ext && !moduleRegEx.test(specifier))) {
-    const fileName = path.basename(filePath).replace(/(\.[^/.]+)+$/, '');
-    const items = fs.readdirSync(path.dirname(filePath));
-    const item = items.find((x) => x.startsWith(fileName) && !typeFileRegEx.test(x) && extensions.indexOf(path.extname(x)) >= 0);
-    if (item) return path.join(path.dirname(filePath), item);
-  }
-
-  // return what was found
-  return stats ? filePath : null;
 }

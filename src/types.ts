@@ -12,3 +12,5 @@ export interface ConfigOptions {
 export type TransformDirectoryCallback = (err?: Error, filePaths?: string[]) => void;
 export type TransformFileCallback = (err?: Error, destFilePath?: string) => void;
 export type TransformTypesCallback = (err?: Error, filePaths?: string[]) => void;
+
+export type Matcher = (filePath: string) => boolean;
