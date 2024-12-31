@@ -1,14 +1,12 @@
-import type { TsConfigResult } from 'get-tsconfig-compat';
 import minimatch from 'minimatch';
 import path from 'path-posix';
 import unixify from 'unixify';
 import loadTsConfig from './loadTsConfig';
 
-/**
- * @param {TsConfigResult} tsconfig The configuration.
- * @returns {(filePath:string) => boolean} The function to test for typescript files being included or excluded
- */
-export default function createMatcher(tsConfig: TsConfigResult) {
+import type { TsConfigResult } from 'get-tsconfig-compat';
+import type { Matcher } from './types';
+
+export default function createMatcher(tsConfig: TsConfigResult): Matcher {
   const tsconfig = loadTsConfig({ tsconfig: tsConfig }, 'transformTypes');
   const tsconfigPath = path.dirname(unixify(tsconfig.path));
 
@@ -24,7 +22,7 @@ export default function createMatcher(tsConfig: TsConfigResult) {
   const includes = (tsconfig.config.include || []).map(matchFn);
   const excludes = (tsconfig.config.exclude || []).map(matchFn);
 
-  return function matcher(filePath: string): boolean {
+  return function matcher(filePath) {
     if (filePath.endsWith('.json')) return false;
 
     filePath = unixify(filePath);
