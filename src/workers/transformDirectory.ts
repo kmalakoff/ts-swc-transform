@@ -30,10 +30,10 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
         const queue = new Queue();
         entries.forEach((entry) => {
           queue.defer((cb) =>
-            transformFile(entry.fullPath, path.dirname(path.join(dest, entry.path)), type, options, (err, to) => {
+            transformFile(entry.fullPath, path.dirname(path.join(dest, entry.path)), type, options, (err, outPath) => {
               if (err) return cb(err);
-              results.push({ from: entry, to: path.join(path.relative(src, path.dirname(entry.fullPath)), to) });
-              if (options.sourceMaps) results.push({ from: entry, to: `${path.join(path.relative(src, path.dirname(entry.fullPath)), to)}.map` });
+              results.push(outPath);
+              if (options.sourceMaps) results.push(`${outPath}.map`);
               cb();
             })
           );

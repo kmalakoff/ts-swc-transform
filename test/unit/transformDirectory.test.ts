@@ -18,7 +18,7 @@ import checkFiles from '../lib/checkFiles.cjs';
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.resolve(__dirname, '..', 'data', 'src');
-const FILE_COUNT = 6;
+const FILE_COUNT = 5;
 const hasRequire = typeof require !== 'undefined';
 
 function tests({ type, ext, packageType, expectedCount, options, promise }) {

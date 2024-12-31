@@ -7,7 +7,7 @@ function worker(dir, results, expectedCount, options, callback) {
   const iterator = new Iterator(dir);
   iterator.forEach(
     (entry, cb) => {
-      if (entry.stats.isFile()) found.push(entry.path);
+      if (entry.stats.isFile()) found.push(entry.fullPath);
       cb();
     },
     { callbacks: true, concurrency: Infinity },
@@ -16,7 +16,7 @@ function worker(dir, results, expectedCount, options, callback) {
       const fullyExpected = options.sourceMaps ? 2 * expectedCount : expectedCount;
       assert.equal(results.length, fullyExpected);
       assert.equal(found.length, fullyExpected);
-      assert.deepEqual(difference(results.map((x) => x.to).sort(), found.sort()), []);
+      assert.deepEqual(difference(results.sort(), found.sort()), []);
       callback();
     }
   );
