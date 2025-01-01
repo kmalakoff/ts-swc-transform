@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const { createMatcher, extensions, resolveFileSync, toPath, transformFile, transformDirectory, transformSync } = require('ts-swc-transform');
+const { createMatcher, extensions, resolveFileSync, toPath, transformDirectory, transformSync } = require('ts-swc-transform');
 const swc = require('ts-swc-transform');
 
 describe('exports .cjs', () => {
@@ -13,8 +13,6 @@ describe('exports .cjs', () => {
     assert.equal(typeof resolveFileSync, 'function', 'resolveFileSync is a function');
     assert.ok(!!toPath, 'toPath exists');
     assert.equal(typeof toPath, 'function', 'toPath is a function');
-    assert.ok(!!transformFile, 'transformFile exists');
-    assert.equal(typeof transformFile, 'function', 'transformFile is a function');
     assert.ok(!!transformDirectory, 'transformDirectory exists');
     assert.equal(typeof transformDirectory, 'function', 'transformDirectory is a function');
     assert.ok(!!transformSync, 'transformSync exists');
@@ -30,8 +28,6 @@ describe('exports .cjs', () => {
     assert.equal(typeof swc.resolveFileSync, 'function', 'resolveFileSync is a function');
     assert.ok(!!swc.toPath, 'toPath exists');
     assert.equal(typeof swc.toPath, 'function', 'toPath is a function');
-    assert.ok(!!swc.transformFile, 'transformFile exists');
-    assert.equal(typeof swc.transformFile, 'function', 'transformFile is a function');
     assert.ok(!!swc.transformDirectory, 'transformDirectory exists');
     assert.equal(typeof swc.transformDirectory, 'function', 'transformDirectory is a function');
     assert.ok(!!swc.transformSync, 'transformSync exists');
