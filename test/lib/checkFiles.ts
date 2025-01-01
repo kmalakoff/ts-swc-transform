@@ -1,6 +1,6 @@
-const assert = require('assert');
-const difference = require('lodash.difference');
-const Iterator = require('fs-iterator');
+import assert from 'assert';
+import Iterator from 'fs-iterator';
+import difference from 'lodash.difference';
 
 function worker(dir, results, expectedCount, options, callback) {
   const found = [];
@@ -22,11 +22,7 @@ function worker(dir, results, expectedCount, options, callback) {
   );
 }
 
-module.exports = function checkFiles(dir, results, expectedCount, options, callback) {
+export default function checkFiles(dir, results, expectedCount, options, callback?) {
   if (typeof callback === 'function') return worker(dir, results, expectedCount, options, callback);
-  return new Promise((resolve, reject) => {
-    worker(dir, results, expectedCount, options, (err) => {
-      err ? reject(err) : resolve(undefined);
-    });
-  });
-};
+  return new Promise((resolve, reject) => worker(dir, results, expectedCount, options, (err) => (err ? reject(err) : resolve(undefined))));
+}

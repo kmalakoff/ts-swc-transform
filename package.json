@@ -8,9 +8,9 @@
     "typescript",
     "transform",
     "transformSync",
+    "transformFile",
     "transformDirectory",
     "directory",
-    "transformFile",
     "file"
   ],
   "homepage": "https://github.com/kmalakoff/ts-swc-transform",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@swc/core": "*",
-    "cross-spawn-cb": "^1.5.8",
+    "cross-spawn-cb": "^2.0.0",
     "exit": "^0.1.2",
     "fs-iterator": "^5.2.1",
     "get-tsconfig-compat": "^2.0.3",

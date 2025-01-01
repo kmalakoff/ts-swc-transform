@@ -5,7 +5,6 @@ export { default as extensions } from './extensions';
 export { default as resolveFileSync } from './resolveFileSync';
 export { default as toPath } from './toPath';
 
-export { default as transformFile } from './transformFile';
 export { default as transformDirectory } from './transformDirectory';
 export { default as transformSync } from './transformSync';
 export { default as transformTypes } from './transformTypes';

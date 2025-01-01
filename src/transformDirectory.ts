@@ -32,11 +32,7 @@ export default function transformDirectory(src: string, dest: string, type: stri
     options = { tsconfig, ...options };
 
     if (typeof callback === 'function') return workerWrapper(version, src, dest, type, options, callback);
-    return new Promise((resolve, reject) =>
-      workerWrapper(version, src, dest, type, options, (err, result) => {
-        err ? reject(err) : resolve(result);
-      })
-    );
+    return new Promise((resolve, reject) => workerWrapper(version, src, dest, type, options, (err, result) => (err ? reject(err) : resolve(result))));
   } catch (err) {
     console.log(err);
     if (callback) callback(err);

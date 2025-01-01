@@ -12,7 +12,7 @@ import lazy from 'lazy-cache';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const swcLazy = lazy(_require)('@swc/core');
 
-export default function transformFileWorker(src, dest, type, options, callback) {
+export default function transformFile(entry, dest, type, options, callback) {
   let tsconfig = options.tsconfig;
 
   // overrides for cjs
@@ -27,15 +27,15 @@ export default function transformFileWorker(src, dest, type, options, callback) 
   const swcOptions = swcPrepareOptions(tsconfig);
   const swc = swcLazy();
 
-  const basename = path.basename(src);
   swc
-    .transformFile(src, {
-      ...(basename.endsWith('.tsx') || basename.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
-      filename: basename,
+    .transformFile(entry.fullPath, {
+      ...(entry.basename.endsWith('.tsx') || entry.basename.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
+      filename: entry.basename,
     })
     .then((output) => {
-      const ext = type === 'esm' ? patchESM(output, options, basename) : patchCJS(output, options, basename);
-      const outPath = path.join(dest, basename.replace(/\.[^/.]+$/, '') + ext);
+      const extTarget = type === 'esm' ? patchESM(entry, output, options) : patchCJS(entry, output, options);
+      const ext = path.extname(entry.path);
+      const outPath = path.join(dest, (ext ? entry.path.slice(0, -ext.length) : entry.path) + extTarget);
 
       mkdirp(path.dirname(outPath), () => {
         const queue = new Queue();
