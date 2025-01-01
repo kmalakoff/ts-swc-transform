@@ -1,8 +1,7 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
-
+import fs from 'fs';
 import path from 'path';
 import url from 'url';
+import Pinkie from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 
 import assert from 'assert';
@@ -12,15 +11,15 @@ import Queue from 'queue-cb';
 
 // @ts-ignore
 import { transformDirectory } from 'ts-swc-transform';
-import checkFiles from '../lib/checkFiles.cjs';
+import checkFiles from '../lib/checkFiles';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.resolve(__dirname, '..', 'data', 'src');
-const FILE_COUNT = 6;
+const FILE_COUNT = 9;
 const hasRequire = typeof require !== 'undefined';
 
-function tests({ type, expectedCount, options, promise }) {
+function tests({ type, testFile, expectedCount, options, promise }) {
   it(`transformDirectory (${type} options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
     const queue = new Queue(1);
     queue.defer(async (cb) => {
@@ -29,9 +28,10 @@ function tests({ type, expectedCount, options, promise }) {
       await checkFiles(TMP_DIR, results, expectedCount, options);
       cb();
     });
+    queue.defer(fs.writeFile.bind(null, path.join(TMP_DIR, 'package.json'), `{"type":"${type === 'cjs' ? 'commonjs' : 'module'}"}`, 'utf8'));
     hasRequire ||
       queue.defer((cb) => {
-        spawn(process.execPath, [`./test${options.extensions[type]}`, 'arg'], { cwd: TMP_DIR, encoding: 'utf8' }, (err, res) => {
+        spawn(process.execPath, [testFile], { cwd: TMP_DIR, encoding: 'utf8' }, (err, res) => {
           if (err) console.log(err, res);
           assert.ok(!err, err ? err.message : '');
           assert.equal(cr(res.stdout).split('\n').slice(-2)[0], 'Success!');
@@ -48,10 +48,13 @@ function tests({ type, expectedCount, options, promise }) {
 describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   (() => {
     // patch and restore promise
+    // @ts-ignore
+    // @ts-ignore
     let rootPromise: Promise;
     before(() => {
       rootPromise = global.Promise;
-      global.Promise = Promise;
+      // @ts-ignore
+      global.Promise = Pinkie;
     });
     after(() => {
       global.Promise = rootPromise;
@@ -60,12 +63,13 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
 
   describe('clean directory', () => {
     beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-    after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
-    tests({ type: 'cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: false });
-    tests({ type: 'esm', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.js' } }, promise: false });
-    tests({ type: 'cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
-    tests({ type: 'esm', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
-    tests({ type: 'cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: true });
+    tests({ type: 'cjs', testFile: './testFolder.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.js', esm: '.mjs' } }, promise: false });
+    tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: false });
+    tests({ type: 'esm', testFile: './test.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.js' } }, promise: false });
+    tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
+    tests({ type: 'esm', testFile: './test.mjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
+    tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: true });
   });
 });

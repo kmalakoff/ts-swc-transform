@@ -5,7 +5,7 @@ import rimraf2 from 'rimraf2';
 
 import { SKIPS, typeFileRegEx } from '../constants';
 import createMatcher from '../createMatcher';
-import transformFile from './transformFile';
+import transformFile from '../lib/transformFile';
 
 export default function transformDirectoryWorker(src, dest, type, options, callback) {
   const tsconfig = options.tsconfig;
@@ -25,12 +25,12 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
       (err) => {
         if (err) return callback(err);
         const results = [];
-        options = { ...options, tsconfig };
+        options = { ...options, tsconfig, src, dest };
 
         const queue = new Queue();
         entries.forEach((entry) => {
           queue.defer((cb) =>
-            transformFile(entry.fullPath, path.dirname(path.join(dest, entry.path)), type, options, (err, outPath) => {
+            transformFile(entry, dest, type, options, (err, outPath) => {
               if (err) return cb(err);
               results.push(outPath);
               if (options.sourceMaps) results.push(`${outPath}.map`);

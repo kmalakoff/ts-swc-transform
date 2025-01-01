@@ -1,20 +1,18 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
-
 import path from 'path';
 import url from 'url';
+import Pinkie from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 
 import Queue from 'queue-cb';
 
 // @ts-ignore
 import { transformTypes } from 'ts-swc-transform';
-import checkFiles from '../lib/checkFiles.cjs';
+import checkFiles from '../lib/checkFiles';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.resolve(__dirname, '..', 'data', 'src');
-const FILE_COUNT = 6;
+const FILE_COUNT = 9;
 
 function tests({ expectedCount, options, promise }) {
   it(`transformTypes (options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
@@ -35,10 +33,13 @@ function tests({ expectedCount, options, promise }) {
 describe('transformTypes', () => {
   (() => {
     // patch and restore promise
+    // @ts-ignore
+    // @ts-ignore
     let rootPromise: Promise;
     before(() => {
       rootPromise = global.Promise;
-      global.Promise = Promise;
+      // @ts-ignore
+      global.Promise = Pinkie;
     });
     after(() => {
       global.Promise = rootPromise;
