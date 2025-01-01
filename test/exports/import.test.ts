@@ -1,6 +1,6 @@
 import assert from 'assert';
 // @ts-ignore
-import { createMatcher, extensions, resolveFileSync, toPath, transformDirectory, transformFile, transformSync } from 'ts-swc-transform';
+import { createMatcher, extensions, resolveFileSync, toPath, transformDirectory, transformSync } from 'ts-swc-transform';
 // @ts-ignore
 import * as swc from 'ts-swc-transform';
 
@@ -14,8 +14,6 @@ describe('exports .ts', () => {
     assert.equal(typeof resolveFileSync, 'function', 'resolveFileSync is a function');
     assert.ok(!!toPath, 'toPath exists');
     assert.equal(typeof toPath, 'function', 'toPath is a function');
-    assert.ok(!!transformFile, 'transformFile exists');
-    assert.equal(typeof transformFile, 'function', 'transformFile is a function');
     assert.ok(!!transformDirectory, 'transformDirectory exists');
     assert.equal(typeof transformDirectory, 'function', 'transformDirectory is a function');
     assert.ok(!!transformSync, 'transformSync exists');
@@ -31,8 +29,6 @@ describe('exports .ts', () => {
     assert.equal(typeof swc.resolveFileSync, 'function', 'resolveFileSync is a function');
     assert.ok(!!swc.toPath, 'toPath exists');
     assert.equal(typeof swc.toPath, 'function', 'toPath is a function');
-    assert.ok(!!swc.transformFile, 'transformFile exists');
-    assert.equal(typeof swc.transformFile, 'function', 'transformFile is a function');
     assert.ok(!!swc.transformDirectory, 'transformDirectory exists');
     assert.equal(typeof swc.transformDirectory, 'function', 'transformDirectory is a function');
     assert.ok(!!swc.transformSync, 'transformSync exists');
