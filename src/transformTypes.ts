@@ -27,15 +27,11 @@ export default function transformTypes(src: string, dest: string, options?: Conf
       options = null;
     }
     options = options || {};
-    const tsconfig = loadTsConfig({ cwd: src, ...options }, 'transformFile');
+    const tsconfig = loadTsConfig({ cwd: src, ...options }, 'transformTypes');
     options = { tsconfig, ...options };
 
     if (typeof callback === 'function') return workerWrapper(version, src, dest, options, callback);
-    return new Promise((resolve, reject) =>
-      workerWrapper(version, src, dest, options, (err, result) => {
-        err ? reject(err) : resolve(result);
-      })
-    );
+    return new Promise((resolve, reject) => workerWrapper(version, src, dest, options, (err, result) => (err ? reject(err) : resolve(result))));
   } catch (err) {
     console.log(err);
     if (callback) callback(err);
