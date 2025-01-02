@@ -32,9 +32,6 @@
   "main": "dist/cjs/index.cjs",
   "module": "dist/dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
-  "bin": {
-    "tst": "bin/cli.js"
-  },
   "files": [
     "dist",
     "scripts"
@@ -51,7 +48,6 @@
   },
   "dependencies": {
     "@swc/core": "*",
-    "cross-spawn-cb": "^2.0.0",
     "exit": "^0.1.2",
     "fs-iterator": "^5.2.1",
     "get-tsconfig-compat": "^2.0.3",
@@ -60,7 +56,7 @@
     "lazy-cache": "^2.0.2",
     "minimatch": "^3.1.2",
     "mkdirp-classic": "^0.5.3",
-    "node-version-call": "^1.4.2",
+    "node-version-call": "^1.4.3",
     "path-posix": "^1.0.0",
     "queue-cb": "^1.4.4",
     "resolve": "^1.22.10",
@@ -75,6 +71,7 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.2",
     "cr": "^0.1.0",
+    "cross-spawn-cb": "^2.0.1",
     "es6-map": "^0.1.5",
     "es6-symbol": "^3.1.4",
     "lodash.difference": "^4.5.0",
