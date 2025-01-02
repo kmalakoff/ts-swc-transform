@@ -1,3 +1,4 @@
+import { sync as installBindingsSync } from '../lib/installBindings';
 import swcPrepareOptions from '../lib/swcPrepareOptions';
 
 import Module from 'module';
@@ -6,14 +7,13 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 const swcLazy = lazy(_require)('@swc/core');
 
 import type { TsConfigResult } from 'get-tsconfig-compat';
-export default function transformSyncWorker(contents: string, fileName: string, tsconfig: TsConfigResult, callback) {
+export default function transformSyncWorker(contents: string, fileName: string, tsconfig: TsConfigResult) {
+  installBindingsSync();
+
   const swcOptions = swcPrepareOptions(tsconfig);
   const swc = swcLazy();
-  swc
-    .transform(contents, {
-      ...(fileName.endsWith('.tsx') || fileName.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
-      filename: fileName,
-    })
-    .then((output) => callback(null, output))
-    .catch(callback);
+  return swc.transformSync(contents, {
+    ...(fileName.endsWith('.tsx') || fileName.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
+    filename: fileName,
+  });
 }

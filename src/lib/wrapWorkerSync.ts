@@ -8,6 +8,6 @@ export default function wrapWorkerSync(workerPath: string) {
 
   return function workerWrapperSync(version, ...args) {
     if (version === 'local') return workerLazy().apply(null, args);
-    return call()({ version, callbacks: true }, workerPath, ...args);
+    return call()(version, workerPath, ...args);
   };
 }
