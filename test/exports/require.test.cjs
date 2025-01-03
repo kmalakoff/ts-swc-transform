@@ -1,14 +1,14 @@
 const assert = require('assert');
 
-const { createMatcher, extensions, resolveFileSync, toPath, transformDirectory, transformSync } = require('ts-swc-transform');
+const { createMatcher, constants, resolveFileSync, toPath, transformDirectory, transformSync } = require('ts-swc-transform');
 const swc = require('ts-swc-transform');
 
 describe('exports .cjs', () => {
   it('named exports', () => {
     assert.ok(!!createMatcher, 'createMatcher exists');
     assert.equal(typeof createMatcher, 'function', 'createMatcher is a function');
-    assert.ok(!!extensions, 'extensions exists');
-    assert.equal(typeof extensions, 'object', 'extensions is an array');
+    assert.ok(!!constants, 'constants exists');
+    assert.equal(typeof constants, 'object', 'constants is an array');
     assert.ok(!!resolveFileSync, 'resolveFileSync exists');
     assert.equal(typeof resolveFileSync, 'function', 'resolveFileSync is a function');
     assert.ok(!!toPath, 'toPath exists');
@@ -20,8 +20,8 @@ describe('exports .cjs', () => {
   });
 
   it('default exports', () => {
-    assert.ok(!!swc.extensions, 'extensions exists');
-    assert.equal(typeof swc.extensions, 'object', 'extensions is an array');
+    assert.ok(!!swc.constants, 'constants exists');
+    assert.equal(typeof swc.constants, 'object', 'constants is an array');
     assert.ok(!!swc.createMatcher, 'createMatcher exists');
     assert.equal(typeof swc.createMatcher, 'function', 'createMatcher is a function');
     assert.ok(!!swc.resolveFileSync, 'resolveFileSync exists');

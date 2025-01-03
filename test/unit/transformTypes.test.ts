@@ -19,9 +19,13 @@ function tests({ expectedCount, options, promise }) {
     const queue = new Queue(1);
     queue.defer(async (cb) => {
       if (!promise) return transformTypes(SRC_DIR, TMP_DIR, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results, expectedCount, options, cb)));
-      const results = await transformTypes(SRC_DIR, TMP_DIR, options);
-      await checkFiles(TMP_DIR, results, expectedCount, options, cb);
-      cb();
+      try {
+        const results = await transformTypes(SRC_DIR, TMP_DIR, options);
+        await checkFiles(TMP_DIR, results, expectedCount, options);
+        cb();
+      } catch (err) {
+        done(err);
+      }
     });
     queue.await((err) => {
       !err || console.error(err);
@@ -33,7 +37,6 @@ function tests({ expectedCount, options, promise }) {
 describe('transformTypes', () => {
   (() => {
     // patch and restore promise
-    // @ts-ignore
     // @ts-ignore
     let rootPromise: Promise;
     before(() => {
