@@ -1,9 +1,10 @@
 import assert from 'assert';
+import path from 'path';
 import Iterator from 'fs-iterator';
 import difference from 'lodash.difference';
 
 function worker(dir, results, expectedCount, options, callback) {
-  const found = [];
+  let found = [];
   const iterator = new Iterator(dir);
   iterator.forEach(
     (entry, cb) => {
@@ -14,9 +15,11 @@ function worker(dir, results, expectedCount, options, callback) {
     (err) => {
       if (err) return callback(err);
       const fullyExpected = options.sourceMaps ? 2 * expectedCount : expectedCount;
+      results = results.map((x) => path.normalize(x));
+      found = found.map((x) => path.normalize(x));
       assert.equal(results.length, fullyExpected);
       assert.equal(found.length, fullyExpected);
-      assert.deepEqual(difference(results.sort(), found.sort()), []);
+      assert.deepEqual(difference(results, found), []);
       callback();
     }
   );

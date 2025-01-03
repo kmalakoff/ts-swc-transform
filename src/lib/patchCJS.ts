@@ -1,5 +1,4 @@
-import { requireRegEx } from '../constants';
-import extensions from '../extensions';
+import { extensions, requireRegEx } from '../constants';
 import makeReplacements from './makeReplacements';
 
 // https://github.com/vercel/next.js/blob/20b63e13ab2631d6043277895d373aa31a1b327c/packages/next/taskfile-swc.js#L118-L125

@@ -25,9 +25,13 @@ function tests({ type, testFile, expectedCount, options, promise }) {
     const queue = new Queue(1);
     queue.defer(async (cb) => {
       if (!promise) return transformDirectory(SRC_DIR, TMP_DIR, type, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results, expectedCount, options, cb)));
-      const results = await transformDirectory(SRC_DIR, TMP_DIR, type, options);
-      await checkFiles(TMP_DIR, results, expectedCount, options);
-      cb();
+      try {
+        const results = await transformDirectory(SRC_DIR, TMP_DIR, type, options);
+        await checkFiles(TMP_DIR, results, expectedCount, options);
+        cb();
+      } catch (err) {
+        done(err);
+      }
     });
     queue.defer(fs.writeFile.bind(null, path.join(TMP_DIR, 'package.json'), `{"type":"${type === 'cjs' ? 'commonjs' : 'module'}"}`, 'utf8'));
     hasRequire ||
@@ -49,7 +53,6 @@ function tests({ type, testFile, expectedCount, options, promise }) {
 describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   (() => {
     // patch and restore promise
-    // @ts-ignore
     // @ts-ignore
     let rootPromise: Promise;
     before(() => {
