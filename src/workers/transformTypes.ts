@@ -1,4 +1,3 @@
-import path from 'path';
 import Iterator from 'fs-iterator';
 import rimraf2 from 'rimraf2';
 
@@ -7,7 +6,7 @@ import lazy from 'lazy-cache';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const tsLazy = lazy(_require)('typescript');
 
-import { typeFileRegEx } from '../constants';
+import { SKIPS, typeFileRegEx } from '../constants';
 import createMatcher from '../createMatcher';
 
 export default function transformTypesWorker(src, dest, options, callback) {
@@ -22,6 +21,7 @@ export default function transformTypesWorker(src, dest, options, callback) {
         if (!entry.stats.isFile()) return;
         if (!matcher(entry.fullPath)) return;
         if (typeFileRegEx.test(entry.basename)) return;
+        if (SKIPS.indexOf(entry.basename) >= 0) return;
         entries.push(entry);
       },
       { concurrency: Infinity },
