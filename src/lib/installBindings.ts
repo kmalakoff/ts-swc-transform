@@ -1,4 +1,4 @@
-import installBindings from '../workers/installBindings';
+import installBindings, { isInstalled } from '../workers/installBindings';
 export default installBindings;
 
 import path from 'path';
@@ -13,5 +13,8 @@ const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
 
 const call = lazy(_require)('node-version-call');
-import memoize from 'lodash.memoize';
-export const sync = memoize(() => call()({ version, callbacks: true }, workerPath));
+const install = lazy((target) => {
+  return isInstalled(target) ? target : call()({ version, callbacks: true }, workerPath, target);
+});
+
+export const sync = (target) => install(target)();

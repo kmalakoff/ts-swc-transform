@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { moduleRegEx, typeFileRegEx } from './constants';
-import extensions from './extensions';
+import { extensions, moduleRegEx, typeFileRegEx } from './constants';
 import toPath from './toPath';
 import type { Context } from './types';
 

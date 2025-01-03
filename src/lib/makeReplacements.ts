@@ -18,7 +18,7 @@ export default function makeReplacements(entry, code, regex, extensions, extensi
       if (!ext) {
         try {
           const basename = path.basename(specifier);
-          const fullPath = path.normalize(path.join(src, path.dirname(entry.path), specifier));
+          const fullPath = path.join(src, path.dirname(entry.path), specifier);
           const files = fs.readdirSync(path.dirname(fullPath), { withFileTypes: true });
           const found = files.find((x) => x.name === basename);
           if (found && found.isDirectory()) return specifier;
