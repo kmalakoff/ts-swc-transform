@@ -12,9 +12,9 @@ const workerPath = path.resolve(__dirname, '..', '..', 'cjs', 'workers', 'instal
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
 
-const call = lazy(_require)('node-version-call');
+const callLazy = lazy(_require)('node-version-call');
 const install = lazy((target) => {
-  return isInstalled(target) ? target : call()({ version, callbacks: true }, workerPath, target);
+  return isInstalled(target) ? target : callLazy()({ version, callbacks: true }, workerPath, target);
 });
 
 export const sync = (target) => install(target)();
