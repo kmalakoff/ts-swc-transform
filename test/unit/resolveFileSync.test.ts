@@ -7,7 +7,7 @@ import assert from 'assert';
 import { resolveFileSync } from 'ts-swc-transform';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const SRC_DIR = path.resolve(__dirname, '..', 'data', 'src');
+const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 
 describe('resolveFileSync', () => {
   describe('parentPath', () => {
