@@ -15,8 +15,8 @@ import checkFiles from '../lib/checkFiles';
 import removeBindings from '../lib/removeBindings.cjs';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
-const TMP_DIR = path.resolve(__dirname, '..', '..', '.tmp');
-const SRC_DIR = path.resolve(__dirname, '..', 'data', 'src');
+const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
+const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 const FILE_COUNT = 9;
 const hasRequire = typeof require !== 'undefined';
 
