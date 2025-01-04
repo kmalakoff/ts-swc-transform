@@ -3,7 +3,7 @@ import Iterator from 'fs-iterator';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
 
-import { SKIPS, extensions, typeFileRegEx } from '../constants';
+import { extensions, typeFileRegEx } from '../constants';
 import createMatcher from '../createMatcher';
 import installBindings from '../lib/installBindings';
 import transformFile from '../lib/transformFile';
@@ -23,9 +23,9 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
       iterator.forEach(
         (entry) => {
           if (!entry.stats.isFile()) return;
-          if (!matcher(entry.fullPath)) return;
+          if (entry.basename[0] === '.') return;
           if (typeFileRegEx.test(entry.basename)) return;
-          if (SKIPS.indexOf(entry.basename) >= 0) return;
+          if (!matcher(entry.fullPath)) return;
           const ext = path.extname(entry.basename);
           if (ext && extensions.indexOf(ext) < 0) return;
           entries.push(entry);
