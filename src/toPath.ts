@@ -25,7 +25,7 @@ export default function toPath(specifier: string, context?: Context) {
   if (isAbsolute(specifier)) return specifier;
   if (specifier[0] === '.') {
     const parentPath = context ? getParentPath(context) : process.cwd();
-    return path.resolve(parentPath, specifier);
+    return path.join(parentPath, specifier);
   }
   if (moduleRegEx.test(specifier)) {
     const parentPath = context ? getParentPath(context) : process.cwd();
@@ -40,12 +40,12 @@ export default function toPath(specifier: string, context?: Context) {
       },
     });
     if (!pkg || !pkg.json.module) return main; // no modules, use main
-    if (pkg.json.name === specifier) return path.resolve(pkg.dir, pkg.json.module); // the module
+    if (pkg.json.name === specifier) return path.join(pkg.dir, pkg.json.module); // the module
 
     // a relative path. Only accept if it doesn't break the relative naming and it exists
-    const modulePath = path.resolve(pkg.dir, pkg.json.module);
-    const mainPath = path.resolve(pkg.dir, pkg.json.main);
-    const moduleResolved = path.resolve(modulePath, path.relative(mainPath, main));
+    const modulePath = path.join(pkg.dir, pkg.json.module);
+    const mainPath = path.join(pkg.dir, pkg.json.main);
+    const moduleResolved = path.join(modulePath, path.relative(mainPath, main));
     return moduleResolved.indexOf(specifier.replace(pkg.json.name, '')) < 0 || !existsSync(moduleResolved) ? main : moduleResolved;
   }
 

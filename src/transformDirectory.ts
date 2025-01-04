@@ -5,7 +5,7 @@ import loadTsConfig from './loadTsConfig';
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
-const workerPath = path.resolve(__dirname, '..', 'cjs', 'workers', 'transformDirectory.cjs');
+const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformDirectory.cjs');
 
 import Module from 'module';
 import lazy from 'lazy-cache';
