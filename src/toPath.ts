@@ -6,6 +6,15 @@ import { moduleRegEx } from './constants';
 import fileURLToPath from './lib/fileURLToPath';
 import type { Context } from './types';
 
+const existsSync = (test) => {
+  try {
+    (fs.accessSync || fs.statSync)(test);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
+
 function getParentPath(context: Context) {
   if (context.parentPath) return path.dirname(context.parentPath);
   return context.parentURL ? path.dirname(toPath(context.parentURL)) : process.cwd();
@@ -37,7 +46,7 @@ export default function toPath(specifier: string, context?: Context) {
     const modulePath = path.resolve(pkg.dir, pkg.json.module);
     const mainPath = path.resolve(pkg.dir, pkg.json.main);
     const moduleResolved = path.resolve(modulePath, path.relative(mainPath, main));
-    return moduleResolved.indexOf(specifier.replace(pkg.json.name, '')) < 0 || !fs.existsSync(moduleResolved) ? main : moduleResolved;
+    return moduleResolved.indexOf(specifier.replace(pkg.json.name, '')) < 0 || !existsSync(moduleResolved) ? main : moduleResolved;
   }
 
   return specifier;
