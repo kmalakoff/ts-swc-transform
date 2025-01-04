@@ -5,8 +5,22 @@ import loadTsConfig from './loadTsConfig';
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
-import wrapWorker from './lib/wrapWorker';
-const workerWrapper = wrapWorker(path.resolve(__dirname, '..', 'cjs', 'workers', 'transformDirectory.cjs'));
+const workerPath = path.resolve(__dirname, '..', 'cjs', 'workers', 'transformDirectory.cjs');
+
+import Module from 'module';
+import lazy from 'lazy-cache';
+const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
+const callLazy = lazy(_require)('node-version-call');
+const workerLazy = lazy(_require)(workerPath);
+
+function dispatch(version, src, dest, type, options, callback) {
+  if (version === 'local') return workerLazy()(src, dest, type, options, callback);
+  try {
+    callback(null, callLazy()({ version, callbacks: true }, workerPath, src, dest, type, options));
+  } catch (err) {
+    callback(err);
+  }
+}
 
 import type { ConfigOptions, TransformDirectoryCallback } from './types';
 /**
@@ -31,8 +45,8 @@ export default function transformDirectory(src: string, dest: string, type: stri
     const tsconfig = loadTsConfig({ cwd: src, ...options }, 'transformDirectory');
     options = { tsconfig, ...options };
 
-    if (typeof callback === 'function') return workerWrapper(version, src, dest, type, options, callback);
-    return new Promise((resolve, reject) => workerWrapper(version, src, dest, type, options, (err, result) => (err ? reject(err) : resolve(result))));
+    if (typeof callback === 'function') return dispatch(version, src, dest, type, options, callback);
+    return new Promise((resolve, reject) => dispatch(version, src, dest, type, options, (err, result) => (err ? reject(err) : resolve(result))));
   } catch (err) {
     console.log(err);
     if (callback) callback(err);
