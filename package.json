@@ -51,7 +51,7 @@
     "exit": "^0.1.2",
     "fs-iterator": "^5.2.10",
     "get-tsconfig-compat": "^2.0.3",
-    "install-module-linked": "^1.0.6",
+    "install-module-linked": "^1.0.7",
     "is-absolute": "^1.0.0",
     "lazy-cache": "^2.0.2",
     "minimatch": "^3.1.2",
