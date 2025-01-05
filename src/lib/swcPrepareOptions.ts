@@ -10,6 +10,7 @@ const transpilerLazy = lazy(_require)('ts-node/transpilers/swc');
 import type { TsConfigResult } from 'get-tsconfig-compat';
 
 export default function swcPrepareOptions(tsconfig: TsConfigResult) {
+  console.log('tsconfig', tsconfig);
   try {
     const ts = tsLazy();
     const swc = swcLazy();
@@ -18,5 +19,6 @@ export default function swcPrepareOptions(tsconfig: TsConfigResult) {
     return transpiler.createSwcOptions(parsed.options, undefined, swc, 'swc');
   } catch (err) {
     console.log(`swcPrepareOptions failed: ${err.message}`);
+    return {};
   }
 }

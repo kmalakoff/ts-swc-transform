@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import endsWith from 'lodash.endswith';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 
@@ -29,7 +30,7 @@ export default function transformFile(entry, dest, type, options, callback) {
 
   swc
     .transformFile(entry.fullPath, {
-      ...(entry.basename.endsWith('.tsx') || entry.basename.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
+      ...(endsWith(entry.basename, '.tsx') || endsWith(entry.basename, '.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
       filename: entry.basename,
     })
     .then((output) => {

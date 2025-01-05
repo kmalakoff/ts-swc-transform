@@ -1,9 +1,9 @@
+import type { TsConfigResult } from 'get-tsconfig-compat';
+import endsWith from 'lodash.endswith';
 import minimatch from 'minimatch';
 import path from 'path-posix';
 import unixify from 'unixify';
 import loadTsConfig from './loadTsConfig';
-
-import type { TsConfigResult } from 'get-tsconfig-compat';
 import type { Matcher } from './types';
 
 export default function createMatcher(tsConfig: TsConfigResult): Matcher {
@@ -23,7 +23,7 @@ export default function createMatcher(tsConfig: TsConfigResult): Matcher {
   const excludes = (tsconfig.config.exclude || []).map(matchFn);
 
   return function matcher(filePath) {
-    if (filePath.endsWith('.json')) return false;
+    if (endsWith(filePath, '.json')) return false;
 
     filePath = unixify(filePath);
     for (let i = 0; i < excludes.length; ++i) {
