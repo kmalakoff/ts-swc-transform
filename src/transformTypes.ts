@@ -46,7 +46,6 @@ export default function transformTypes(src: string, dest: string, options?: Conf
     if (typeof callback === 'function') return dispatch(version, src, dest, options, callback);
     return new Promise((resolve, reject) => dispatch(version, src, dest, options, (err, result) => (err ? reject(err) : resolve(result))));
   } catch (err) {
-    console.log(err);
     if (callback) callback(err);
     else return Promise.reject(err);
   }
