@@ -1,3 +1,4 @@
+import endsWith from 'lodash.endswith';
 import { sync as installBindingsSync } from '../lib/installBindings';
 import swcPrepareOptions from '../lib/swcPrepareOptions';
 
@@ -14,7 +15,7 @@ export default function transformSyncWorker(contents: string, fileName: string, 
   const swcOptions = swcPrepareOptions(tsconfig);
   const swc = swcLazy();
   return swc.transformSync(contents, {
-    ...(fileName.endsWith('.tsx') || fileName.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
+    ...(endsWith(fileName, '.tsx') || endsWith(fileName, '.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
     filename: fileName,
   });
 }
