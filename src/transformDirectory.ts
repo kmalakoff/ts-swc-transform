@@ -48,7 +48,6 @@ export default function transformDirectory(src: string, dest: string, type: stri
     if (typeof callback === 'function') return dispatch(version, src, dest, type, options, callback);
     return new Promise((resolve, reject) => dispatch(version, src, dest, type, options, (err, result) => (err ? reject(err) : resolve(result))));
   } catch (err) {
-    console.log(err);
     if (callback) callback(err);
     else return Promise.reject(err);
   }
