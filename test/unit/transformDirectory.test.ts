@@ -38,7 +38,7 @@ function tests({ type, testFile, expectedCount, options, promise }) {
       queue.defer((cb) => {
         spawn(process.execPath, [testFile], { cwd: TMP_DIR, encoding: 'utf8' }, (err, res) => {
           if (err) console.log(err, res);
-          assert.ok(!err, err ? err.message : '');
+          if (err) return done(err);
           assert.equal(cr(res.stdout).split('\n').slice(-2)[0], 'Success!');
           cb();
         });

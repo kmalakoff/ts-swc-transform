@@ -13,9 +13,9 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 const callLazy = lazy(_require)('node-version-call');
 const workerLazy = lazy(_require)(workerPath);
 
-function dispatch(version, src, dest, options) {
-  if (version === 'local') return workerLazy()(src, dest, options);
-  return callLazy()(version, workerPath, src, dest, options);
+function dispatch(version, contents, fileName, tsconfig) {
+  if (version === 'local') return workerLazy()(contents, fileName, tsconfig);
+  return callLazy()(version, workerPath, contents, fileName, tsconfig);
 }
 
 import type { Output } from '@swc/core';
