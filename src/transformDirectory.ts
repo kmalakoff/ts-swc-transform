@@ -1,5 +1,6 @@
 import path from 'path';
 import url from 'url';
+import ensureBindings from './lib/ensureBindings';
 import loadTsConfig from './loadTsConfig';
 
 const major = +process.versions.node.split('.')[0];
@@ -45,7 +46,7 @@ export default function transformDirectory(src: string, dest: string, type: stri
     const tsconfig = loadTsConfig({ cwd: src, ...options }, 'transformDirectory');
     options = { tsconfig, ...options };
 
-    if (typeof callback === 'function') return dispatch(version, src, dest, type, options, callback);
+    if (typeof callback === 'function') return dispatch(version, src, dest, type, options, callback) as undefined;
     return new Promise((resolve, reject) => dispatch(version, src, dest, type, options, (err, result) => (err ? reject(err) : resolve(result))));
   } catch (err) {
     if (callback) callback(err);

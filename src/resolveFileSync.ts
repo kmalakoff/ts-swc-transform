@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import endsWith from 'lodash.endswith';
 import { extensions, moduleRegEx, typeFileRegEx } from './constants';
 import toPath from './toPath';
 import type { Context } from './types';
@@ -14,7 +13,7 @@ export default function resolveFileSync(specifier: string, context?: Context) {
     stat = fs.statSync(filePath);
   } catch (_err) {}
   try {
-    if ((stat && stat.isDirectory()) || endsWith(specifier, '/')) {
+    if ((stat && stat.isDirectory()) || specifier.endsWith('/')) {
       const items = fs.readdirSync(filePath);
       const item = items.find((x) => indexExtensions.indexOf(x) >= 0);
       if (item) return path.join(filePath, item);
