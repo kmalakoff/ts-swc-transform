@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import endsWith from 'lodash.endswith';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
+import ensureBindings from './ensureBindings';
 
 import patchCJS from '../lib/patchCJS';
 import patchESM from '../lib/patchESM';
@@ -14,36 +14,40 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 const swcLazy = lazy(_require)('@swc/core');
 
 export default function transformFile(entry, dest, type, options, callback) {
-  let tsconfig = options.tsconfig;
+  ensureBindings(`${process.platform}-${process.arch}`, (err) => {
+    if (err) return callback(err);
 
-  // overrides for cjs
-  if (type === 'cjs') {
-    tsconfig = { ...tsconfig };
-    tsconfig.config = { ...tsconfig.config };
-    tsconfig.config.compilerOptions = { ...(tsconfig.config.compilerOptions || {}) };
-    tsconfig.config.compilerOptions.module = 'CommonJS';
-    tsconfig.config.compilerOptions.target = 'ES5';
-  }
+    let tsconfig = options.tsconfig;
 
-  const swcOptions = swcPrepareOptions(tsconfig);
-  const swc = swcLazy();
+    // overrides for cjs
+    if (type === 'cjs') {
+      tsconfig = { ...tsconfig };
+      tsconfig.config = { ...tsconfig.config };
+      tsconfig.config.compilerOptions = { ...(tsconfig.config.compilerOptions || {}) };
+      tsconfig.config.compilerOptions.module = 'CommonJS';
+      tsconfig.config.compilerOptions.target = 'ES5';
+    }
 
-  swc
-    .transformFile(entry.fullPath, {
-      ...(endsWith(entry.basename, '.tsx') || endsWith(entry.basename, '.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
-      filename: entry.basename,
-    })
-    .then((output) => {
-      const extTarget = type === 'esm' ? patchESM(entry, output, options) : patchCJS(entry, output, options);
-      const ext = path.extname(entry.path);
-      const outPath = path.join(dest, (ext ? entry.path.slice(0, -ext.length) : entry.path) + extTarget);
+    const swcOptions = swcPrepareOptions(tsconfig);
+    const swc = swcLazy();
 
-      mkdirp(path.dirname(outPath), () => {
-        const queue = new Queue();
-        queue.defer(fs.writeFile.bind(null, outPath, output.code, 'utf8'));
-        !options.sourceMaps || queue.defer(fs.writeFile.bind(null, `${outPath}.map`, output.map, 'utf8'));
-        queue.await((err) => (err ? callback(err) : callback(null, outPath)));
-      });
-    })
-    .catch(callback);
+    swc
+      .transformFile(entry.fullPath, {
+        ...(entry.basename.endsWith('.tsx') || entry.basename.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
+        filename: entry.basename,
+      })
+      .then((output) => {
+        const extTarget = type === 'esm' ? patchESM(entry, output, options) : patchCJS(entry, output, options);
+        const ext = path.extname(entry.path);
+        const outPath = path.join(dest, (ext ? entry.path.slice(0, -ext.length) : entry.path) + extTarget);
+
+        mkdirp(path.dirname(outPath), () => {
+          const queue = new Queue();
+          queue.defer(fs.writeFile.bind(null, outPath, output.code, 'utf8'));
+          !options.sourceMaps || queue.defer(fs.writeFile.bind(null, `${outPath}.map`, output.map, 'utf8'));
+          queue.await((err) => (err ? callback(err) : callback(null, outPath)));
+        });
+      })
+      .catch(callback);
+  });
 }

@@ -1,5 +1,5 @@
+import resolveOnceMap from 'resolve-once-map-cb';
 import installBindings, { isInstalled } from '../workers/installBindings';
-export default installBindings;
 
 import path from 'path';
 import url from 'url';
@@ -18,3 +18,6 @@ const install = lazy((target) => {
 });
 
 export const sync = (target) => install(target)();
+export default resolveOnceMap((target, callback) => {
+  return isInstalled(target) ? callback() : installBindings(target, callback);
+});

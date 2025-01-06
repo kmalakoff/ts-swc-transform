@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import installModule from 'install-module-linked';
 import resolve from 'resolve';
-import resolveOnceMap from 'resolve-once-map-cb';
 
 export function getDependencyInfo(target) {
   const packagePath = resolve.sync('@swc/core/package.json');
@@ -22,15 +21,12 @@ export function isInstalled(target) {
   }
 }
 
-export default resolveOnceMap(function installBindings(target, callback) {
-  if (isInstalled(target)) return callback();
-
+export default function installBindings(target, callback) {
   const { name, version, nodeModules } = getDependencyInfo(target);
   const installString = version ? `${name}@${version}` : name;
 
   installModule(installString, nodeModules, (err) => {
-    if (err) return callback(err);
-    console.log(`installed ${path.join(nodeModules, name)}`);
-    callback();
+    console.log(`installed ${path.join(nodeModules, name)} ${!err ? 'successfully' : 'with errors: ${err.message}'}`);
+    callback(err);
   });
-});
+}
