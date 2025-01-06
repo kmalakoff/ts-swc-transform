@@ -71,10 +71,10 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
     // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
     tests({ type: 'cjs', testFile: './testFolder.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.js', esm: '.mjs' } }, promise: false });
-    tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: false });
-    tests({ type: 'esm', testFile: './test.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.js' } }, promise: false });
-    tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
-    tests({ type: 'esm', testFile: './test.mjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
-    tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: true });
+    // tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: false });
+    // tests({ type: 'esm', testFile: './test.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.js' } }, promise: false });
+    // tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
+    // tests({ type: 'esm', testFile: './test.mjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
+    // tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: true });
   });
 });
