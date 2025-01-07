@@ -4,8 +4,6 @@ const resolveOnce = require('resolve-once-cb');
 const findDependency = require('./findDependency.cjs');
 
 const workerPath = path.join(__dirname, 'install.cjs');
-const major = +process.versions.node.split('.')[0];
-const version = major < 14 ? 'stable' : 'local';
 
 const existsSync = (test) => {
   try {
@@ -34,7 +32,7 @@ module.exports.sync = (identifier, target) => {
   if (bindingsSync[identifier][target] === undefined) {
     bindingsSync[identifier][target] = (() => {
       const { name, nodeModules } = findDependency(identifier, target);
-      return existsSync(path.join(nodeModules, name)) ? target : require('node-version-call')({ version, callbacks: true }, workerPath, identifier, target);
+      return existsSync(path.join(nodeModules, name)) ? target : require('function-exec-sync')({ callbacks: true }, workerPath, identifier, target);
     })();
   }
 };
