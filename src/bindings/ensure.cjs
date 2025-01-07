@@ -21,8 +21,8 @@ module.exports = function ensureBindings(identifier, target, callback) {
   if (bindings[identifier] === undefined) bindings[identifier] = {};
   if (bindings[identifier][target] === undefined) {
     bindings[identifier][target] = resolveOnce((cb) => {
-      const { name, modulePath } = findDependency(identifier, target);
-      return existsSync(path.join(modulePath, '..', 'node_modules', name)) ? cb() : require(workerPath)(identifier, target, cb);
+      const { name, nodeModules } = findDependency(identifier, target);
+      return existsSync(path.join(nodeModules, name)) ? cb() : require(workerPath)(identifier, target, cb);
     });
   }
   bindings[identifier][target](callback);
@@ -33,8 +33,8 @@ module.exports.sync = (identifier, target) => {
   if (bindingsSync[identifier] === undefined) bindingsSync[identifier] = {};
   if (bindingsSync[identifier][target] === undefined) {
     bindingsSync[identifier][target] = (() => {
-      const { name, modulePath } = findDependency(identifier, target);
-      return existsSync(path.join(modulePath, '..', 'node_modules', name)) ? target : require('node-version-call')({ version, callbacks: true }, workerPath, identifier, target);
+      const { name, nodeModules } = findDependency(identifier, target);
+      return existsSync(path.join(nodeModules, name)) ? target : require('node-version-call')({ version, callbacks: true }, workerPath, identifier, target);
     })();
   }
 };
