@@ -1,5 +1,5 @@
 import path from 'path';
-import { sync as ensureBindings } from './ensureBindings';
+import { sync as ensureBindings } from './ensureBindings.cjs';
 
 import Module from 'module';
 import lazy from 'lazy-cache';
