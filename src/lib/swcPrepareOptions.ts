@@ -1,5 +1,5 @@
 import path from 'path';
-import { sync as ensureBindings } from './ensureBindings.cjs';
+import { sync as ensureBindings } from '../bindings/ensure.cjs';
 
 import Module from 'module';
 import lazy from 'lazy-cache';
@@ -11,7 +11,7 @@ const transpilerLazy = lazy(_require)('ts-node/transpilers/swc');
 import type { TsConfigResult } from 'get-tsconfig-compat';
 
 export default function swcPrepareOptions(tsconfig: TsConfigResult) {
-  ensureBindings(`${process.platform}-${process.arch}`);
+  ensureBindings('@swc/core', `${process.platform}-${process.arch}`);
   try {
     const ts = tsLazy();
     const swc = swcLazy();
