@@ -66,7 +66,7 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   })();
 
   describe('clean directory', () => {
-    before(removeBindings);
+    before(() => removeBindings('@swc/core', '@swc/core-'));
     beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
     // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
