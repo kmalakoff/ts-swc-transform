@@ -14,7 +14,7 @@ const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 const tsconfig = getTS.getTsconfig(SRC_DIR);
 
 describe('transformSync', () => {
-  before(removeBindings);
+  before(() => removeBindings('@swc/core', '@swc/core-'));
 
   it('test.ts', () => {
     const filePath = path.join(SRC_DIR, 'test.ts');
