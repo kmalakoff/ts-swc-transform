@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
-import ensureBindings from './ensureBindings';
+import ensureBindings from './ensureBindings.cjs';
 
 import patchCJS from '../lib/patchCJS';
 import patchESM from '../lib/patchESM';
