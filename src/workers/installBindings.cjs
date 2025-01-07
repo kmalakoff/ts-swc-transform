@@ -3,7 +3,7 @@ const installModule = require('install-module-linked');
 const findDependency = require('../lib/findDependency.cjs');
 
 module.exports = function installBindings(target, callback) {
-  const { name, version, modulePath } = findDependency('@swc/core/package.json', target);
+  const { name, version, modulePath } = findDependency('@swc/core', target);
   const nodeModules = path.join(modulePath, '..', 'node_modules');
   const installString = version ? `${name}@${version}` : name;
 
