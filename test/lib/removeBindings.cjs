@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const resolve = require('resolve');
 const rimraf2Sync = require('rimraf2').sync;
 
 function rimrafSync(filePath) {
@@ -7,14 +8,24 @@ function rimrafSync(filePath) {
   else fs.rmSync(filePath, { recursive: true, force: true });
 }
 
-module.exports = function removeBindings(callback) {
-  // Delete all @swc/core-* bindings so the tests try loading them
-  const swcDir = path.dirname(require.resolve('@swc/core/package.json'));
-  const swcParentDir = path.dirname(swcDir);
-  const entries = fs.readdirSync(swcParentDir).filter((entry) => entry.indexOf('core-') >= 0);
-  entries.map((entry) => {
-    console.log(`Deleting binding: ${path.join(swcParentDir, entry)}`);
-    rimrafSync(path.join(swcParentDir, entry));
+const existsSync = (test) => {
+  try {
+    (fs.accessSync || fs.statSync)(test);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
+
+module.exports = function removeBindings(identifier, prefix) {
+  const packagePath = resolve.sync(`${identifier}/package.json`);
+  const nodeModules = identifier[0] === '@' ? path.join(packagePath, '..', '..', '..') : path.join(packagePath, '..', '..');
+  const optionalDependencies = JSON.parse(fs.readFileSync(packagePath, 'utf8')).optionalDependencies;
+  const names = Object.keys(optionalDependencies).filter((name) => name.indexOf(prefix) >= 0);
+  names.map((name) => {
+    const bindingPath = path.join(nodeModules, name);
+    if (!existsSync(bindingPath)) return;
+    console.log(`Deleting binding: ${bindingPath}`);
+    rimrafSync(bindingPath);
   });
-  callback();
 };
