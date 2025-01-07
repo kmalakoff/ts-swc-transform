@@ -8,14 +8,12 @@ const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLTo
 const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformTypes.cjs');
 
 import Module from 'module';
-import lazy from 'lazy-cache';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-const callLazy = lazy(_require)('node-version-call');
 
 function dispatch(version, src, dest, options, callback) {
   if (version === 'local') return _require(workerPath)(src, dest, options, callback);
   try {
-    callback(null, callLazy()({ version, callbacks: true }, workerPath, src, dest, options));
+    callback(null, _require('node-version-call')({ version, callbacks: true }, workerPath, src, dest, options));
   } catch (err) {
     callback(err);
   }

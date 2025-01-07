@@ -1,3 +1,3 @@
-if (!Object.assign) Object.assign = require('object-assign');
-require('es6-map/implement');
-require('es6-symbol/implement');
+require('core-js/actual/object/assign');
+require('core-js/actual/map');
+require('core-js/actual/symbol');

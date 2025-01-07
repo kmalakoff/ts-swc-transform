@@ -2,9 +2,7 @@ import Iterator from 'fs-iterator';
 import rimraf2 from 'rimraf2';
 
 import Module from 'module';
-import lazy from 'lazy-cache';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-const tsLazy = lazy(_require)('typescript');
 
 import { typeFileRegEx } from '../constants';
 import createMatcher from '../createMatcher';
@@ -12,6 +10,7 @@ import createMatcher from '../createMatcher';
 export default function transformTypesWorker(src, dest, options, callback) {
   const tsconfig = options.tsconfig;
   const matcher = createMatcher(tsconfig);
+  const ts = _require('typescript');
 
   rimraf2(dest, { disableGlob: true }, () => {
     const entries = [];
@@ -28,7 +27,6 @@ export default function transformTypesWorker(src, dest, options, callback) {
       (err) => {
         if (err) return callback(err);
 
-        const ts = tsLazy();
         const config = {
           fileNames: entries.map((entry) => entry.fullPath),
           options: {
