@@ -1,6 +1,5 @@
 import path from 'path';
 import url from 'url';
-import ensureBindings from './lib/ensureBindings';
 import loadTsConfig from './loadTsConfig';
 
 const major = +process.versions.node.split('.')[0];
