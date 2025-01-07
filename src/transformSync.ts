@@ -8,13 +8,11 @@ const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLTo
 const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformSync.cjs');
 
 import Module from 'module';
-import lazy from 'lazy-cache';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-const callLazy = lazy(_require)('node-version-call');
 
 function dispatch(version, contents, fileName, tsconfig) {
   if (version === 'local') return _require(workerPath)(contents, fileName, tsconfig);
-  return callLazy()(version, workerPath, contents, fileName, tsconfig);
+  return _require('node-version-call')(version, workerPath, contents, fileName, tsconfig);
 }
 
 import type { Output } from '@swc/core';

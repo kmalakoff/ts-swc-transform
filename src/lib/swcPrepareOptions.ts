@@ -2,20 +2,15 @@ import path from 'path';
 import { sync as ensureBindings } from '../bindings/ensure.cjs';
 
 import Module from 'module';
-import lazy from 'lazy-cache';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-const tsLazy = lazy(_require)('typescript');
-const swcLazy = lazy(_require)('@swc/core');
-const transpilerLazy = lazy(_require)('ts-node/transpilers/swc');
 
 import type { TsConfigResult } from 'get-tsconfig-compat';
-
 export default function swcPrepareOptions(tsconfig: TsConfigResult) {
   ensureBindings('@swc/core', `${process.platform}-${process.arch}`);
   try {
-    const ts = tsLazy();
-    const swc = swcLazy();
-    const transpiler = transpilerLazy();
+    const ts = _require('typescript');
+    const swc = _require('@swc/core');
+    const transpiler = _require('ts-node/transpilers/swc');
     const parsed = ts.parseJsonConfigFileContent(tsconfig.config, ts.sys, path.dirname(tsconfig.path));
     return transpiler.createSwcOptions(parsed.options, undefined, swc, 'swc');
   } catch (err) {
