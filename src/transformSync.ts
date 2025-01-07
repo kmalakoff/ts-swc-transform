@@ -11,10 +11,9 @@ import Module from 'module';
 import lazy from 'lazy-cache';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const callLazy = lazy(_require)('node-version-call');
-const workerLazy = lazy(_require)(workerPath);
 
 function dispatch(version, contents, fileName, tsconfig) {
-  if (version === 'local') return workerLazy()(contents, fileName, tsconfig);
+  if (version === 'local') return _require(workerPath)(contents, fileName, tsconfig);
   return callLazy()(version, workerPath, contents, fileName, tsconfig);
 }
 

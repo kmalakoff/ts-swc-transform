@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
-import ensureBindings from './ensureBindings.cjs';
+import ensureBindings from '../bindings/ensure.cjs';
 
 import patchCJS from '../lib/patchCJS';
 import patchESM from '../lib/patchESM';
@@ -14,7 +14,7 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 const swcLazy = lazy(_require)('@swc/core');
 
 export default function transformFile(entry, dest, type, options, callback) {
-  ensureBindings(`${process.platform}-${process.arch}`, (err) => {
+  ensureBindings('@swc/core', `${process.platform}-${process.arch}`, (err) => {
     if (err) return callback(err);
 
     let tsconfig = options.tsconfig;
