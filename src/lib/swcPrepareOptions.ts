@@ -1,12 +1,12 @@
 import path from 'path';
-import { sync as ensureBindings } from '../bindings/ensure.cjs';
+import { sync as ensureBindingsSync } from './ensureBindings';
 
 import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
 import type { TsConfigResult } from 'get-tsconfig-compat';
 export default function swcPrepareOptions(tsconfig: TsConfigResult) {
-  ensureBindings('@swc/core', `${process.platform}-${process.arch}`);
+  ensureBindingsSync('@swc/core', `${process.platform}-${process.arch}`);
   try {
     const ts = _require('typescript');
     const swc = _require('@swc/core');
