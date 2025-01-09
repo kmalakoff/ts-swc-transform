@@ -1,6 +1,6 @@
 {
   "name": "ts-swc-transform",
-  "version": "1.13.13",
+  "version": "1.13.14",
   "description": "Typescript transformers for swc. Supports Node >= 0.8",
   "keywords": [
     "matcher",
@@ -48,7 +48,7 @@
     "exit": "^0.1.2",
     "fs-iterator": "^5.2.10",
     "get-tsconfig-compat": "^2.0.3",
-    "install-module-linked": "^1.1.10",
+    "install-optional": "^0.1.0",
     "is-absolute": "^1.0.0",
     "minimatch": "^3.1.2",
     "mkdirp-classic": "^0.5.3",
