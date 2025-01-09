@@ -1,5 +1,5 @@
 import path from 'path';
-import { sync as ensureBindingsSync } from './ensureBindings';
+import ensureBindingsSync from './ensureBindingsSync';
 
 import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
