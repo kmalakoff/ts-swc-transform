@@ -9,10 +9,10 @@ import cr from 'cr';
 import spawn from 'cross-spawn-cb';
 import Queue from 'queue-cb';
 
+import { removeSync } from 'install-optional';
 // @ts-ignore
 import { transformDirectory } from 'ts-swc-transform';
 import checkFiles from '../lib/checkFiles';
-import removeBindings from '../lib/removeBindings.cjs';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
@@ -66,7 +66,7 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   })();
 
   describe('clean directory', () => {
-    before(() => removeBindings('@swc/core', '@swc/core-'));
+    before(() => removeSync('@swc/core', '@swc/core-'));
     beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
     // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
