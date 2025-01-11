@@ -27,16 +27,19 @@ export default function toPath(specifier: string, context?: Context) {
   }
   if (moduleRegEx.test(specifier)) {
     const parentPath = context ? getParentPath(context) : process.cwd();
-    if (useCJS) {
-      const entryPath = resolveCJS.sync(specifier, {
-        basedir: parentPath,
-        extensions: ['.js', '.json', '.node', '.mjs'],
-      });
-      if (entryPath) return entryPath;
-    } else {
-      const entryURL = resolveESM(specifier, pathToFileURL(parentPath));
-      if (entryURL) return fileURLToPath(entryURL);
+    if (!useCJS) {
+      try {
+        const entryURL = resolveESM(specifier, pathToFileURL(parentPath));
+        if (entryURL) return fileURLToPath(entryURL);
+      } catch (_) {
+        /* it may fail due to commonjs edge cases */
+      }
     }
+    const entryPath = resolveCJS.sync(specifier, {
+      basedir: parentPath,
+      extensions: ['.js', '.json', '.node', '.mjs'],
+    });
+    if (entryPath) return entryPath;
   }
 
   return specifier;
