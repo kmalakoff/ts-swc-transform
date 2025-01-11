@@ -22,19 +22,17 @@
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
   "type": "module",
   "exports": {
-    ".": {
-      "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs",
-      "types": "./dist/types/index.d.ts"
-    },
-    "./*": "./*"
+    "import": "./dist/esm/index.mjs",
+    "require": "./dist/cjs/index.cjs",
+    "types": "./dist/types/index.d.ts"
   },
   "main": "dist/cjs/index.cjs",
   "module": "dist/dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist",
-    "scripts"
+    "scripts",
+    "assets"
   ],
   "scripts": {
     "build": "tsds build",
@@ -45,6 +43,7 @@
   },
   "dependencies": {
     "@swc/core": "*",
+    "core-js-pure": "^3.40.0",
     "exit": "^0.1.2",
     "fs-iterator": "^5.2.10",
     "get-tsconfig-compat": "^2.0.3",
