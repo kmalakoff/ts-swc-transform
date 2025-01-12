@@ -11,10 +11,7 @@ const src = resolve.sync('import-meta-resolve');
 const dest = path.join(__dirname, '..', '..', '..', 'assets', 'import-meta-resolve.cjs');
 
 import fs from 'fs';
-const REPLACEMENTS = [
-  { from: 'var process = require(\'process\');', to: '// var process = require(\'process\');' },
-  { from: 'var v8 = require(\'v8\');', to: '// var v8 = require(\'v8\');' }
-]
+const REPLACEMENTS = []
 function patch(callback) {
   try {
     const pre = fs.readFileSync(path.join(__dirname, '..', 'assets', 'pre.js'), 'utf8');
