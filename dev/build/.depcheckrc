@@ -1,1 +1,1 @@
-ignores: ["import-meta-resolve"]
+ignores: ["@types/*", "import-meta-resolve"]
