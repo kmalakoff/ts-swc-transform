@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["@types/node", "minimatch", "ts-node", "which"]
+  "reject": ["@types/*", "biomejs/*", "assert",  "minimatch", "ts-node", "which"]
 }
