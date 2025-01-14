@@ -47,7 +47,7 @@
     "exit": "^0.1.2",
     "fs-iterator": "^5.2.12",
     "get-tsconfig-compat": "^2.0.3",
-    "install-optional": "^0.1.5",
+    "install-optional": "^0.1.6",
     "is-absolute": "^1.0.0",
     "minimatch": "^3.1.2",
     "mkdirp-classic": "^0.5.3",
