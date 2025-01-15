@@ -1,7 +1,6 @@
 import assert from 'assert';
 import path from 'path';
 import Iterator from 'fs-iterator';
-import difference from 'lodash.difference';
 
 function worker(dir, results, expectedCount, options, callback) {
   let found = [];
@@ -19,7 +18,9 @@ function worker(dir, results, expectedCount, options, callback) {
       found = found.map((x) => path.normalize(x));
       assert.equal(results.length, fullyExpected);
       assert.equal(found.length, fullyExpected);
-      assert.deepEqual(difference(results, found), []);
+      // https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
+      const difference = results.filter((x) => found.indexOf(x) < 0).concat(found.filter((x) => results.indexOf(x) < 0));
+      assert.deepEqual(difference, []);
       callback();
     }
   );

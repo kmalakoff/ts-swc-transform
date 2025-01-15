@@ -1,1 +1,1 @@
-ignores: ["@types/*", "ts-swc-transform", "@biomejs/*", "typescript", "ts-node", "react", "getopts-compat", "exit", "core-js"]
+ignores: ["ts-swc-transform", "ts-node", "typescript", "react", "getopts-compat", "exit", "core-js"]
