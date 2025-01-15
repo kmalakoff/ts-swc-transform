@@ -43,16 +43,16 @@
   },
   "dependencies": {
     "@swc/core": "*",
-    "core-js-pure": "^3.40.0",
+    "core-js-pure": "*",
     "exit": "^0.1.2",
     "fs-iterator": "^5.2.13",
     "get-tsconfig-compat": "^2.0.3",
-    "install-optional": "^0.1.8",
+    "install-optional": "^0.1.9",
     "is-absolute": "^1.0.0",
     "minimatch": "^3.1.2",
     "mkdirp-classic": "^0.5.3",
     "path-posix": "^1.0.0",
-    "queue-cb": "^1.4.12",
+    "queue-cb": "^1.4.13",
     "resolve": "^1.22.10",
     "rimraf2": "^2.8.2",
     "ts-node": "*",
@@ -60,17 +60,12 @@
     "unixify": "^1.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@swc/core": "^1.9.3",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^22.10.5",
-    "cr": "^0.1.0",
-    "cross-spawn-cb": "^2.1.5",
-    "lodash.difference": "^4.5.0",
-    "pinkie-promise": "^2.0.1",
-    "react": "^19.0.0",
-    "ts-node": "^10.8.2",
-    "typescript": "^5.7.2"
+    "@types/mocha": "*",
+    "@types/node": "*",
+    "cr": "*",
+    "cross-spawn-cb": "*",
+    "pinkie-promise": "*",
+    "react": "*"
   },
   "engines": {
     "node": ">=0.8"
