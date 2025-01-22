@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import find from 'lodash.find';
 import { extensions, moduleRegEx, typeFileRegEx } from './constants';
 import toPath from './toPath';
 import type { Context } from './types';
@@ -15,13 +16,13 @@ export default function resolveFileSync(specifier: string, context?: Context) {
   try {
     if ((stat && stat.isDirectory()) || specifier.endsWith('/')) {
       const items = fs.readdirSync(filePath);
-      const item = items.find((x) => indexExtensions.indexOf(x) >= 0);
+      const item = find(items, (x) => indexExtensions.indexOf(x) >= 0);
       if (item) return path.join(filePath, item);
     } else if (!stat && !moduleRegEx.test(specifier)) {
       const ext = path.extname(filePath);
       const basename = ext ? path.basename(filePath).slice(0, -ext.length) : path.basename(filePath);
       const items = fs.readdirSync(path.dirname(filePath));
-      const item = items.find((x) => {
+      const item = find(items, (x) => {
         if (typeFileRegEx.test(x)) return false;
         const extTest = path.extname(x);
         const basenameTest = extTest ? path.basename(x).slice(0, -extTest.length) : path.basename(x);
