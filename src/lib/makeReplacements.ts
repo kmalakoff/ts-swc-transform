@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import find from 'lodash.find';
 import { moduleRegEx } from '../constants';
 import parseSpecifiers from './parseSpecifiers';
 
@@ -20,7 +21,7 @@ export default function makeReplacements(entry, code, regex, extensions, extensi
           const basename = path.basename(specifier);
           const fullPath = path.join(src, path.dirname(entry.path), specifier);
           const files = fs.readdirSync(path.dirname(fullPath), { withFileTypes: true });
-          const found = files.find((x) => x.name === basename);
+          const found = find(files, (x) => x.name === basename);
           if (found && found.isDirectory()) return specifier;
         } catch (_err) {}
       }
