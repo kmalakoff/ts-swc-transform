@@ -19,12 +19,12 @@ describe('toPath', () => {
     const file = resolveFileSync('@swc/core', context);
     assert.equal(file, path.join(NODE_MODULES, '@swc', 'core', 'index.js'));
   });
-  it('fast-extract', () => {
-    const file = resolveFileSync('fast-extract', context);
+  it('fs-iterator', () => {
+    const file = resolveFileSync('fs-iterator', context);
     if (useCJS) {
-      assert.equal(file, path.join(NODE_MODULES, 'fast-extract', 'dist', 'cjs', 'index.cjs'));
+      assert.equal(file, path.join(NODE_MODULES, 'fs-iterator', 'dist', 'cjs', 'index.cjs'));
     } else {
-      assert.equal(file, path.join(NODE_MODULES, 'fast-extract', 'dist', 'esm', 'index.mjs'));
+      assert.equal(file, path.join(NODE_MODULES, 'fs-iterator', 'dist', 'esm', 'index.mjs'));
     }
   });
 });
