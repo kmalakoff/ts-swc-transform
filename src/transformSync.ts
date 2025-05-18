@@ -5,7 +5,7 @@ import * as getTS from 'get-tsconfig-compat';
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
-const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformSync.cjs');
+const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformSync.js');
 
 import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
