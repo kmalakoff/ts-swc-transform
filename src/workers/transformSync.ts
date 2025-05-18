@@ -1,4 +1,4 @@
-import swcPrepareOptions from '../lib/swcPrepareOptions';
+import swcPrepareOptions from '../lib/swcPrepareOptions.js';
 
 import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;

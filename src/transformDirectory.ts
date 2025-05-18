@@ -1,11 +1,11 @@
 import path from 'path';
 import url from 'url';
-import loadTsConfig from './loadTsConfig';
+import loadTsConfig from './loadTsConfig.js';
 
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
-const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformDirectory.cjs');
+const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformDirectory.js');
 
 import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;

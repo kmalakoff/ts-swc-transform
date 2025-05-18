@@ -2,8 +2,8 @@ import type { TsConfigResult } from 'get-tsconfig-compat';
 import minimatch from 'minimatch';
 import path from 'path-posix';
 import unixify from 'unixify';
-import loadTsConfig from './loadTsConfig';
-import type { Matcher } from './types';
+import loadTsConfig from './loadTsConfig.js';
+import type { Matcher } from './types.js';
 
 export default function createMatcher(tsConfig: TsConfigResult): Matcher {
   const tsconfig = loadTsConfig({ tsconfig: tsConfig }, 'transformTypes');

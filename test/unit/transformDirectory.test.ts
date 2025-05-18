@@ -17,7 +17,7 @@ import checkFiles from '../lib/checkFiles';
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
-const FILE_COUNT = 9;
+const FILE_COUNT = 7;
 const hasRequire = typeof require !== 'undefined';
 
 function tests({ type, testFile, expectedCount, options, promise }) {
@@ -71,10 +71,10 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
     // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
     tests({ type: 'cjs', testFile: './testFolder.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.js', esm: '.mjs' } }, promise: false });
-    // tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: false });
-    // tests({ type: 'esm', testFile: './test.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.js' } }, promise: false });
-    // tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
-    // tests({ type: 'esm', testFile: './test.mjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' }, sourceMaps: true }, promise: false });
-    // tests({ type: 'cjs', testFile: './test.cjs', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.mjs' } }, promise: true });
+    tests({ type: 'cjs', testFile: './test.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.js', esm: '.mjs' } }, promise: false });
+    tests({ type: 'esm', testFile: './test.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.js' } }, promise: false });
+    tests({ type: 'cjs', testFile: './test.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.js', esm: '.mjs' }, sourceMaps: true }, promise: false });
+    tests({ type: 'esm', testFile: './test.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.cjs', esm: '.js' }, sourceMaps: true }, promise: false });
+    tests({ type: 'cjs', testFile: './test.js', expectedCount: FILE_COUNT, options: { extensions: { cjs: '.js', esm: '.mjs' } }, promise: true });
   });
 });
