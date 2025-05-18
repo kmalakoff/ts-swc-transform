@@ -3,9 +3,9 @@ import path from 'path';
 import mkdirp from 'mkdirp-classic';
 import Queue from 'queue-cb';
 
-import patchCJS from '../lib/patchCJS';
-import patchESM from '../lib/patchESM';
-import swcPrepareOptions from '../lib/swcPrepareOptions';
+import patchCJS from '../lib/patchCJS.js';
+import patchESM from '../lib/patchESM.js';
+import swcPrepareOptions from '../lib/swcPrepareOptions.js';
 
 import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
