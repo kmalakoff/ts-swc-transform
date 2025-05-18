@@ -5,9 +5,9 @@ import isAbsolute from 'is-absolute';
 import resolveCJS from 'resolve';
 // @ts-ignore
 import { resolve as resolveESM } from '../../assets/import-meta-resolve.cjs';
-import { moduleRegEx } from './constants';
-import * as urlPolyfills from './lib/url-file-url';
-import type { Context } from './types';
+import { moduleRegEx } from './constants.js';
+import * as urlPolyfills from './lib/url-file-url.js';
+import type { Context } from './types.js';
 
 const useCJS = !module.createRequire;
 const fileURLToPath = url.fileURLToPath || urlPolyfills.fileURLToPath;
