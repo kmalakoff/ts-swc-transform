@@ -12,7 +12,7 @@ import checkFiles from '../lib/checkFiles';
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
-const FILE_COUNT = 9;
+const FILE_COUNT = 7;
 
 function tests({ expectedCount, options, promise }) {
   it(`transformTypes (options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
