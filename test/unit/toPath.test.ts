@@ -22,9 +22,9 @@ describe('toPath', () => {
   it('fs-iterator', () => {
     const file = resolveFileSync('fs-iterator', context);
     if (useCJS) {
-      assert.equal(file, path.join(NODE_MODULES, 'fs-iterator', 'dist', 'cjs', 'index.cjs'));
+      assert.equal(file, path.join(NODE_MODULES, 'fs-iterator', 'dist', 'cjs', 'index.js'));
     } else {
-      assert.equal(file, path.join(NODE_MODULES, 'fs-iterator', 'dist', 'esm', 'index.mjs'));
+      assert.equal(file, path.join(NODE_MODULES, 'fs-iterator', 'dist', 'esm', 'index.js'));
     }
   });
 });
