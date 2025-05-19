@@ -1,5 +1,5 @@
 import path from 'path';
-import Iterator from 'fs-iterator';
+import Iterator, { type Entry } from 'fs-iterator';
 import Queue from 'queue-cb';
 
 import { extensions, typeFileRegEx } from '../constants.js';
@@ -13,7 +13,7 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
   const entries = [];
   const iterator = new Iterator(src);
   iterator.forEach(
-    (entry) => {
+    (entry: Entry): undefined => {
       if (!entry.stats.isFile()) return;
       if (entry.basename[0] === '.') return;
       if (typeFileRegEx.test(entry.basename)) return;
@@ -28,7 +28,7 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
       options = { ...options, tsconfig, src, dest };
 
       const queue = new Queue();
-      entries.forEach((entry) => {
+      entries.forEach((entry: Entry) => {
         queue.defer((cb) =>
           transformFile(entry, dest, type, options, (err, outPath) => {
             if (err) return cb(err);
