@@ -1,4 +1,4 @@
-import Iterator from 'fs-iterator';
+import Iterator, { type Entry } from 'fs-iterator';
 
 import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
@@ -14,7 +14,7 @@ export default function transformTypesWorker(src, dest, options, callback) {
   const entries = [];
   const iterator = new Iterator(src);
   iterator.forEach(
-    (entry) => {
+    (entry: Entry): undefined => {
       if (!entry.stats.isFile()) return;
       if (entry.basename[0] === '.') return;
       if (typeFileRegEx.test(entry.basename)) return;
