@@ -19,7 +19,7 @@ function dispatch(version, src, dest, type, options, callback) {
   }
 }
 
-import type { ConfigOptions, TransformDirectoryCallback } from './types';
+import type { ConfigOptions, TransformDirectoryCallback } from './types.js';
 /**
  * @param {string} src The source directory to traverse.
  * @param {string} dest The output directory to write files to.
