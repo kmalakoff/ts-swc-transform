@@ -46,7 +46,7 @@
     "@swc/core": "*",
     "core-js-pure": "*",
     "exit": "^0.1.2",
-    "fs-iterator": "^5.3.8",
+    "fs-iterator": "^5.3.10",
     "get-tsconfig-compat": "^2.0.3",
     "install-optional": "^0.1.56",
     "is-absolute": "^1.0.0",
