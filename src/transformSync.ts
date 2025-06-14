@@ -17,12 +17,6 @@ function dispatch(version, contents, fileName, tsconfig) {
 
 import type { Output } from '@swc/core';
 import type { TsConfigResult } from 'get-tsconfig-compat';
-/**
- * @param {string} contents The file contents.
- * @param {string} fileName The filename.
- * @param {TsConfigResult} tsconfig The configuration.
- * @returns {{ code: string, map?: string }} Returns object with the transformed code and source map if option sourceMaps was provided.
- */
 export default function transformSync(contents: string, fileName: string, tsconfig: TsConfigResult): Output {
   if (typeof contents !== 'string') throw new Error('transformTypes: unexpected contents');
   if (typeof fileName !== 'string') throw new Error('transformTypes: unexpected fileName');

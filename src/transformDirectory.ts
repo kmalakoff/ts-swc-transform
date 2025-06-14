@@ -20,14 +20,6 @@ function dispatch(version, src, dest, type, options, callback) {
 }
 
 import type { ConfigOptions, TransformDirectoryCallback } from './types.js';
-/**
- * @param {string} src The source directory to traverse.
- * @param {string} dest The output directory to write files to.
- * @param {string} type The type of transform ('esm' or 'cjs').
- * @param {{sourceMaps: boolean}} options Options to pass to swc.
- * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
- * @returns {void | Promise<any>} Optional promise if callback not provided.
- */
 export default function transformDirectory(src: string, dest: string, type: string, options?: ConfigOptions | TransformDirectoryCallback, callback?: TransformDirectoryCallback): undefined | Promise<string[]> {
   try {
     if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
