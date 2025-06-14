@@ -20,13 +20,6 @@ function dispatch(version, src, dest, options, callback) {
 }
 
 import type { ConfigOptions, TransformTypesCallback } from './types.js';
-/**
- * @param {string} src The source directory to traverse.
- * @param {string} dest The output directory to write files to.
- * @param {{tsconfig: TsConfigResult}} options Options.
- * @param {(err?: Error) =>} [callback] Optional callback. Uses promise if callback not provided.
- * @returns {void | Promise<any>} Optional promise if callback not provided.
- */
 export default function transformTypes(src: string, dest: string, options?: ConfigOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<string[]> {
   try {
     if (typeof src !== 'string') throw new Error('transformTypes: unexpected source');
