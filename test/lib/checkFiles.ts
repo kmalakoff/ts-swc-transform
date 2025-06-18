@@ -1,6 +1,6 @@
 import assert from 'assert';
-import path from 'path';
 import Iterator from 'fs-iterator';
+import path from 'path';
 
 function worker(dir, results, expectedCount, options, callback) {
   let found = [];

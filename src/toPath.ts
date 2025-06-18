@@ -1,8 +1,8 @@
+import isAbsolute from 'is-absolute';
 import module from 'module';
 import path from 'path';
-import url from 'url';
-import isAbsolute from 'is-absolute';
 import resolveCJS from 'resolve';
+import url from 'url';
 // @ts-ignore
 import { resolve as resolveESM } from '../../assets/import-meta-resolve.cjs';
 import { moduleRegEx } from './constants.js';

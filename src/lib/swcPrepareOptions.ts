@@ -1,8 +1,8 @@
+import { installSync } from 'install-optional';
+import Module from 'module';
 import path from 'path';
 import url from 'url';
-import { installSync } from 'install-optional';
 
-import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 

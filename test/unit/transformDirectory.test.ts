@@ -1,17 +1,15 @@
-import fs from 'fs';
-import path from 'path';
-import url from 'url';
-import Pinkie from 'pinkie-promise';
-import rimraf2 from 'rimraf2';
-
 import assert from 'assert';
 import cr from 'cr';
 import spawn from 'cross-spawn-cb';
-import Queue from 'queue-cb';
-
+import fs from 'fs';
 import { removeSync } from 'install-optional';
+import path from 'path';
+import Pinkie from 'pinkie-promise';
+import Queue from 'queue-cb';
+import rimraf2 from 'rimraf2';
 // @ts-ignore
 import { transformDirectory } from 'ts-swc-transform';
+import url from 'url';
 import checkFiles from '../lib/checkFiles';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));

@@ -1,6 +1,7 @@
 import Iterator, { type Entry } from 'fs-iterator';
 
 import Module from 'module';
+
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
 import { typeFileRegEx } from '../constants.js';

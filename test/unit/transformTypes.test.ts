@@ -1,12 +1,10 @@
 import path from 'path';
-import url from 'url';
 import Pinkie from 'pinkie-promise';
-import rimraf2 from 'rimraf2';
-
 import Queue from 'queue-cb';
-
+import rimraf2 from 'rimraf2';
 // @ts-ignore
 import { transformTypes } from 'ts-swc-transform';
+import url from 'url';
 import checkFiles from '../lib/checkFiles';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
