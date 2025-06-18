@@ -1,6 +1,6 @@
 import fs from 'fs';
-import path from 'path';
 import find from 'lodash.find';
+import path from 'path';
 import { extensions, moduleRegEx, typeFileRegEx } from './constants.js';
 import toPath from './toPath.js';
 import type { Context } from './types.js';

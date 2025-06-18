@@ -1,9 +1,10 @@
 // Extracted from https://raw.githubusercontent.com/holepunchto/url-file-url/refs/heads/main/index.js
 // Apache 2 License https://github.com/holepunchto/url-file-url/blob/main/LICENSE
 
-import path from 'path';
 import replaceAll from 'core-js-pure/actual/string/replace-all.js';
 import URL from 'core-js-pure/actual/url/index.js';
+import path from 'path';
+
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 
 export function fileURLToPath(url: string | URL): string {

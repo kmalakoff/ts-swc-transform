@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { constants, createMatcher, resolveFileSync, toPath, transformDirectory, transformSync } from 'ts-swc-transform';
 import * as swc from 'ts-swc-transform';
+import { constants, createMatcher, resolveFileSync, toPath, transformDirectory, transformSync } from 'ts-swc-transform';
 
 describe('exports .mjs', () => {
   it('named exports', () => {
