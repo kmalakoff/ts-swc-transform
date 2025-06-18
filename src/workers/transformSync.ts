@@ -1,6 +1,6 @@
+import Module from 'module';
 import swcPrepareOptions from '../lib/swcPrepareOptions.js';
 
-import Module from 'module';
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
 import type { TsConfigResult } from 'get-tsconfig-compat';
