@@ -8,6 +8,7 @@ const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLTo
 const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformTypes.js');
 
 import Module from 'module';
+
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
 function dispatch(version, src, dest, options, callback) {

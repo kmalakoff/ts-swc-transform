@@ -1,5 +1,5 @@
-import path from 'path';
 import Iterator, { type Entry } from 'fs-iterator';
+import path from 'path';
 import Queue from 'queue-cb';
 
 import { extensions, typeFileRegEx } from '../constants.js';
