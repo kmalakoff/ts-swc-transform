@@ -14,7 +14,6 @@ export default function createMatcher(tsConfig: TsConfigResult): Matcher {
     if (!path.isAbsolute(pattern) && !pattern.startsWith('*')) pattern = path.join(tsconfigPath, pattern);
 
     return function match(filePath) {
-      // @ts-ignore
       return filePath.startsWith(pattern) || minimatch(filePath, pattern);
     };
   }

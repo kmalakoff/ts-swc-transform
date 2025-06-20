@@ -10,7 +10,7 @@ import rimraf2 from 'rimraf2';
 // @ts-ignore
 import { transformDirectory } from 'ts-swc-transform';
 import url from 'url';
-import checkFiles from '../lib/checkFiles';
+import checkFiles from '../lib/checkFiles.ts';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
@@ -51,15 +51,13 @@ function tests({ type, testFile, expectedCount, options, promise }) {
 describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   (() => {
     // patch and restore promise
-    // @ts-ignore
-    let rootPromise: Promise;
+    if (typeof global === 'undefined') return;
+    const globalPromise = global.Promise;
     before(() => {
-      rootPromise = global.Promise;
-      // @ts-ignore
       global.Promise = Pinkie;
     });
     after(() => {
-      global.Promise = rootPromise;
+      global.Promise = globalPromise;
     });
   })();
 
