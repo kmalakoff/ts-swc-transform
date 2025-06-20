@@ -5,7 +5,7 @@ import rimraf2 from 'rimraf2';
 // @ts-ignore
 import { transformTypes } from 'ts-swc-transform';
 import url from 'url';
-import checkFiles from '../lib/checkFiles';
+import checkFiles from '../lib/checkFiles.ts';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
@@ -35,15 +35,13 @@ function tests({ expectedCount, options, promise }) {
 describe('transformTypes', () => {
   (() => {
     // patch and restore promise
-    // @ts-ignore
-    let rootPromise: Promise;
+    if (typeof global === 'undefined') return;
+    const globalPromise = global.Promise;
     before(() => {
-      rootPromise = global.Promise;
-      // @ts-ignore
       global.Promise = Pinkie;
     });
     after(() => {
-      global.Promise = rootPromise;
+      global.Promise = globalPromise;
     });
   })();
 
