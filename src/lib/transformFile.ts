@@ -1,4 +1,6 @@
+import type { Output } from '@swc/core';
 import fs from 'fs';
+import type { Entry } from 'fs-iterator';
 import mkdirp from 'mkdirp-classic';
 import Module from 'module';
 import path from 'path';
@@ -9,7 +11,9 @@ import swcPrepareOptions from '../lib/swcPrepareOptions.js';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-export default function transformFile(entry, dest, type, options, callback) {
+import type { ConfigOptionsInternal, TargetType, TransformFileCallback } from '../types.js';
+
+export default function transformFile(entry: Entry, dest: string, type: TargetType, options: ConfigOptionsInternal, callback: TransformFileCallback): undefined {
   let tsconfig = options.tsconfig;
 
   // overrides for cjs
@@ -29,7 +33,7 @@ export default function transformFile(entry, dest, type, options, callback) {
       ...(entry.basename.endsWith('.tsx') || entry.basename.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
       filename: entry.basename,
     })
-    .then((output) => {
+    .then((output: Output) => {
       const extTarget = type === 'esm' ? patchESM(entry, output, options) : patchCJS(entry, output, options);
       const ext = path.extname(entry.path);
       const outPath = path.join(dest, (ext ? entry.path.slice(0, -ext.length) : entry.path) + extTarget);

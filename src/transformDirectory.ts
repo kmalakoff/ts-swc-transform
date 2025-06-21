@@ -11,7 +11,9 @@ import Module from 'module';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-function dispatch(version, src, dest, type, options, callback) {
+import type { ConfigOptions, TargetType, TransformDirectoryCallback } from './types.js';
+
+function dispatch(version: string, src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): undefined {
   if (version === 'local') return _require(workerPath)(src, dest, type, options, callback);
   try {
     callback(null, _require('node-version-call')({ version, callbacks: true }, workerPath, src, dest, type, options));
@@ -20,8 +22,7 @@ function dispatch(version, src, dest, type, options, callback) {
   }
 }
 
-import type { ConfigOptions, TransformDirectoryCallback } from './types.js';
-export default function transformDirectory(src: string, dest: string, type: string, options?: ConfigOptions | TransformDirectoryCallback, callback?: TransformDirectoryCallback): undefined | Promise<string[]> {
+export default function transformDirectory(src: string, dest: string, type: TargetType, options?: ConfigOptions | TransformDirectoryCallback, callback?: TransformDirectoryCallback): undefined | Promise<string[]> {
   try {
     if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
@@ -36,7 +37,11 @@ export default function transformDirectory(src: string, dest: string, type: stri
     options = { tsconfig, ...options };
 
     if (typeof callback === 'function') return dispatch(version, src, dest, type, options, callback) as undefined;
-    return new Promise((resolve, reject) => dispatch(version, src, dest, type, options, (err, result) => (err ? reject(err) : resolve(result))));
+    return new Promise((resolve, reject) =>
+      dispatch(version, src, dest, type, options as ConfigOptions, (err, result) => {
+        err ? reject(err) : resolve(result);
+      })
+    );
   } catch (err) {
     if (callback) callback(err);
     else return Promise.reject(err);

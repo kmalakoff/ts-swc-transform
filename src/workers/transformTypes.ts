@@ -7,7 +7,9 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 import { typeFileRegEx } from '../constants.js';
 import createMatcher from '../createMatcher.js';
 
-export default function transformTypesWorker(src, dest, options, callback) {
+import type { ConfigOptions, TransformTypesCallback } from '../types.js';
+
+export default function transformTypesWorker(src: string, dest: string, options: ConfigOptions, callback: TransformTypesCallback): undefined {
   const tsconfig = options.tsconfig;
   const matcher = createMatcher(tsconfig);
   const ts = _require('typescript');
@@ -23,13 +25,17 @@ export default function transformTypesWorker(src, dest, options, callback) {
       entries.push(entry);
     },
     { concurrency: Infinity },
-    (err) => {
-      if (err) return callback(err);
+    (err): undefined => {
+      if (err) {
+        callback(err);
+        return;
+      }
 
+      const compilerOptions = ts.convertCompilerOptionsFromJson(tsconfig.config.compilerOptions, '');
       const config = {
         fileNames: entries.map((entry) => entry.fullPath),
         options: {
-          ...(tsconfig.compilerOptions || {}),
+          ...compilerOptions,
           outDir: dest,
           allowJs: true,
           declaration: true,
