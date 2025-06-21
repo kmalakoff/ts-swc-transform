@@ -13,12 +13,12 @@ const useCJS = !module.createRequire;
 const fileURLToPath = url.fileURLToPath || urlPolyfills.fileURLToPath;
 const pathToFileURL = url.pathToFileURL || urlPolyfills.pathToFileURL;
 
-function getParentPath(context: Context) {
+function getParentPath(context: Context): string {
   if (context.parentPath) return path.dirname(context.parentPath);
   return context.parentURL ? path.dirname(toPath(context.parentURL)) : process.cwd();
 }
 
-export default function toPath(specifier: string, context?: Context) {
+export default function toPath(specifier: string, context?: Context): string {
   if (specifier.startsWith('file:')) return fileURLToPath(specifier);
   if (isAbsolute(specifier)) return specifier;
   if (specifier[0] === '.') {
