@@ -61,10 +61,10 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
     });
   })();
 
-  describe.only('clean directory', () => {
+  describe('clean directory', () => {
     before(() => removeSync('@swc/core', '@swc/core-'));
     beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-    // after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
 
     tests({ type: 'cjs', testFile: './testFolder.js', expectedCount: FILE_COUNT, options: {}, promise: false });
     tests({ type: 'cjs', testFile: './test.js', expectedCount: FILE_COUNT, options: {}, promise: false });
