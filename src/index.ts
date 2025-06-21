@@ -1,8 +1,8 @@
-export * as constants from './constants.js';
-export { default as createMatcher } from './createMatcher.js';
-export { default as resolveFileSync } from './resolveFileSync.js';
-export { default as toPath } from './toPath.js';
-export { default as transformDirectory } from './transformDirectory.js';
-export { default as transformSync } from './transformSync.js';
-export { default as transformTypes } from './transformTypes.js';
-export type * from './types.js';
+export * as constants from './constants.ts';
+export { default as createMatcher } from './createMatcher.ts';
+export { default as resolveFileSync } from './resolveFileSync.ts';
+export { default as toPath } from './toPath.ts';
+export { default as transformDirectory } from './transformDirectory.ts';
+export { default as transformSync } from './transformSync.ts';
+export { default as transformTypes } from './transformTypes.ts';
+export type * from './types.ts';

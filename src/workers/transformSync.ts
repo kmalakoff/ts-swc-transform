@@ -1,6 +1,6 @@
 import type { Output } from '@swc/core';
 import Module from 'module';
-import swcPrepareOptions from '../lib/swcPrepareOptions.js';
+import swcPrepareOptions from '../lib/swcPrepareOptions.ts';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 

@@ -1,6 +1,6 @@
 import path from 'path';
 import url from 'url';
-import loadTsConfig from './loadTsConfig.js';
+import loadTsConfig from './loadTsConfig.ts';
 
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
@@ -11,7 +11,7 @@ import Module from 'module';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-import type { ConfigOptions, TargetType, TransformDirectoryCallback } from './types.js';
+import type { ConfigOptions, TargetType, TransformDirectoryCallback } from './types.ts';
 
 function dispatch(version: string, src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): undefined {
   if (version === 'local') return _require(workerPath)(src, dest, type, options, callback);
