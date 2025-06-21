@@ -1,10 +1,11 @@
+import type { Output } from '@swc/core';
 import Module from 'module';
 import swcPrepareOptions from '../lib/swcPrepareOptions.js';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
 import type { TsConfigResult } from 'get-tsconfig-compat';
-export default function transformSyncWorker(contents: string, fileName: string, tsconfig: TsConfigResult) {
+export default function transformSyncWorker(contents: string, fileName: string, tsconfig: TsConfigResult): Output {
   const swcOptions = swcPrepareOptions(tsconfig);
   const swc = _require('@swc/core');
   return swc.transformSync(contents, {

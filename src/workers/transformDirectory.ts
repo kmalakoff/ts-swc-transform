@@ -6,11 +6,13 @@ import { extensions, typeFileRegEx } from '../constants.js';
 import createMatcher from '../createMatcher.js';
 import transformFile from '../lib/transformFile.js';
 
-export default function transformDirectoryWorker(src, dest, type, options, callback) {
+import type { ConfigOptions, ConfigOptionsInternal, TargetType, TransformDirectoryCallback } from '../types.js';
+
+export default function transformDirectoryWorker(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): undefined {
   const tsconfig = options.tsconfig;
   const matcher = createMatcher(tsconfig);
 
-  const entries = [];
+  const entries: Entry[] = [];
   const iterator = new Iterator(src);
   iterator.forEach(
     (entry: Entry): undefined => {
@@ -22,15 +24,18 @@ export default function transformDirectoryWorker(src, dest, type, options, callb
       if (ext && extensions.indexOf(ext) < 0) return;
       entries.push(entry);
     },
-    (err) => {
-      if (err) return callback(err);
+    (err): undefined => {
+      if (err) {
+        callback(err);
+        return;
+      }
       const results = [];
-      options = { ...options, tsconfig, src, dest };
+      options = { ...options, tsconfig, src, dest } as ConfigOptionsInternal;
 
       const queue = new Queue();
       entries.forEach((entry: Entry) => {
         queue.defer((cb) =>
-          transformFile(entry, dest, type, options, (err, outPath) => {
+          transformFile(entry, dest, type, options as ConfigOptionsInternal, (err, outPath) => {
             if (err) return cb(err);
             results.push(path.normalize(outPath));
             if (options.sourceMaps) results.push(`${path.normalize(outPath)}.map`);
