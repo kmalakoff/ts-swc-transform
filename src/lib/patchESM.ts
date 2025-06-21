@@ -7,7 +7,7 @@ const EXTENSIONS = {
   esm: ['.js', '.ts', '.tsx', '.mts', '.mjs'],
 };
 const DEFAULT_EXTENSION_CJS = '.cjs';
-const DEFAULT_EXTENSION_EMS = '.mjs';
+const DEFAULT_EXTENSION_EMS = '.js';
 
 import type { Output } from '@swc/core';
 import type { Entry } from 'fs-iterator';
