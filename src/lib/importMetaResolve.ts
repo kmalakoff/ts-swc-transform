@@ -1,5 +1,8 @@
 import Module from 'module';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-const path = '../../../assets/importMetaResolve.cjs';
-export default _require(path).resolve;
+const resolve = _require('../../../assets/importMetaResolve.cjs').resolve;
+
+export default function importMetaResolve(specifier: string, url: URL): string {
+  return resolve(specifier, url);
+}
