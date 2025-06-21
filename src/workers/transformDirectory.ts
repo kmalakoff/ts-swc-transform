@@ -6,7 +6,7 @@ import { extensions, typeFileRegEx } from '../constants.ts';
 import createMatcher from '../createMatcher.ts';
 import transformFile from '../lib/transformFile.ts';
 
-import type { ConfigOptions, ConfigOptionsInternal, TargetType, TransformDirectoryCallback } from '../types.ts';
+import type { ConfigOptions, TargetType, TransformDirectoryCallback } from '../types.ts';
 
 export default function transformDirectoryWorker(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): undefined {
   const tsconfig = options.tsconfig;
@@ -30,12 +30,12 @@ export default function transformDirectoryWorker(src: string, dest: string, type
         return;
       }
       const results = [];
-      options = { ...options, tsconfig, src, dest } as ConfigOptionsInternal;
+      options = { ...options, tsconfig };
 
       const queue = new Queue();
       entries.forEach((entry: Entry) => {
         queue.defer((cb) =>
-          transformFile(entry, dest, type, options as ConfigOptionsInternal, (err, outPath) => {
+          transformFile(entry, dest, type, options, (err, outPath) => {
             if (err) return cb(err);
             results.push(path.normalize(outPath));
             if (options.sourceMaps) results.push(`${path.normalize(outPath)}.map`);

@@ -11,9 +11,9 @@ import swcPrepareOptions from '../lib/swcPrepareOptions.ts';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-import type { ConfigOptionsInternal, TargetType, TransformFileCallback } from '../types.ts';
+import type { ConfigOptions, TargetType, TransformFileCallback } from '../types.ts';
 
-export default function transformFile(entry: Entry, dest: string, type: TargetType, options: ConfigOptionsInternal, callback: TransformFileCallback): undefined {
+export default function transformFile(entry: Entry, dest: string, type: TargetType, options: ConfigOptions, callback: TransformFileCallback): undefined {
   let tsconfig = options.tsconfig;
 
   // overrides for cjs
