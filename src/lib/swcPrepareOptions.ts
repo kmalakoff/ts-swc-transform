@@ -1,3 +1,4 @@
+import type { Options } from '@swc/core';
 import { installSync } from 'install-optional';
 import Module from 'module';
 import path from 'path';
@@ -7,7 +8,13 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 
 import type { TsConfigResult } from 'get-tsconfig-compat';
-export default function swcPrepareOptions(tsconfig: TsConfigResult) {
+
+export interface TranspilerOptions {
+  tsxOptions: Options;
+  nonTsxOptions: Options;
+}
+
+export default function swcPrepareOptions(tsconfig: TsConfigResult): TranspilerOptions {
   installSync('@swc/core', `${process.platform}-${process.arch}`, { cwd: __dirname });
   try {
     const ts = _require('typescript');
@@ -17,6 +24,6 @@ export default function swcPrepareOptions(tsconfig: TsConfigResult) {
     return transpiler.createSwcOptions(parsed.options, undefined, swc, 'swc');
   } catch (err) {
     console.log(`swcPrepareOptions failed: ${err.message}`);
-    return {};
+    return {} as TranspilerOptions;
   }
 }
