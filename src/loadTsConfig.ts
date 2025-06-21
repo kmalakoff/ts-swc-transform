@@ -1,7 +1,7 @@
 import * as getTS from 'get-tsconfig-compat';
 import type { ConfigOptions } from './types.js';
 
-export default function loadTsConfig(options: ConfigOptions, name: string) {
+export default function loadTsConfig(options: ConfigOptions, name: string): getTS.TsConfigResult {
   let tsconfig = options.tsconfig;
   if (!tsconfig) tsconfig = getTS.getTsconfig(options.cwd || process.cwd());
 
