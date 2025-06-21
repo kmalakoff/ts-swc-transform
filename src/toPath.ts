@@ -4,7 +4,7 @@ import path from 'path';
 import resolveCJS from 'resolve';
 import url from 'url';
 import { moduleRegEx } from './constants.ts';
-import * as imr from './lib/importMetaResolve.ts';
+import importMetaResolve from './lib/importMetaResolve.ts';
 import * as urlPolyfills from './lib/urlFileUrl.ts';
 import type { Context } from './types.ts';
 
@@ -28,7 +28,7 @@ export default function toPath(specifier: string, context?: Context): string {
     const parentPath = context ? getParentPath(context) : process.cwd();
     if (!useCJS) {
       try {
-        const entryURL = imr.resolve(specifier, pathToFileURL(parentPath));
+        const entryURL = importMetaResolve(specifier, pathToFileURL(parentPath));
         if (entryURL) return fileURLToPath(entryURL);
       } catch (_) {
         /* it may fail due to commonjs edge cases */
