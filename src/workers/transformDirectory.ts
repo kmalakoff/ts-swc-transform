@@ -2,11 +2,11 @@ import Iterator, { type Entry } from 'fs-iterator';
 import path from 'path';
 import Queue from 'queue-cb';
 
-import { extensions, typeFileRegEx } from '../constants.js';
-import createMatcher from '../createMatcher.js';
-import transformFile from '../lib/transformFile.js';
+import { extensions, typeFileRegEx } from '../constants.ts';
+import createMatcher from '../createMatcher.ts';
+import transformFile from '../lib/transformFile.ts';
 
-import type { ConfigOptions, ConfigOptionsInternal, TargetType, TransformDirectoryCallback } from '../types.js';
+import type { ConfigOptions, ConfigOptionsInternal, TargetType, TransformDirectoryCallback } from '../types.ts';
 
 export default function transformDirectoryWorker(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): undefined {
   const tsconfig = options.tsconfig;
