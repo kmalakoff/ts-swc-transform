@@ -3,7 +3,7 @@ import type { Entry } from 'fs-iterator';
 import find from 'lodash.find';
 import path from 'path';
 import { moduleRegEx } from '../constants';
-import type { ConfigOptionsInternal } from '../types.js';
+import type { ConfigOptionsInternal } from '../types.ts';
 import parseSpecifiers from './parseSpecifiers';
 
 export default function makeReplacements(entry: Entry, code: string, regex: RegExp, extensions: string[], extension: string, options: ConfigOptionsInternal): string {

@@ -4,10 +4,10 @@ import Module from 'module';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-import { typeFileRegEx } from '../constants.js';
-import createMatcher from '../createMatcher.js';
+import { typeFileRegEx } from '../constants.ts';
+import createMatcher from '../createMatcher.ts';
 
-import type { ConfigOptions, TransformTypesCallback } from '../types.js';
+import type { ConfigOptions, TransformTypesCallback } from '../types.ts';
 
 export default function transformTypesWorker(src: string, dest: string, options: ConfigOptions, callback: TransformTypesCallback): undefined {
   const tsconfig = options.tsconfig;

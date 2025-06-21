@@ -1,9 +1,9 @@
 import fs from 'fs';
 import find from 'lodash.find';
 import path from 'path';
-import { extensions, moduleRegEx, typeFileRegEx } from './constants.js';
-import toPath from './toPath.js';
-import type { Context } from './types.js';
+import { extensions, moduleRegEx, typeFileRegEx } from './constants.ts';
+import toPath from './toPath.ts';
+import type { Context } from './types.ts';
 
 const indexExtensions = extensions.map((x) => `index${x}`);
 

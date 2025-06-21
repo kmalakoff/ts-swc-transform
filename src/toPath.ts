@@ -3,11 +3,10 @@ import module from 'module';
 import path from 'path';
 import resolveCJS from 'resolve';
 import url from 'url';
-// @ts-ignore
-import { resolve as resolveESM } from '../../assets/import-meta-resolve.cjs';
-import { moduleRegEx } from './constants.js';
-import * as urlPolyfills from './lib/url-file-url.js';
-import type { Context } from './types.js';
+import { moduleRegEx } from './constants.ts';
+import * as imr from './lib/importMetaResolve.ts';
+import * as urlPolyfills from './lib/urlFileUrl.ts';
+import type { Context } from './types.ts';
 
 const useCJS = !module.createRequire;
 const fileURLToPath = url.fileURLToPath || urlPolyfills.fileURLToPath;
@@ -29,7 +28,7 @@ export default function toPath(specifier: string, context?: Context): string {
     const parentPath = context ? getParentPath(context) : process.cwd();
     if (!useCJS) {
       try {
-        const entryURL = resolveESM(specifier, pathToFileURL(parentPath));
+        const entryURL = imr.resolve(specifier, pathToFileURL(parentPath));
         if (entryURL) return fileURLToPath(entryURL);
       } catch (_) {
         /* it may fail due to commonjs edge cases */
