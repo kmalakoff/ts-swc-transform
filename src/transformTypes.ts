@@ -1,6 +1,6 @@
 import path from 'path';
 import url from 'url';
-import loadTsConfig from './loadTsConfig.js';
+import loadTsConfig from './loadTsConfig.ts';
 
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
@@ -20,7 +20,7 @@ function dispatch(version, src, dest, options, callback) {
   }
 }
 
-import type { ConfigOptions, TransformTypesCallback } from './types.js';
+import type { ConfigOptions, TransformTypesCallback } from './types.ts';
 export default function transformTypes(src: string, dest: string, options?: ConfigOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<string[]> {
   try {
     if (typeof src !== 'string') throw new Error('transformTypes: unexpected source');
