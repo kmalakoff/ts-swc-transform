@@ -5,13 +5,13 @@ import mkdirp from 'mkdirp-classic';
 import Module from 'module';
 import path from 'path';
 import Queue from 'queue-cb';
-import patchCJS from '../lib/patchCJS.js';
-import patchESM from '../lib/patchESM.js';
-import swcPrepareOptions from '../lib/swcPrepareOptions.js';
+import patchCJS from '../lib/patchCJS.ts';
+import patchESM from '../lib/patchESM.ts';
+import swcPrepareOptions from '../lib/swcPrepareOptions.ts';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-import type { ConfigOptionsInternal, TargetType, TransformFileCallback } from '../types.js';
+import type { ConfigOptionsInternal, TargetType, TransformFileCallback } from '../types.ts';
 
 export default function transformFile(entry: Entry, dest: string, type: TargetType, options: ConfigOptionsInternal, callback: TransformFileCallback): undefined {
   let tsconfig = options.tsconfig;

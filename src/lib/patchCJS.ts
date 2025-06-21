@@ -8,7 +8,7 @@ const DEFAULT_EXTENSION = '.js';
 import type { Output } from '@swc/core';
 import type { Entry } from 'fs-iterator';
 import type { CompilerOptions } from 'typescript';
-import type { ConfigOptionsInternal } from '../types.js';
+import type { ConfigOptionsInternal } from '../types.ts';
 
 interface InternalCompilerOptions extends CompilerOptions {
   rewriteRelativeImportExtensions?: boolean;
