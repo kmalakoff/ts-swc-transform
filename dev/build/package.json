@@ -16,5 +16,6 @@
     "rollup": "^4.30.1",
     "rollup-plugin-node-externals": "^8.0.0",
     "ts-swc-rollup-plugin": "^1.10.2"
-  }
+  },
+  "version": ""
 }
