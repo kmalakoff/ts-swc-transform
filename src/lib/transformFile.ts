@@ -7,7 +7,7 @@ import path from 'path';
 import Queue from 'queue-cb';
 import patchCJS from '../lib/patchCJS.ts';
 import patchESM from '../lib/patchESM.ts';
-import swcPrepareOptions from '../lib/swcPrepareOptions.ts';
+import prepareSWCOptions from '../lib/prepareSWCOptions.ts';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
@@ -21,11 +21,11 @@ export default function transformFile(entry: Entry, dest: string, type: TargetTy
     tsconfig = { ...tsconfig };
     tsconfig.config = { ...tsconfig.config };
     tsconfig.config.compilerOptions = { ...(tsconfig.config.compilerOptions || {}) };
-    tsconfig.config.compilerOptions.module = 'CommonJS';
-    tsconfig.config.compilerOptions.target = 'ES5';
+    tsconfig.config.compilerOptions.module = 'commonjs';
+    tsconfig.config.compilerOptions.target = 'es5';
   }
 
-  const swcOptions = swcPrepareOptions(tsconfig);
+  const swcOptions = prepareSWCOptions(tsconfig);
   const swc = _require('@swc/core');
 
   swc
