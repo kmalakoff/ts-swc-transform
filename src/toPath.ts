@@ -4,7 +4,7 @@ import path from 'path';
 import resolveCJS from 'resolve';
 import url from 'url';
 import { moduleRegEx } from './constants.ts';
-import importMetaResolve from './lib/importMetaResolve.ts';
+import importMetaResolve from './lib/import-meta-resolve.ts';
 import * as urlPolyfills from './lib/urlFileUrl.ts';
 import type { Context } from './types.ts';
 

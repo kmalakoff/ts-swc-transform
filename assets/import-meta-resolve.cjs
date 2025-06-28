@@ -1,9 +1,9 @@
 // bail early
 var useCJS = !require('module').createRequire;
 if (useCJS) {
-    module.exports.moduleResolve = function () { return null };
-    module.exports.resolve = function () { return null };
-    return;
+  module.exports.moduleResolve = function () { return null };
+  module.exports.resolve = function () { return null };
+  return;
 }
 'use strict';
 
@@ -26,8 +26,8 @@ var util = require('util');
  *
  * @typedef {Error & ErrnoExceptionFields} ErrnoException
  */ /**
-* @typedef {(...parameters: Array<any>) => string} MessageFunction
-*/ // Manually “tree shaken” from:
+ * @typedef {(...parameters: Array<any>) => string} MessageFunction
+ */ // Manually “tree shaken” from:
 // <https://github.com/nodejs/node/blob/45f5c9b/lib/internal/errors.js>
 // Last checked on: Nov 2, 2023.
 function _type_of$1(obj) {
@@ -61,7 +61,7 @@ var codes = {};
  *   The list type to be inserted before the last element.
  * @returns {string}
  */ function formatList(array) {
-    var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'and';
+    var type = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 'and';
     return array.length < 3 ? array.join(" ".concat(type, " ")) : "".concat(array.slice(0, -1).join(', '), ", ").concat(type, " ").concat(array[array.length - 1]);
 }
 /** @type {Map<string, MessageFunction | string>} */ var messages = new Map();
@@ -71,157 +71,157 @@ codes.ERR_INVALID_ARG_TYPE = createError('ERR_INVALID_ARG_TYPE', /**
    * @param {string} name
    * @param {Array<string> | string} expected
    * @param {unknown} actual
-   */ function (name, expected, actual) {
-        assert(typeof name === 'string', "'name' must be a string");
-        if (!Array.isArray(expected)) {
-            expected = [
-                expected
-            ];
-        }
-        var message = 'The ';
-        if (name.endsWith(' argument')) {
-            // For cases like 'first argument'
-            message += "".concat(name, " ");
-        } else {
-            var type = name.includes('.') ? 'property' : 'argument';
-            message += '"'.concat(name, '" ').concat(type, " ");
-        }
-        message += 'must be ';
+   */ function(name, expected, actual) {
+    assert(typeof name === 'string', "'name' must be a string");
+    if (!Array.isArray(expected)) {
+        expected = [
+            expected
+        ];
+    }
+    var message = 'The ';
+    if (name.endsWith(' argument')) {
+        // For cases like 'first argument'
+        message += "".concat(name, " ");
+    } else {
+        var type = name.includes('.') ? 'property' : 'argument';
+        message += '"'.concat(name, '" ').concat(type, " ");
+    }
+    message += 'must be ';
     /** @type {Array<string>} */ var types = [];
     /** @type {Array<string>} */ var instances = [];
     /** @type {Array<string>} */ var other = [];
-        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
-        try {
-            for (var _iterator = expected[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var value = _step.value;
-                assert(typeof value === 'string', 'All expected entries have to be of type string');
-                if (kTypes.has(value)) {
-                    types.push(value.toLowerCase());
-                } else if (classRegExp.exec(value) === null) {
-                    assert(value !== 'object', 'The value "object" should be written as "Object"');
-                    other.push(value);
-                } else {
-                    instances.push(value);
-                }
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return != null) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
-        }
-        // Special handle `object` in case other instances are allowed to outline
-        // the differences between each other.
-        if (instances.length > 0) {
-            var pos = types.indexOf('object');
-            if (pos !== -1) {
-                types.slice(pos, 1);
-                instances.push('Object');
-            }
-        }
-        if (types.length > 0) {
-            message += "".concat(types.length > 1 ? 'one of type' : 'of type', " ").concat(formatList(types, 'or'));
-            if (instances.length > 0 || other.length > 0) message += ' or ';
-        }
-        if (instances.length > 0) {
-            message += "an instance of ".concat(formatList(instances, 'or'));
-            if (other.length > 0) message += ' or ';
-        }
-        if (other.length > 0) {
-            if (other.length > 1) {
-                message += "one of ".concat(formatList(other, 'or'));
+    var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+    try {
+        for(var _iterator = expected[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+            var value = _step.value;
+            assert(typeof value === 'string', 'All expected entries have to be of type string');
+            if (kTypes.has(value)) {
+                types.push(value.toLowerCase());
+            } else if (classRegExp.exec(value) === null) {
+                assert(value !== 'object', 'The value "object" should be written as "Object"');
+                other.push(value);
             } else {
-                if (other[0].toLowerCase() !== other[0]) message += 'an ';
-                message += "".concat(other[0]);
+                instances.push(value);
             }
         }
-        message += ". Received ".concat(determineSpecificType(actual));
-        return message;
-    }, TypeError);
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally{
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+                _iterator.return();
+            }
+        } finally{
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+    // Special handle `object` in case other instances are allowed to outline
+    // the differences between each other.
+    if (instances.length > 0) {
+        var pos = types.indexOf('object');
+        if (pos !== -1) {
+            types.slice(pos, 1);
+            instances.push('Object');
+        }
+    }
+    if (types.length > 0) {
+        message += "".concat(types.length > 1 ? 'one of type' : 'of type', " ").concat(formatList(types, 'or'));
+        if (instances.length > 0 || other.length > 0) message += ' or ';
+    }
+    if (instances.length > 0) {
+        message += "an instance of ".concat(formatList(instances, 'or'));
+        if (other.length > 0) message += ' or ';
+    }
+    if (other.length > 0) {
+        if (other.length > 1) {
+            message += "one of ".concat(formatList(other, 'or'));
+        } else {
+            if (other[0].toLowerCase() !== other[0]) message += 'an ';
+            message += "".concat(other[0]);
+        }
+    }
+    message += ". Received ".concat(determineSpecificType(actual));
+    return message;
+}, TypeError);
 codes.ERR_INVALID_MODULE_SPECIFIER = createError('ERR_INVALID_MODULE_SPECIFIER', /**
    * @param {string} request
    * @param {string} reason
    * @param {string} [base]
-   */ function (request, reason) {
-        var base = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
-        return 'Invalid module "'.concat(request, '" ').concat(reason).concat(base ? " imported from ".concat(base) : '');
-    }, TypeError);
+   */ function(request, reason) {
+    var base = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : undefined;
+    return 'Invalid module "'.concat(request, '" ').concat(reason).concat(base ? " imported from ".concat(base) : '');
+}, TypeError);
 codes.ERR_INVALID_PACKAGE_CONFIG = createError('ERR_INVALID_PACKAGE_CONFIG', /**
    * @param {string} path
    * @param {string} [base]
    * @param {string} [message]
-   */ function (path, base, message) {
-        return "Invalid package config ".concat(path).concat(base ? " while importing ".concat(base) : '').concat(message ? ". ".concat(message) : '');
-    }, Error);
+   */ function(path, base, message) {
+    return "Invalid package config ".concat(path).concat(base ? " while importing ".concat(base) : '').concat(message ? ". ".concat(message) : '');
+}, Error);
 codes.ERR_INVALID_PACKAGE_TARGET = createError('ERR_INVALID_PACKAGE_TARGET', /**
    * @param {string} packagePath
    * @param {string} key
    * @param {unknown} target
    * @param {boolean} [isImport=false]
    * @param {string} [base]
-   */ function (packagePath, key, target) {
-        var isImport = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false, base = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : undefined;
-        var relatedError = typeof target === 'string' && !isImport && target.length > 0 && !target.startsWith('./');
-        if (key === '.') {
-            assert(isImport === false);
-            return 'Invalid "exports" main target '.concat(JSON.stringify(target), " defined ") + "in the package config ".concat(packagePath, "package.json").concat(base ? " imported from ".concat(base) : '').concat(relatedError ? '; targets must start with "./"' : '');
-        }
-        return 'Invalid "'.concat(isImport ? 'imports' : 'exports', '" target ').concat(JSON.stringify(target), " defined for '").concat(key, "' in the package config ").concat(packagePath, "package.json").concat(base ? " imported from ".concat(base) : '').concat(relatedError ? '; targets must start with "./"' : '');
-    }, Error);
+   */ function(packagePath, key, target) {
+    var isImport = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : false, base = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : undefined;
+    var relatedError = typeof target === 'string' && !isImport && target.length > 0 && !target.startsWith('./');
+    if (key === '.') {
+        assert(isImport === false);
+        return 'Invalid "exports" main target '.concat(JSON.stringify(target), " defined ") + "in the package config ".concat(packagePath, "package.json").concat(base ? " imported from ".concat(base) : '').concat(relatedError ? '; targets must start with "./"' : '');
+    }
+    return 'Invalid "'.concat(isImport ? 'imports' : 'exports', '" target ').concat(JSON.stringify(target), " defined for '").concat(key, "' in the package config ").concat(packagePath, "package.json").concat(base ? " imported from ".concat(base) : '').concat(relatedError ? '; targets must start with "./"' : '');
+}, Error);
 codes.ERR_MODULE_NOT_FOUND = createError('ERR_MODULE_NOT_FOUND', /**
    * @param {string} path
    * @param {string} base
    * @param {boolean} [exactUrl]
-   */ function (path, base) {
-        var exactUrl = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-        return "Cannot find ".concat(exactUrl ? 'module' : 'package', " '").concat(path, "' imported from ").concat(base);
-    }, Error);
+   */ function(path, base) {
+    var exactUrl = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : false;
+    return "Cannot find ".concat(exactUrl ? 'module' : 'package', " '").concat(path, "' imported from ").concat(base);
+}, Error);
 codes.ERR_NETWORK_IMPORT_DISALLOWED = createError('ERR_NETWORK_IMPORT_DISALLOWED', "import of '%s' by %s is not supported: %s", Error);
 codes.ERR_PACKAGE_IMPORT_NOT_DEFINED = createError('ERR_PACKAGE_IMPORT_NOT_DEFINED', /**
    * @param {string} specifier
    * @param {string} packagePath
    * @param {string} base
-   */ function (specifier, packagePath, base) {
-        return 'Package import specifier "'.concat(specifier, '" is not defined').concat(packagePath ? " in package ".concat(packagePath, "package.json") : '', " imported from ").concat(base);
-    }, TypeError);
+   */ function(specifier, packagePath, base) {
+    return 'Package import specifier "'.concat(specifier, '" is not defined').concat(packagePath ? " in package ".concat(packagePath, "package.json") : '', " imported from ").concat(base);
+}, TypeError);
 codes.ERR_PACKAGE_PATH_NOT_EXPORTED = createError('ERR_PACKAGE_PATH_NOT_EXPORTED', /**
    * @param {string} packagePath
    * @param {string} subpath
    * @param {string} [base]
-   */ function (packagePath, subpath) {
-        var base = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
-        if (subpath === '.') return 'No "exports" main defined in '.concat(packagePath, "package.json").concat(base ? " imported from ".concat(base) : '');
-        return "Package subpath '".concat(subpath, '\' is not defined by "exports" in ').concat(packagePath, "package.json").concat(base ? " imported from ".concat(base) : '');
-    }, Error);
+   */ function(packagePath, subpath) {
+    var base = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : undefined;
+    if (subpath === '.') return 'No "exports" main defined in '.concat(packagePath, "package.json").concat(base ? " imported from ".concat(base) : '');
+    return "Package subpath '".concat(subpath, '\' is not defined by "exports" in ').concat(packagePath, "package.json").concat(base ? " imported from ".concat(base) : '');
+}, Error);
 codes.ERR_UNSUPPORTED_DIR_IMPORT = createError('ERR_UNSUPPORTED_DIR_IMPORT', "Directory import '%s' is not supported " + 'resolving ES modules imported from %s', Error);
 codes.ERR_UNSUPPORTED_RESOLVE_REQUEST = createError('ERR_UNSUPPORTED_RESOLVE_REQUEST', 'Failed to resolve module specifier "%s" from "%s": Invalid relative URL or base scheme is not hierarchical.', TypeError);
 codes.ERR_UNKNOWN_FILE_EXTENSION = createError('ERR_UNKNOWN_FILE_EXTENSION', /**
    * @param {string} extension
    * @param {string} path
-   */ function (extension, path) {
-        return 'Unknown file extension "'.concat(extension, '" for ').concat(path);
-    }, TypeError);
+   */ function(extension, path) {
+    return 'Unknown file extension "'.concat(extension, '" for ').concat(path);
+}, TypeError);
 codes.ERR_INVALID_ARG_VALUE = createError('ERR_INVALID_ARG_VALUE', /**
    * @param {string} name
    * @param {unknown} value
    * @param {string} [reason='is invalid']
-   */ function (name, value) {
-        var reason = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'is invalid';
-        var inspected = util.inspect(value);
-        if (inspected.length > 128) {
-            inspected = "".concat(inspected.slice(0, 128), "...");
-        }
-        var type = name.includes('.') ? 'property' : 'argument';
-        return "The ".concat(type, " '").concat(name, "' ").concat(reason, ". Received ").concat(inspected);
-    }, TypeError);
+   */ function(name, value) {
+    var reason = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 'is invalid';
+    var inspected = util.inspect(value);
+    if (inspected.length > 128) {
+        inspected = "".concat(inspected.slice(0, 128), "...");
+    }
+    var type = name.includes('.') ? 'property' : 'argument';
+    return "The ".concat(type, " '").concat(name, "' ").concat(reason, ". Received ").concat(inspected);
+}, TypeError);
 /**
  * Utility function for registering the error codes. Only used here. Exported
  * *only* to allow for testing.
@@ -245,7 +245,7 @@ codes.ERR_INVALID_ARG_VALUE = createError('ERR_INVALID_ARG_VALUE', /**
     /**
    * @param {Array<unknown>} parameters
    */ function NodeError() {
-        for (var _len = arguments.length, parameters = new Array(_len), _key = 0; _key < _len; _key++) {
+        for(var _len = arguments.length, parameters = new Array(_len), _key = 0; _key < _len; _key++){
             parameters[_key] = arguments[_key];
         }
         var limit = Error.stackTraceLimit;
@@ -287,7 +287,7 @@ codes.ERR_INVALID_ARG_VALUE = createError('ERR_INVALID_ARG_VALUE', /**
         if (v8.startupSnapshot.isBuildingSnapshot()) {
             return false;
         }
-    } catch (e) { }
+    } catch (e) {}
     var desc = Object.getOwnPropertyDescriptor(Error, 'stackTraceLimit');
     if (desc === undefined) {
         return Object.isExtensible(Error);
@@ -312,17 +312,17 @@ var captureLargerStackTrace = hideStackFrames(/**
    * @param {Error} error
    * @returns {Error}
    */ // @ts-expect-error: fine
-    function (error) {
-        var stackTraceLimitIsWritable = isErrorStackTraceLimitWritable();
-        if (stackTraceLimitIsWritable) {
-            userStackTraceLimit = Error.stackTraceLimit;
-            Error.stackTraceLimit = Number.POSITIVE_INFINITY;
-        }
-        Error.captureStackTrace(error);
-        // Reset the limit
-        if (stackTraceLimitIsWritable) Error.stackTraceLimit = userStackTraceLimit;
-        return error;
-    });
+function(error) {
+    var stackTraceLimitIsWritable = isErrorStackTraceLimitWritable();
+    if (stackTraceLimitIsWritable) {
+        userStackTraceLimit = Error.stackTraceLimit;
+        Error.stackTraceLimit = Number.POSITIVE_INFINITY;
+    }
+    Error.captureStackTrace(error);
+    // Reset the limit
+    if (stackTraceLimitIsWritable) Error.stackTraceLimit = userStackTraceLimit;
+    return error;
+});
 /**
  * @param {string} key
  * @param {Array<unknown>} parameters
@@ -337,7 +337,7 @@ var captureLargerStackTrace = hideStackFrames(/**
     }
     var regex = /%[dfijoOs]/g;
     var expectedLength = 0;
-    while (regex.exec(message) !== null) expectedLength++;
+    while(regex.exec(message) !== null)expectedLength++;
     assert(expectedLength === parameters.length, "Code: ".concat(key, "; The provided arguments length (").concat(parameters.length, ") does not ") + "match the required ones (".concat(expectedLength, ")."));
     if (parameters.length === 0) return message;
     parameters.unshift(message);
@@ -446,7 +446,7 @@ var ERR_INVALID_PACKAGE_CONFIG$1 = codes.ERR_INVALID_PACKAGE_CONFIG;
  */ function getPackageScopeConfig(resolved) {
     // Note: in Node, this is now a native module.
     var packageJSONUrl = new URL('package.json', resolved);
-    while (true) {
+    while(true){
         var packageJSONPath = packageJSONUrl.pathname;
         if (packageJSONPath.endsWith('node_modules/package.json')) {
             break;
@@ -518,7 +518,7 @@ var hasOwnProperty = {}.hasOwnProperty;
     'file:': getFileProtocolModuleFormat,
     'http:': getHttpProtocolModuleFormat,
     'https:': getHttpProtocolModuleFormat,
-    'node:': function () {
+    'node:': function() {
         return 'builtin';
     }
 };
@@ -544,13 +544,13 @@ var hasOwnProperty = {}.hasOwnProperty;
  */ function extname(url) {
     var pathname = url.pathname;
     var index = pathname.length;
-    while (index--) {
+    while(index--){
         var code = pathname.codePointAt(index);
-        if (code === 47 /* `/` */) {
+        if (code === 47 /* `/` */ ) {
             return '';
         }
-        if (code === 46 /* `.` */) {
-            return pathname.codePointAt(index - 1) === 47 /* `/` */ ? '' : pathname.slice(index);
+        if (code === 46 /* `.` */ ) {
+            return pathname.codePointAt(index - 1) === 47 /* `/` */  ? '' : pathname.slice(index);
         }
     }
     return '';
@@ -586,7 +586,7 @@ var hasOwnProperty = {}.hasOwnProperty;
     throw new ERR_UNKNOWN_FILE_EXTENSION(value, filepath);
 }
 function getHttpProtocolModuleFormat() {
-    // To do: HTTPS imports.
+// To do: HTTPS imports.
 }
 /**
  * @param {URL} url
@@ -706,10 +706,10 @@ var doubleSlashRegEx = /[/\\]{2}/;
     try {
         return fs.statSync(path);
     } catch (e) {
-        // Note: in Node code this returns `new Stats`,
-        // but in Node 22 that’s marked as a deprecated internal API.
-        // Which, well, we kinda are, but still to prevent that warning,
-        // just yield `undefined`.
+    // Note: in Node code this returns `new Stats`,
+    // but in Node 22 that’s marked as a deprecated internal API.
+    // Which, well, we kinda are, but still to prevent that warning,
+    // just yield `undefined`.
     }
 }
 /**
@@ -749,7 +749,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
             "./".concat(packageConfig.main, "/index.node")
         ];
         var i = -1;
-        while (++i < tries.length) {
+        while(++i < tries.length){
             guess = new url.URL(tries[i], packageJsonUrl);
             if (fileExists(guess)) break;
             guess = undefined;
@@ -758,7 +758,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
             emitLegacyIndexDeprecation(guess, packageJsonUrl, base, packageConfig.main);
             return guess;
         }
-        // Fallthrough.
+    // Fallthrough.
     }
     var tries1 = [
         './index.js',
@@ -766,7 +766,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
         './index.node'
     ];
     var i1 = -1;
-    while (++i1 < tries1.length) {
+    while(++i1 < tries1.length){
         guess = new url.URL(tries1[i1], packageJsonUrl);
         if (fileExists(guess)) break;
         guess = undefined;
@@ -880,10 +880,10 @@ var doubleSlashRegEx = /[/\\]{2}/;
                 new url.URL(target);
                 isURL = true;
             } catch (e) {
-                // Continue regardless of error.
+            // Continue regardless of error.
             }
             if (!isURL) {
-                var exportTarget = pattern ? RegExpPrototypeSymbolReplace.call(patternRegEx, target, function () {
+                var exportTarget = pattern ? RegExpPrototypeSymbolReplace.call(patternRegEx, target, function() {
                     return subpath;
                 }) : target + subpath;
                 return packageResolve(exportTarget, packageJsonUrl, conditions);
@@ -894,10 +894,10 @@ var doubleSlashRegEx = /[/\\]{2}/;
     if (invalidSegmentRegEx.exec(target.slice(2)) !== null) {
         if (deprecatedInvalidSegmentRegEx.exec(target.slice(2)) === null) {
             if (!isPathMap) {
-                var request = pattern ? match.replace('*', function () {
+                var request = pattern ? match.replace('*', function() {
                     return subpath;
                 }) : match + subpath;
-                var resolvedTarget = pattern ? RegExpPrototypeSymbolReplace.call(patternRegEx, target, function () {
+                var resolvedTarget = pattern ? RegExpPrototypeSymbolReplace.call(patternRegEx, target, function() {
                     return subpath;
                 }) : target;
                 emitInvalidSegmentDeprecation(resolvedTarget, request, match, packageJsonUrl, internal, base, true);
@@ -912,12 +912,12 @@ var doubleSlashRegEx = /[/\\]{2}/;
     if (!resolvedPath.startsWith(packagePath)) throw invalidPackageTarget(match, target, packageJsonUrl, internal, base);
     if (subpath === '') return resolved;
     if (invalidSegmentRegEx.exec(subpath) !== null) {
-        var request1 = pattern ? match.replace('*', function () {
+        var request1 = pattern ? match.replace('*', function() {
             return subpath;
         }) : match + subpath;
         if (deprecatedInvalidSegmentRegEx.exec(subpath) === null) {
             if (!isPathMap) {
-                var resolvedTarget1 = pattern ? RegExpPrototypeSymbolReplace.call(patternRegEx, target, function () {
+                var resolvedTarget1 = pattern ? RegExpPrototypeSymbolReplace.call(patternRegEx, target, function() {
                     return subpath;
                 }) : target;
                 emitInvalidSegmentDeprecation(resolvedTarget1, request1, match, packageJsonUrl, internal, base, false);
@@ -927,7 +927,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
         }
     }
     if (pattern) {
-        return new url.URL(RegExpPrototypeSymbolReplace.call(patternRegEx, resolved.href, function () {
+        return new url.URL(RegExpPrototypeSymbolReplace.call(patternRegEx, resolved.href, function() {
             return subpath;
         }));
     }
@@ -961,9 +961,9 @@ var doubleSlashRegEx = /[/\\]{2}/;
         if (targetList.length === 0) return null;
         /** @type {ErrnoException | null | undefined} */ var lastException;
         var i = -1;
-        while (++i < targetList.length) {
+        while(++i < targetList.length){
             var targetItem = targetList[i];
-            /** @type {URL | null} */ var resolveResult = undefined;
+            /** @type {URL | null} */ var resolveResult = void 0;
             try {
                 resolveResult = resolvePackageTarget(packageJsonUrl, targetItem, subpath, packageSubpath, base, pattern, internal, isPathMap, conditions);
             } catch (error) {
@@ -987,14 +987,14 @@ var doubleSlashRegEx = /[/\\]{2}/;
     if ((typeof target === "undefined" ? "undefined" : _type_of(target)) === 'object' && target !== null) {
         var keys = Object.getOwnPropertyNames(target);
         var i1 = -1;
-        while (++i1 < keys.length) {
+        while(++i1 < keys.length){
             var key = keys[i1];
             if (isArrayIndex(key)) {
                 throw new ERR_INVALID_PACKAGE_CONFIG(url.fileURLToPath(packageJsonUrl), base, '"exports" cannot contain numeric property keys.');
             }
         }
         i1 = -1;
-        while (++i1 < keys.length) {
+        while(++i1 < keys.length){
             var key1 = keys[i1];
             if (key1 === 'default' || conditions && conditions.has(key1)) {
                 // @ts-expect-error: indexable.
@@ -1023,7 +1023,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
     var isConditionalSugar = false;
     var i = 0;
     var keyIndex = -1;
-    while (++keyIndex < keys.length) {
+    while(++keyIndex < keys.length){
         var key = keys[keyIndex];
         var currentIsConditionalSugar = key === '' || key[0] !== '.';
         if (i++ === 0) {
@@ -1075,7 +1075,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
     var bestMatchSubpath = '';
     var keys = Object.getOwnPropertyNames(exports);
     var i = -1;
-    while (++i < keys.length) {
+    while(++i < keys.length){
         var key = keys[i];
         var patternIndex = key.indexOf('*');
         if (patternIndex !== -1 && packageSubpath.startsWith(key.slice(0, patternIndex))) {
@@ -1148,7 +1148,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
                 var bestMatchSubpath = '';
                 var keys = Object.getOwnPropertyNames(imports);
                 var i = -1;
-                while (++i < keys.length) {
+                while(++i < keys.length){
                     var key = keys[i];
                     var patternIndex = key.indexOf('*');
                     if (patternIndex !== -1 && name.startsWith(key.slice(0, -1))) {
@@ -1244,8 +1244,8 @@ var doubleSlashRegEx = /[/\\]{2}/;
             return legacyMainResolve(packageJsonUrl1, packageConfig1, base);
         }
         return new url.URL(packageSubpath, packageJsonUrl1);
-        // Cross-platform root check.
-    } while (packageJsonPath.length !== lastPath.length);
+    // Cross-platform root check.
+    }while (packageJsonPath.length !== lastPath.length);
     throw new ERR_MODULE_NOT_FOUND(packageName, url.fileURLToPath(base), false);
 }
 /**
@@ -1331,14 +1331,14 @@ var doubleSlashRegEx = /[/\\]{2}/;
         if (parentProtocol === 'http:' || parentProtocol === 'https:') {
             if (shouldBeTreatedAsRelativeOrAbsolutePath(specifier)) {
                 // Avoid accessing the `protocol` property due to the lazy getters.
-                var parsedProtocol = parsed === null || parsed === undefined ? undefined : parsed.protocol;
+                var parsedProtocol = parsed === null || parsed === void 0 ? void 0 : parsed.protocol;
                 // `data:` and `blob:` disallowed due to allowing file: access via
                 // indirection
                 if (parsedProtocol && parsedProtocol !== 'https:' && parsedProtocol !== 'http:') {
                     throw new ERR_NETWORK_IMPORT_DISALLOWED(specifier, parsedParentURL, 'remote imports cannot import from a local location.');
                 }
                 return {
-                    url: (parsed === null || parsed === undefined ? undefined : parsed.href) || ''
+                    url: (parsed === null || parsed === void 0 ? void 0 : parsed.href) || ''
                 };
             }
             if (module$1.builtinModules.includes(specifier)) {
@@ -1387,7 +1387,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
  * @param {{parentURL?: string, conditions?: Array<string>}} context
  * @returns {{url: string, format?: string | null}}
  */ function defaultResolve(specifier) {
-    var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var context = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
     var parentURL = context.parentURL;
     assert(parentURL !== undefined, 'expected `parentURL` to be defined');
     throwIfInvalidParentURL(parentURL);
@@ -1396,7 +1396,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
         try {
             parsedParentURL = new url.URL(parentURL);
         } catch (e) {
-            // Ignore exception
+        // Ignore exception
         }
     }
     /** @type {URL | undefined} */ var parsed;
@@ -1412,7 +1412,7 @@ var doubleSlashRegEx = /[/\\]{2}/;
             };
         }
     } catch (e) {
-        // Ignore exception
+    // Ignore exception
     }
     // There are multiple deep branches that can either throw or return; instead
     // of duplicating that deeply nested logic for the possible returns, DRY and
