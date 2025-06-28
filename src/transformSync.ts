@@ -1,6 +1,8 @@
-import * as getTS from 'get-tsconfig-compat';
 import path from 'path';
 import url from 'url';
+import loadConfigSync from './loadConfigSync.ts';
+
+import type { TSConfig } from './types.ts';
 
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
@@ -17,10 +19,9 @@ function dispatch(version, contents, fileName, tsconfig) {
 }
 
 import type { Output } from '@swc/core';
-import type { TsConfigResult } from 'get-tsconfig-compat';
-export default function transformSync(contents: string, fileName: string, tsconfig: TsConfigResult): Output {
+export default function transformSync(contents: string, fileName: string, tsconfig?: TSConfig): Output {
   if (typeof contents !== 'string') throw new Error('transformTypes: unexpected contents');
   if (typeof fileName !== 'string') throw new Error('transformTypes: unexpected fileName');
-  if (!tsconfig) tsconfig = getTS.getTsconfig(process.cwd());
+  if (!tsconfig) tsconfig = loadConfigSync(process.cwd());
   return dispatch(version, contents, fileName, tsconfig);
 }

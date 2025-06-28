@@ -1,5 +1,6 @@
 export * as constants from './constants.ts';
 export { default as createMatcher } from './createMatcher.ts';
+export { default as loadConfigSync } from './loadConfigSync.ts';
 export { default as resolveFileSync } from './resolveFileSync.ts';
 export { default as toPath } from './toPath.ts';
 export { default as transformDirectory } from './transformDirectory.ts';
