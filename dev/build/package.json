@@ -9,13 +9,13 @@
     "import-meta-resolve": "^4.1.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.2",
-    "@rollup/plugin-node-resolve": "^16.0.0",
-    "cross-spawn-cb": "^2.1.2",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "cross-spawn-cb": "^2.3.5",
     "resolve": "^1.22.10",
-    "rollup": "^4.30.1",
-    "rollup-plugin-node-externals": "^8.0.0",
-    "ts-swc-rollup-plugin": "^1.10.2"
+    "rollup": "^4.44.1",
+    "rollup-plugin-node-externals": "^8.0.1",
+    "ts-swc-rollup-plugin": "^2.1.9"
   },
   "version": ""
 }
