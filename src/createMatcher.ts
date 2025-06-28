@@ -1,12 +1,9 @@
-import type { TsConfigResult } from 'get-tsconfig-compat';
 import minimatch from 'minimatch';
 import path from 'path-posix';
 import unixify from 'unixify';
-import loadTsConfig from './loadTsConfig.ts';
-import type { Matcher } from './types.ts';
+import type { Matcher, TSConfig } from './types.ts';
 
-export default function createMatcher(tsConfig: TsConfigResult): Matcher {
-  const tsconfig = loadTsConfig({ tsconfig: tsConfig }, 'transformTypes');
+export default function createMatcher(tsconfig: TSConfig): Matcher {
   const tsconfigPath = path.dirname(unixify(tsconfig.path));
 
   function matchFn(condition) {
@@ -18,8 +15,8 @@ export default function createMatcher(tsConfig: TsConfigResult): Matcher {
     };
   }
 
-  const includes = (tsconfig.config.include || []).map(matchFn);
-  const excludes = (tsconfig.config.exclude || []).map(matchFn);
+  const includes = ((tsconfig.config.include as string[]) || []).map(matchFn);
+  const excludes = ((tsconfig.config.exclude as string[]) || []).map(matchFn);
 
   return function matcher(filePath) {
     if (filePath.endsWith('.json')) return false;
