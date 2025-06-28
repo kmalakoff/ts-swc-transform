@@ -1,6 +1,6 @@
 import path from 'path';
 import url from 'url';
-import loadTsConfig from './loadTsConfig.ts';
+import loadConfigSync from './loadConfigSync.ts';
 
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
@@ -32,8 +32,8 @@ export default function transformDirectory(src: string, dest: string, type: Targ
       callback = options as TransformDirectoryCallback;
       options = null;
     }
-    options = options || {};
-    const tsconfig = loadTsConfig({ cwd: src, ...options }, 'transformDirectory');
+    options = (options || {}) as ConfigOptions;
+    const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
     options = { tsconfig, ...options };
 
     if (typeof callback === 'function') return dispatch(version, src, dest, type, options, callback) as undefined;

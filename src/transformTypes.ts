@@ -1,6 +1,6 @@
 import path from 'path';
 import url from 'url';
-import loadTsConfig from './loadTsConfig.ts';
+import loadConfigSync from './loadConfigSync.ts';
 
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
@@ -30,8 +30,8 @@ export default function transformTypes(src: string, dest: string, options?: Conf
       callback = options as TransformTypesCallback;
       options = null;
     }
-    options = options || {};
-    const tsconfig = loadTsConfig({ cwd: src, ...options }, 'transformTypes');
+    options = (options || {}) as ConfigOptions;
+    const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
     options = { tsconfig, ...options };
 
     if (typeof callback === 'function') return dispatch(version, src, dest, options, callback);

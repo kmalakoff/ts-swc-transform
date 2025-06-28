@@ -1,15 +1,14 @@
 import assert from 'assert';
 import fs from 'fs';
-import * as getTS from 'get-tsconfig-compat';
 import { removeSync } from 'install-optional';
 import path from 'path';
 // @ts-ignore
-import { transformSync } from 'ts-swc-transform';
+import { loadConfigSync, transformSync } from 'ts-swc-transform';
 import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
-const tsconfig = getTS.getTsconfig(SRC_DIR);
+const tsconfig = loadConfigSync(SRC_DIR);
 
 describe('transformSync', () => {
   before(() => removeSync('@swc/core', '@swc/core-'));
