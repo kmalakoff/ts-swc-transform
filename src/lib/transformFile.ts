@@ -27,10 +27,11 @@ export default function transformFile(entry: Entry, dest: string, type: TargetTy
 
   const swcOptions = prepareSWCOptions(tsconfig);
   const swc = _require('@swc/core');
+  const ext = path.extname(entry.basename);
 
   swc
     .transformFile(entry.fullPath, {
-      ...(entry.basename.endsWith('.tsx') || entry.basename.endsWith('.jsx') ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
+      ...(ext === '.tsx' || ext === '.jsx' ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
       filename: entry.basename,
     })
     .then((output: Output) => {
