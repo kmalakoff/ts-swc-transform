@@ -18,7 +18,7 @@ function getParentPath(context: Context): string {
 }
 
 export default function toPath(specifier: string, context?: Context): string {
-  if (specifier.startsWith('file:')) return fileURLToPath(specifier);
+  if (specifier.indexOf('file:') === 0) return fileURLToPath(specifier);
   if (isAbsolute(specifier)) return specifier;
   if (specifier[0] === '.') {
     const parentPath = context ? getParentPath(context) : process.cwd();
