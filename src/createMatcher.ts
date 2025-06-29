@@ -8,10 +8,10 @@ export default function createMatcher(tsconfig: TSConfig): Matcher {
 
   function matchFn(condition) {
     let pattern = unixify(condition);
-    if (!path.isAbsolute(pattern) && !pattern.startsWith('*')) pattern = path.join(tsconfigPath, pattern);
+    if (!path.isAbsolute(pattern) && pattern.indexOf('*') !== 0) pattern = path.join(tsconfigPath, pattern);
 
     return function match(filePath) {
-      return filePath.startsWith(pattern) || minimatch(filePath, pattern);
+      return filePath.indexOf(pattern) === 0 || minimatch(filePath, pattern);
     };
   }
 
