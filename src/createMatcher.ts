@@ -19,7 +19,8 @@ export default function createMatcher(tsconfig: TSConfig): Matcher {
   const excludes = ((tsconfig.config.exclude as string[]) || []).map(matchFn);
 
   return function matcher(filePath) {
-    if (filePath.endsWith('.json')) return false;
+    const ext = path.extname(filePath);
+    if (ext === '.json') return false;
 
     filePath = unixify(filePath);
     for (let i = 0; i < excludes.length; ++i) {
