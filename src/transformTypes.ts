@@ -1,6 +1,6 @@
 import path from 'path';
+import loadConfigSync from 'read-tsconfig-sync';
 import url from 'url';
-import loadConfigSync from './loadConfigSync.ts';
 
 const major = +process.versions.node.split('.')[0];
 const version = major < 14 ? 'stable' : 'local';
