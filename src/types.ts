@@ -1,16 +1,11 @@
-import type * as TSConfigSchema from './TSConfigSchema.ts';
+import type { TSConfig } from 'read-tsconfig-sync';
 
 export interface Context {
   parentURL?: string;
   parentPath?: string;
 }
 
-export * as TSConfigSchema from './TSConfigSchema.ts';
-export interface TSConfig {
-  path: string;
-  config: TSConfigSchema.TSConfigData;
-}
-
+export type { TSConfig, TSConfigSchema } from 'read-tsconfig-sync';
 export interface ConfigOptions {
   tsconfig?: TSConfig;
   cwd?: string;

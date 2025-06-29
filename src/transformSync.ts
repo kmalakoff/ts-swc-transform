@@ -1,6 +1,6 @@
 import path from 'path';
+import loadConfigSync from 'read-tsconfig-sync';
 import url from 'url';
-import loadConfigSync from './loadConfigSync.ts';
 
 import type { TSConfig } from './types.ts';
 
