@@ -46,7 +46,7 @@
     "@swc/core": "*",
     "core-js-pure": "*",
     "exit": "^0.1.2",
-    "fs-iterator": "^6.0.6",
+    "fs-iterator": "^6.1.0",
     "install-optional": "^1.0.3",
     "is-absolute": "^1.0.0",
     "lodash.debounce": "^4.0.8",
