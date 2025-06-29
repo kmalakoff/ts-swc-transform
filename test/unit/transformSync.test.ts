@@ -2,8 +2,9 @@ import assert from 'assert';
 import fs from 'fs';
 import { removeSync } from 'install-optional';
 import path from 'path';
+import loadConfigSync from 'read-tsconfig-sync';
 // @ts-ignore
-import { loadConfigSync, transformSync } from 'ts-swc-transform';
+import { transformSync } from 'ts-swc-transform';
 import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
