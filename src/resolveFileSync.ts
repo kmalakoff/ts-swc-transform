@@ -14,7 +14,7 @@ export default function resolveFileSync(specifier: string, context?: Context): s
     stat = fs.statSync(filePath);
   } catch (_err) {}
   try {
-    if ((stat && stat.isDirectory()) || specifier.endsWith('/')) {
+    if ((stat && stat.isDirectory()) || specifier[specifier.length - 1] === '/') {
       const items = fs.readdirSync(filePath);
       const item = find(items, (x) => indexExtensions.indexOf(x) >= 0);
       if (item) return path.join(filePath, item);
