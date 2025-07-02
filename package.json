@@ -52,7 +52,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.find": "^4.6.0",
     "mkdirp-classic": "^0.5.3",
-    "node-version-call": "^1.9.5",
+    "node-version-call": "^1.9.6",
     "queue-cb": "^1.5.5",
     "read-tsconfig-sync": "^1.0.2",
     "resolve": "^1.22.10",
