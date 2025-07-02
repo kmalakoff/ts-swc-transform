@@ -11,6 +11,7 @@ import type { Context } from './types.ts';
 const useCJS = !module.createRequire;
 const fileURLToPath = url.fileURLToPath || urlPolyfills.fileURLToPath;
 const pathToFileURL = url.pathToFileURL || urlPolyfills.pathToFileURL;
+const startsWith = (string, check) => string.lastIndexOf(check, 0) === 0;
 
 function getParentPath(context: Context): string {
   if (context.parentPath) return path.dirname(context.parentPath);
@@ -18,7 +19,7 @@ function getParentPath(context: Context): string {
 }
 
 export default function toPath(specifier: string, context?: Context): string {
-  if (specifier.indexOf('file:') === 0) return fileURLToPath(specifier);
+  if (startsWith(specifier, 'file:')) return fileURLToPath(specifier);
   if (isAbsolute(specifier)) return specifier;
   if (specifier[0] === '.') {
     const parentPath = context ? getParentPath(context) : process.cwd();
