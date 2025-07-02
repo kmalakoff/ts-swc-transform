@@ -2,10 +2,12 @@ import assert from 'assert';
 // @ts-ignore
 import * as swc from 'ts-swc-transform';
 // @ts-ignore
-import { constants, resolveFileSync, toPath, transformDirectory, transformSync } from 'ts-swc-transform';
+import { constants, createMatcher, resolveFileSync, toPath, transformDirectory, transformSync } from 'ts-swc-transform';
 
 describe('exports .ts', () => {
   it('named exports', () => {
+    assert.ok(!!createMatcher, 'createMatcher exists');
+    assert.equal(typeof createMatcher, 'function', 'createMatcher is a function');
     assert.ok(!!constants, 'constants exists');
     assert.equal(typeof constants, 'object', 'constants is an array');
     assert.ok(!!resolveFileSync, 'resolveFileSync exists');
@@ -21,6 +23,8 @@ describe('exports .ts', () => {
   it('default exports', () => {
     assert.ok(!!swc.constants, 'constants exists');
     assert.equal(typeof swc.constants, 'object', 'constants is an array');
+    assert.ok(!!swc.createMatcher, 'createMatcher exists');
+    assert.equal(typeof swc.createMatcher, 'function', 'createMatcher is a function');
     assert.ok(!!swc.resolveFileSync, 'resolveFileSync exists');
     assert.equal(typeof swc.resolveFileSync, 'function', 'resolveFileSync is a function');
     assert.ok(!!swc.toPath, 'toPath exists');
