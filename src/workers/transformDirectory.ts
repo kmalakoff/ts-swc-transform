@@ -1,16 +1,15 @@
 import Iterator, { type Entry } from 'fs-iterator';
 import path from 'path';
 import Queue from 'queue-cb';
-
+import match from 'test-match';
 import { extensions, typeFileRegEx } from '../constants.ts';
-import createMatcher from '../createMatcher.ts';
 import transformFile from '../lib/transformFile.ts';
 
 import type { ConfigOptions, TargetType, TransformDirectoryCallback } from '../types.ts';
 
 export default function transformDirectoryWorker(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): undefined {
   const tsconfig = options.tsconfig;
-  const matcher = createMatcher(tsconfig);
+  const matcher = match({ cwd: path.dirname(tsconfig.path), include: tsconfig.config.include as string[], exclude: tsconfig.config.exclude as string[] });
 
   const entries: Entry[] = [];
   const iterator = new Iterator(src);
