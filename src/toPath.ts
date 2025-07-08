@@ -1,12 +1,14 @@
 import isAbsolute from 'is-absolute';
 import module from 'module';
 import path from 'path';
-import * as resolveCJS from 'resolve';
+import * as resolve from 'resolve';
 import url from 'url';
 import { moduleRegEx } from './constants.ts';
 import importMetaResolve from './lib/import-meta-resolve.ts';
 import * as urlPolyfills from './lib/urlFileUrl.ts';
 import type { Context } from './types.ts';
+
+const resolveSync = (resolve.default ?? resolve).sync;
 
 const useCJS = !module.createRequire;
 const fileURLToPath = url.fileURLToPath || urlPolyfills.fileURLToPath;
@@ -35,7 +37,7 @@ export default function toPath(specifier: string, context?: Context): string {
         /* it may fail due to commonjs edge cases */
       }
     }
-    const entryPath = resolveCJS.sync(specifier, {
+    const entryPath = resolveSync(specifier, {
       basedir: parentPath,
       extensions: ['.js', '.json', '.node', '.mjs'],
     });
