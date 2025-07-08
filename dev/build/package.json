@@ -7,15 +7,15 @@
     "build": "node scripts/assets.mjs"
   },
   "dependencies": {
-    "import-meta-resolve": "^4.1.0"
+    "import-meta-resolve": "*"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.6",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "cross-spawn-cb": "^2.4.2",
-    "resolve": "^1.22.10",
-    "rollup": "^4.44.2",
-    "rollup-plugin-node-externals": "^8.0.1",
-    "ts-swc-rollup-plugin": "^2.3.11"
+    "@rollup/plugin-commonjs": "*",
+    "@rollup/plugin-node-resolve": "*",
+    "cross-spawn-cb": "*",
+    "resolve": "*",
+    "rollup": "*",
+    "rollup-plugin-node-externals": "*",
+    "ts-swc-rollup-plugin": "*"
   }
 }
