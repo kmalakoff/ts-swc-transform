@@ -2,7 +2,7 @@
 
 import spawn from 'cross-spawn-cb';
 import path from 'path';
-import resolve from 'resolve';
+import * as resolve from 'resolve';
 import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
