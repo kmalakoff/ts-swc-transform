@@ -1,7 +1,7 @@
 import isAbsolute from 'is-absolute';
 import module from 'module';
 import path from 'path';
-import resolveCJS from 'resolve';
+import * as resolveCJS from 'resolve';
 import url from 'url';
 import { moduleRegEx } from './constants.ts';
 import importMetaResolve from './lib/import-meta-resolve.ts';
