@@ -42,7 +42,7 @@ export default function transformFile(entry: Entry, dest: string, type: TargetTy
       mkdirp(path.dirname(outPath), () => {
         const queue = new Queue();
         queue.defer(fs.writeFile.bind(null, outPath, output.code, 'utf8'));
-        if(output.map && options.sourceMaps) queue.defer(fs.writeFile.bind(null, `${outPath}.map`, output.map, 'utf8'));
+        if (output.map && options.sourceMaps) queue.defer(fs.writeFile.bind(null, `${outPath}.map`, output.map, 'utf8'));
         queue.await((err) => (err ? callback(err) : callback(null, outPath)));
       });
     })
