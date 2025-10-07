@@ -1,7 +1,6 @@
 import assert from 'assert';
 import module from 'module';
 import path from 'path';
-// @ts-ignore
 import { resolveFileSync } from 'ts-swc-transform';
 import url from 'url';
 
