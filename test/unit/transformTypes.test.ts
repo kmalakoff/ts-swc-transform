@@ -2,7 +2,6 @@ import path from 'path';
 import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
 import rimraf2 from 'rimraf2';
-// @ts-ignore
 import { transformTypes } from 'ts-swc-transform';
 import url from 'url';
 import checkFiles from '../lib/checkFiles.ts';
