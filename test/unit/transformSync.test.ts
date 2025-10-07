@@ -3,7 +3,6 @@ import fs from 'fs';
 import { removeSync } from 'install-optional';
 import path from 'path';
 import loadConfigSync from 'read-tsconfig-sync';
-// @ts-ignore
 import { transformSync } from 'ts-swc-transform';
 import url from 'url';
 
