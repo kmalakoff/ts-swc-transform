@@ -35,8 +35,9 @@ export default function transformTypesWorker(src: string, dest: string, options:
       const config = {
         fileNames: entries.map((entry) => entry.fullPath),
         options: {
-          ...compilerOptions,
+          ...compilerOptions.options,
           outDir: dest,
+          noEmit: false,
           allowJs: true,
           declaration: true,
           emitDeclarationOnly: true,
@@ -55,6 +56,24 @@ export default function transformTypesWorker(src: string, dest: string, options:
       };
       const program = ts.createProgram(programOptions);
       const res = program.emit();
+
+      // Post-process declaration files to provide .js extensions in import paths
+      if (res.emittedFiles && compilerOptions.options.rewriteRelativeImportExtensions) {
+        const fs = _require('fs');
+        res.emittedFiles.forEach((file) => {
+          if (file.endsWith('.d.ts') || file.endsWith('.d.cts') || file.endsWith('.d.mts')) {
+            try {
+              const content = fs.readFileSync(file, 'utf8');
+              const updated = content.replace(/from\s+['"]([^'"]+)\.ts['"]/g, "from '$1.js'").replace(/export\s+\*\s+from\s+['"]([^'"]+)\.ts['"]/g, "export * from '$1.js'");
+              if (updated !== content) {
+                fs.writeFileSync(file, updated, 'utf8');
+              }
+            } catch (_err) {
+              // Ignore errors
+            }
+          }
+        });
+      }
       callback(null, res.emittedFiles);
     }
   );

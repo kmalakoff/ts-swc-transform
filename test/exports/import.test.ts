@@ -1,7 +1,5 @@
 import assert from 'assert';
-// @ts-ignore
 import * as swc from 'ts-swc-transform';
-// @ts-ignore
 import { constants, createMatcher, resolveFileSync, toPath, transformDirectory, transformSync } from 'ts-swc-transform';
 
 describe('exports .ts', () => {
