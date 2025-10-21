@@ -1,11 +1,12 @@
+import fs from 'fs';
 import Iterator, { type Entry } from 'fs-iterator';
-
 import Module from 'module';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
 import { typeFileRegEx } from '../constants.ts';
 import createMatcher from '../createMatcher.ts';
+import { rewriteExtensions } from '../lib/rewriteExtensions.ts';
 
 import type { ConfigOptions, TransformTypesCallback } from '../types.ts';
 
@@ -57,14 +58,13 @@ export default function transformTypesWorker(src: string, dest: string, options:
       const program = ts.createProgram(programOptions);
       const res = program.emit();
 
-      // Post-process declaration files to provide .js extensions in import paths
+      // TODO: remove patch for https://github.com/microsoft/TypeScript/issues/61037
       if (res.emittedFiles && compilerOptions.options.rewriteRelativeImportExtensions) {
-        const fs = _require('fs');
         res.emittedFiles.forEach((file) => {
           if (file.endsWith('.d.ts') || file.endsWith('.d.cts') || file.endsWith('.d.mts')) {
             try {
               const content = fs.readFileSync(file, 'utf8');
-              const updated = content.replace(/from\s+['"]([^'"]+)\.ts['"]/g, "from '$1.js'").replace(/export\s+\*\s+from\s+['"]([^'"]+)\.ts['"]/g, "export * from '$1.js'");
+              const updated = rewriteExtensions(content);
               if (updated !== content) {
                 fs.writeFileSync(file, updated, 'utf8');
               }
