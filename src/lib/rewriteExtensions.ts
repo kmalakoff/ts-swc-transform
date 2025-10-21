@@ -1,7 +1,3 @@
-import path from 'path';
-import { moduleRegEx } from '../constants.ts';
-import parseSpecifiers from './parseSpecifiers.ts';
-
 export const extensions = {
   '.ts': '.js',
   '.tsx': '.js',
@@ -14,19 +10,13 @@ export function replaceExtension(ext: string): string {
   return replace === undefined ? ext : replace;
 }
 
-export function makeReplacements(code: string, regex: RegExp): string {
-  const parsed = parseSpecifiers(code, regex);
+// Pure regex solution for rewriting TypeScript extensions to JavaScript
+// Pattern: quote + relative path (starts with .) + TS extension + matching quote
+const extensionPattern = /(['"`])(\.[-\w./]*?)\.(tsx?|mts|cts)\1/g;
 
-  return parsed
-    .map((parsed) => {
-      if (!parsed.isSpecifier) return parsed.content;
-      const specifier = parsed.content;
-      if (moduleRegEx.test(specifier)) return specifier;
-      if (specifier[0] !== '.') return specifier;
-      const ext = path.extname(specifier);
-      const replace = replaceExtension(ext);
-      if (ext === replace) return specifier;
-      return `${specifier.slice(0, -ext.length)}${replace}`;
-    })
-    .join('');
+export function rewriteExtensions(content: string): string {
+  return content.replace(extensionPattern, (_match, quote, path, ext) => {
+    const newExt = extensions[`.${ext}`];
+    return `${quote}${path}${newExt}${quote}`;
+  });
 }
