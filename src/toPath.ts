@@ -7,13 +7,13 @@ import { moduleRegEx } from './constants.ts';
 import importMetaResolve from './lib/import-meta-resolve.ts';
 import * as urlPolyfills from './lib/urlFileUrl.ts';
 import type { Context } from './types.ts';
+import startsWith from 'starts-with';
 
 const resolveSync = (resolve.default ?? resolve).sync;
 
 const useCJS = !module.createRequire;
 const fileURLToPath = url.fileURLToPath || urlPolyfills.fileURLToPath;
 const pathToFileURL = url.pathToFileURL || urlPolyfills.pathToFileURL;
-const startsWith = (string, check) => string.lastIndexOf(check, 0) === 0;
 
 function getParentPath(context: Context): string {
   if (context.parentPath) return path.dirname(context.parentPath);
