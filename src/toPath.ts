@@ -2,12 +2,12 @@ import isAbsolute from 'is-absolute';
 import module from 'module';
 import path from 'path';
 import * as resolve from 'resolve';
+import startsWith from 'starts-with';
 import url from 'url';
 import { moduleRegEx } from './constants.ts';
 import importMetaResolve from './lib/import-meta-resolve.ts';
 import * as urlPolyfills from './lib/urlFileUrl.ts';
 import type { Context } from './types.ts';
-import startsWith from 'starts-with';
 
 const resolveSync = (resolve.default ?? resolve).sync;
 
