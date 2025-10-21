@@ -32,7 +32,6 @@
   "types": "dist/cjs/index.d.cts",
   "files": [
     "dist",
-    "scripts",
     "assets"
   ],
   "scripts": {
