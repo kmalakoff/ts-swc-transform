@@ -29,7 +29,7 @@
     "./package.json": "./package.json"
   },
   "main": "dist/cjs/index.js",
-  "types": "dist/cjs/index.d.cts",
+  "types": "dist/cjs/index.d.ts",
   "files": [
     "dist",
     "assets"
@@ -56,6 +56,7 @@
     "read-tsconfig-sync": "*",
     "resolve": "*",
     "rimraf2": "*",
+    "starts-with": "^1.0.2",
     "test-match": "*",
     "ts-node": "*",
     "typescript": "*"
