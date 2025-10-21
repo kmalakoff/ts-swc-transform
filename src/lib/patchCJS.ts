@@ -1,5 +1,5 @@
 import path from 'path';
-import { replaceExtension, rewriteExtensions } from './rewriteExtensions.ts';
+import { replaceExtension, rewriteExtensionsCJS } from './rewriteExtensions.ts';
 
 // https://github.com/vercel/next.js/blob/20b63e13ab2631d6043277895d373aa31a1b327c/packages/next/taskfile-swc.js#L118-L125
 export const interop = "/* CJS INTEROP */ if (exports.__esModule && exports.default) { try { Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) { exports.default[key] = exports[key]; } } catch (_) {}; module.exports = exports.default; }";
@@ -15,7 +15,7 @@ interface InternalCompilerOptions extends CompilerOptions {
 
 export default function patchCJS(entry: Entry, output: Output, options: ConfigOptions): string {
   const rewrite = ((options.tsconfig.config.compilerOptions || {}) as unknown as InternalCompilerOptions).rewriteRelativeImportExtensions;
-  if (rewrite) output.code = rewriteExtensions(output.code);
+  if (rewrite) output.code = rewriteExtensionsCJS(output.code);
   output.code += interop;
 
   return replaceExtension(path.extname(entry.basename));
