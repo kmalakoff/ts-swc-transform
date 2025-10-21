@@ -156,17 +156,17 @@ describe('rewriteExtensions', () => {
     });
 
     it('does NOT transform .ts in regex pattern', () => {
-      const input = `const pattern = /\\.d\\.ts$/;`;
+      const input = 'const pattern = /\\.d\\.ts$/;';
       assert.strictEqual(rewriteExtensions(input), input);
     });
 
     it('does NOT transform .ts in single-line comment', () => {
-      const input = `// This file should be .ts not .js`;
+      const input = '// This file should be .ts not .js';
       assert.strictEqual(rewriteExtensions(input), input);
     });
 
     it('does NOT transform .ts in multi-line comment', () => {
-      const input = `/* Convert .ts to .js */`;
+      const input = '/* Convert .ts to .js */';
       assert.strictEqual(rewriteExtensions(input), input);
     });
 
