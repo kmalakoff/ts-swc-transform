@@ -29,38 +29,29 @@ export function rewriteExtensions(content: string): string {
   //          import type { X } from './path.ts'
   //          export * from './path.ts'
   //          export type * from './path.ts'
-  result = result.replace(
-    /\b(import|export)(\s+type)?(?:\s+[^'"]*?\s+from\s+|\s+)['"]([^'"]+)\.(tsx?|mts|cts)['"]/g,
-    (match, keyword, typeKeyword, path, ext) => {
-      if (!isRelativePath(path)) return match;
-      const newExt = replaceExtension(`.${ext}`);
-      return match.replace(`.${ext}"`, `${newExt}"`).replace(`.${ext}'`, `${newExt}'`).replace(`.${ext}\``, `${newExt}\``);
-    }
-  );
+  result = result.replace(/\b(import|export)(\s+type)?(?:\s+[^'"]*?\s+from\s+|\s+)['"]([^'"]+)\.(tsx?|mts|cts)['"]/g, (match, _keyword, _typeKeyword, path, ext) => {
+    if (!isRelativePath(path)) return match;
+    const newExt = replaceExtension(`.${ext}`);
+    return match.replace(`.${ext}"`, `${newExt}"`).replace(`.${ext}'`, `${newExt}'`).replace(`.${ext}\``, `${newExt}\``);
+  });
 
   // Pattern 2: Dynamic import types
   // Matches: typeof import('./path.ts')
-  result = result.replace(
-    /\bimport\s*\(\s*['"]([^'"]+)\.(tsx?|mts|cts)['"]\s*\)/g,
-    (match, path, ext) => {
-      if (!isRelativePath(path)) return match;
-      const newExt = replaceExtension(`.${ext}`);
-      return match.replace(`.${ext}"`, `${newExt}"`).replace(`.${ext}'`, `${newExt}'`).replace(`.${ext}\``, `${newExt}\``);
-    }
-  );
+  result = result.replace(/\bimport\s*\(\s*['"]([^'"]+)\.(tsx?|mts|cts)['"]\s*\)/g, (match, path, ext) => {
+    if (!isRelativePath(path)) return match;
+    const newExt = replaceExtension(`.${ext}`);
+    return match.replace(`.${ext}"`, `${newExt}"`).replace(`.${ext}'`, `${newExt}'`).replace(`.${ext}\``, `${newExt}\``);
+  });
 
   // Pattern 3: Triple-slash path references
   // Matches: /// <reference path="./file.ts" />
   //          /// <reference path="./file.d.ts" />
-  result = result.replace(
-    /\/\/\/\s*<reference\s+path\s*=\s*['"]([^'"]+)\.(d\.ts|tsx?|mts|cts)['"]\s*\/>/g,
-    (match, path, ext) => {
-      if (!isRelativePath(path)) return match;
-      // Special case: .d.ts → .d.js
-      const newExt = ext === 'd.ts' ? '.d.js' : replaceExtension(`.${ext}`);
-      return match.replace(`.${ext}"`, `${newExt}"`).replace(`.${ext}'`, `${newExt}'`).replace(`.${ext}\``, `${newExt}\``);
-    }
-  );
+  result = result.replace(/\/\/\/\s*<reference\s+path\s*=\s*['"]([^'"]+)\.(d\.ts|tsx?|mts|cts)['"]\s*\/>/g, (match, path, ext) => {
+    if (!isRelativePath(path)) return match;
+    // Special case: .d.ts → .d.js
+    const newExt = ext === 'd.ts' ? '.d.js' : replaceExtension(`.${ext}`);
+    return match.replace(`.${ext}"`, `${newExt}"`).replace(`.${ext}'`, `${newExt}'`).replace(`.${ext}\``, `${newExt}\``);
+  });
 
   return result;
 }
@@ -72,14 +63,11 @@ export function rewriteExtensionsCJS(content: string): string {
 
   // Pattern 4: CommonJS require() statements
   // Matches: require('./path.ts')
-  result = result.replace(
-    /\brequire\s*\(\s*['"]([^'"]+)\.(tsx?|mts|cts)['"]\s*\)/g,
-    (match, path, ext) => {
-      if (!isRelativePath(path)) return match;
-      const newExt = replaceExtension(`.${ext}`);
-      return match.replace(`.${ext}"`, `${newExt}"`).replace(`.${ext}'`, `${newExt}'`).replace(`.${ext}\``, `${newExt}\``);
-    }
-  );
+  result = result.replace(/\brequire\s*\(\s*['"]([^'"]+)\.(tsx?|mts|cts)['"]\s*\)/g, (match, path, ext) => {
+    if (!isRelativePath(path)) return match;
+    const newExt = replaceExtension(`.${ext}`);
+    return match.replace(`.${ext}"`, `${newExt}"`).replace(`.${ext}'`, `${newExt}'`).replace(`.${ext}\``, `${newExt}\``);
+  });
 
   return result;
 }
