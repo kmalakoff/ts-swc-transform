@@ -42,7 +42,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "@swc/core": "1.15.0",
+    "@swc/core": "*",
     "core-js-pure": "*",
     "exit": "*",
     "fs-iterator": "*",
