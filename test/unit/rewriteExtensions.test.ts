@@ -196,6 +196,67 @@ describe('rewriteExtensions', () => {
       assert.strictEqual(rewriteExtensions(input), expected);
     });
   });
+
+  describe('Additional edge cases', () => {
+    it('transforms side-effect only imports', () => {
+      const input = `import './setup.ts';`;
+      const expected = `import './setup.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+
+    it('transforms default import', () => {
+      const input = `import Default from './module.ts';`;
+      const expected = `import Default from './module.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+
+    it('transforms default + named imports', () => {
+      const input = `import Default, { named } from './module.ts';`;
+      const expected = `import Default, { named } from './module.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+
+    it('transforms re-export with rename', () => {
+      const input = `export { Foo as Bar } from './foo.ts';`;
+      const expected = `export { Foo as Bar } from './foo.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+
+    it('handles file.test.ts pattern correctly', () => {
+      const input = `import { test } from './utils.test.ts';`;
+      const expected = `import { test } from './utils.test.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+
+    it('handles file.spec.ts pattern correctly', () => {
+      const input = `import { spec } from './utils.spec.ts';`;
+      const expected = `import { spec } from './utils.spec.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+
+    it('transforms namespace import', () => {
+      const input = `import * as Utils from './utils.ts';`;
+      const expected = `import * as Utils from './utils.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+
+    it('transforms multiple named exports', () => {
+      const input = `export { A, B, C } from './abc.ts';`;
+      const expected = `export { A, B, C } from './abc.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+
+    it('handles deeply nested relative paths', () => {
+      const input = `import { deep } from '../../../very/deep/path.ts';`;
+      const expected = `import { deep } from '../../../very/deep/path.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+
+    it('does NOT transform .ts in template literal string', () => {
+      const input = 'const ext = `.ts`;';
+      assert.strictEqual(rewriteExtensions(input), input);
+    });
+  });
 });
 
 describe('rewriteExtensionsCJS', () => {
