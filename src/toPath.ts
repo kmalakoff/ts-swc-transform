@@ -2,8 +2,9 @@ import isAbsolute from 'is-absolute';
 import module from 'module';
 import path from 'path';
 import * as resolve from 'resolve';
-import startsWith from 'starts-with';
 import url from 'url';
+
+import { stringStartsWith } from './compat.ts';
 import { moduleRegEx } from './constants.ts';
 import importMetaResolve from './lib/import-meta-resolve.ts';
 import * as urlPolyfills from './lib/urlFileUrl.ts';
@@ -21,7 +22,7 @@ function getParentPath(context: Context): string {
 }
 
 export default function toPath(specifier: string, context?: Context): string {
-  if (startsWith(specifier, 'file:')) return fileURLToPath(specifier);
+  if (stringStartsWith(specifier, 'file:')) return fileURLToPath(specifier);
   if (isAbsolute(specifier)) return specifier;
   if (specifier[0] === '.') {
     const parentPath = context ? getParentPath(context) : process.cwd();
