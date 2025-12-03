@@ -30,17 +30,17 @@ describe('resolveFileSync', () => {
   describe('parentURL', () => {
     const context = { parentURL: `file://${SRC_DIR}/index.ts` };
 
-    it('test.ts', () => {
+    it('test.ts with parentURL', () => {
       const file = resolveFileSync('./test.ts', context);
       assert.equal(file, path.join(SRC_DIR, 'test.ts'));
     });
 
-    it('test', () => {
+    it('test without extension with parentURL', () => {
       const file = resolveFileSync('./test', context);
       assert.equal(file, path.join(SRC_DIR, 'test.ts'));
     });
 
-    it('test', () => {
+    it('resolves relative path from parentURL context', () => {
       const file = resolveFileSync('./test', context);
       assert.equal(file, path.join(SRC_DIR, 'test.ts'));
     });

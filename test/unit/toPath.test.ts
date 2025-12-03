@@ -87,4 +87,48 @@ describe('toPath', () => {
       assert.equal(file, absPath, 'should return absolute path as-is');
     });
   });
+
+  describe('module resolution fallback', () => {
+    it('resolves package with main field only (no exports)', () => {
+      // is-absolute has main field but no exports
+      const file = resolveFileSync('is-absolute', context);
+      assert.ok(file, 'should resolve package with main field');
+      assert.ok(file.indexOf('is-absolute') !== -1, 'path should include is-absolute');
+    });
+
+    it('resolves package with exports field', () => {
+      // fs-iterator has exports field with conditional exports
+      const file = resolveFileSync('fs-iterator', context);
+      assert.ok(file, 'should resolve package with exports field');
+      assert.ok(file.indexOf('fs-iterator') !== -1, 'path should include fs-iterator');
+    });
+
+    it('resolves deeply nested scoped package', () => {
+      const file = resolveFileSync('@swc/core', context);
+      assert.ok(file, 'should resolve scoped package');
+      assert.ok(file.indexOf('@swc') !== -1, 'path should include @swc');
+    });
+
+    it('returns specifier for unresolvable bare specifier', () => {
+      // For bare specifiers that cannot be resolved, it should return the specifier
+      const specifier = 'definitely-not-a-real-package-12345';
+      try {
+        const result = resolveFileSync(specifier, context);
+        // May return the specifier as-is or throw
+        assert.ok(result === specifier || result === null, 'should return specifier or null');
+      } catch (err) {
+        // Throwing is also acceptable
+        assert.ok(err.message.indexOf('Cannot find') !== -1, 'should throw cannot find error');
+      }
+    });
+  });
+
+  describe('file URL handling', () => {
+    it('resolves file:// URL to path', () => {
+      const fileUrl = `file://${SRC_DIR}/test.ts`;
+      const file = resolveFileSync(fileUrl, context);
+      assert.ok(file, 'should resolve file:// URL');
+      assert.ok(file.indexOf('test.ts') !== -1, 'path should include test.ts');
+    });
+  });
 });
