@@ -1,4 +1,3 @@
-import './polyfills.cjs';
 import assert from 'assert';
 import exit from 'exit';
 

@@ -57,7 +57,6 @@
     "read-tsconfig-sync": "*",
     "resolve": "*",
     "rimraf2": "*",
-    "starts-with": "^1.0.2",
     "test-match": "*",
     "ts-node": "*",
     "typescript": "*"
