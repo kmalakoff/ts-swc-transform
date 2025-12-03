@@ -6,7 +6,6 @@ import toPath from './toPath.ts';
 import type { Context } from './types.ts';
 
 const indexExtensions = extensions.map((x) => `index${x}`);
-const endsWith = (string, check) => string.indexOf(check, string.length - check.length) !== -1;
 
 export default function resolveFileSync(specifier: string, context?: Context): string {
   const filePath = toPath(specifier, context);
@@ -17,7 +16,7 @@ export default function resolveFileSync(specifier: string, context?: Context): s
   try {
     if ((stat && stat.isDirectory()) || specifier[specifier.length - 1] === '/') {
       const items = fs.readdirSync(filePath);
-      const item = find(items, (x) => endsWith(indexExtensions, x));
+      const item = find(indexExtensions, (x) => items.indexOf(x) !== -1);
       if (item) return path.join(filePath, item);
     } else if (!stat && !moduleRegEx.test(specifier)) {
       const ext = path.extname(filePath);
