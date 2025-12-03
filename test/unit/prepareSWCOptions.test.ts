@@ -81,4 +81,131 @@ describe('prepareSWCOptions', () => {
       assert.ok(typeof options === 'object', 'should return an object');
     });
   });
+
+  describe('tsconfig option combinations', () => {
+    it('handles jsx: preserve', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { jsx: 'preserve' as const } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles jsx: react', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { jsx: 'react' as const } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles jsx: react-jsx', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { jsx: 'react-jsx' as const } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles verbatimModuleSyntax: true', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { verbatimModuleSyntax: true } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles target: esnext', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { target: 'esnext' as const } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles target: es5', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { target: 'es5' as const } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles module: esnext', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { module: 'esnext' as const } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles module: commonjs', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { module: 'commonjs' as const } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles strict: true', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { strict: true } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles experimentalDecorators: true', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { experimentalDecorators: true } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles emitDecoratorMetadata: true', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { emitDecoratorMetadata: true } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles useDefineForClassFields: true', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: { compilerOptions: { useDefineForClassFields: true } },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+
+    it('handles combination of multiple options', () => {
+      const tsconfig = {
+        path: path.join(SRC_DIR, 'tsconfig.json'),
+        config: {
+          compilerOptions: {
+            target: 'es2020' as const,
+            module: 'esnext' as const,
+            jsx: 'react-jsx' as const,
+            strict: true,
+            experimentalDecorators: true,
+          },
+        },
+      };
+      const options = prepareSWCOptions(tsconfig);
+      assert.ok(typeof options === 'object', 'should return an object');
+    });
+  });
 });

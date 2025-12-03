@@ -215,4 +215,67 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
       assert.ok(content.indexOf('module.exports') === -1, 'ESM output should NOT contain module.exports');
     });
   });
+
+  describe('source map validation', () => {
+    beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    afterEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+
+    it('source map has valid structure', async () => {
+      await transformDirectory(SRC_DIR, TMP_DIR, 'cjs', { sourceMaps: true });
+      const mapPath = path.join(TMP_DIR, 'test.js.map');
+      const map = JSON.parse(fs.readFileSync(mapPath, 'utf8'));
+
+      assert.equal(map.version, 3, 'should be source map v3');
+      assert.ok(Array.isArray(map.sources), 'should have sources array');
+      assert.ok(typeof map.mappings === 'string', 'should have mappings string');
+      assert.ok(map.sources.length > 0, 'should have at least one source');
+    });
+
+    it('source map references correct source file', async () => {
+      await transformDirectory(SRC_DIR, TMP_DIR, 'cjs', { sourceMaps: true });
+      const mapPath = path.join(TMP_DIR, 'test.js.map');
+      const map = JSON.parse(fs.readFileSync(mapPath, 'utf8'));
+
+      // Source should reference the original .ts file
+      assert.ok(
+        map.sources.some((s) => s.indexOf('test.ts') !== -1),
+        'should reference original source'
+      );
+    });
+
+    it('source map has non-empty mappings', async () => {
+      await transformDirectory(SRC_DIR, TMP_DIR, 'cjs', { sourceMaps: true });
+      const mapPath = path.join(TMP_DIR, 'test.js.map');
+      const map = JSON.parse(fs.readFileSync(mapPath, 'utf8'));
+
+      assert.ok(map.mappings.length > 0, 'mappings should not be empty');
+    });
+
+    it('generates separate source map file alongside JS file', async () => {
+      await transformDirectory(SRC_DIR, TMP_DIR, 'cjs', { sourceMaps: true });
+      const jsPath = path.join(TMP_DIR, 'test.js');
+      const mapPath = path.join(TMP_DIR, 'test.js.map');
+
+      // Both files should exist
+      assert.ok(fs.existsSync(jsPath), 'JS file should exist');
+      assert.ok(fs.existsSync(mapPath), 'source map file should exist');
+
+      // Map file should be valid JSON
+      const map = JSON.parse(fs.readFileSync(mapPath, 'utf8'));
+      assert.ok(map.version, 'map should have version');
+    });
+
+    it('ESM source maps have valid structure', async () => {
+      await transformDirectory(SRC_DIR, TMP_DIR, 'esm', { sourceMaps: true });
+      const mapPath = path.join(TMP_DIR, 'test.js.map');
+      const map = JSON.parse(fs.readFileSync(mapPath, 'utf8'));
+
+      assert.equal(map.version, 3, 'should be source map v3');
+      assert.ok(Array.isArray(map.sources), 'should have sources array');
+      assert.ok(
+        map.sources.some((s) => s.indexOf('test.ts') !== -1),
+        'should reference original source'
+      );
+    });
+  });
 });
