@@ -4,6 +4,7 @@ import Module from 'module';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
+import { stringEndsWith } from '../compat.ts';
 import { typeFileRegEx } from '../constants.ts';
 import createMatcher from '../createMatcher.ts';
 import { rewriteExtensions } from '../lib/rewriteExtensions.ts';
@@ -61,7 +62,7 @@ export default function transformTypesWorker(src: string, dest: string, options:
       // TODO: remove patch for https://github.com/microsoft/TypeScript/issues/61037
       if (res.emittedFiles && compilerOptions.options.rewriteRelativeImportExtensions) {
         res.emittedFiles.forEach((file) => {
-          if (file.endsWith('.d.ts') || file.endsWith('.d.cts') || file.endsWith('.d.mts')) {
+          if (stringEndsWith(file, '.d.ts') || stringEndsWith(file, '.d.cts') || stringEndsWith(file, '.d.mts')) {
             try {
               const content = fs.readFileSync(file, 'utf8');
               const updated = rewriteExtensions(content);
