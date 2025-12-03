@@ -20,8 +20,8 @@ function dispatch(version, contents, fileName, tsconfig) {
 
 import type { Output } from '@swc/core';
 export default function transformSync(contents: string, fileName: string, tsconfig?: TSConfig): Output {
-  if (typeof contents !== 'string') throw new Error('transformTypes: unexpected contents');
-  if (typeof fileName !== 'string') throw new Error('transformTypes: unexpected fileName');
+  if (typeof contents !== 'string') throw new Error('transformSync: unexpected contents');
+  if (typeof fileName !== 'string') throw new Error('transformSync: unexpected fileName');
   if (!tsconfig) tsconfig = loadConfigSync(process.cwd());
   return dispatch(version, contents, fileName, tsconfig);
 }
