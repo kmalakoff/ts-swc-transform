@@ -1,4 +1,4 @@
-import startsWith from 'starts-with';
+import { stringStartsWith } from '../compat.ts';
 
 export const extensions = {
   '.ts': '.js',
@@ -14,7 +14,7 @@ export function replaceExtension(ext: string): string {
 
 // Helper to check if a path is relative (starts with ./ or ../)
 function isRelativePath(path: string): boolean {
-  return startsWith(path, './') || startsWith(path, '../');
+  return stringStartsWith(path, './') || stringStartsWith(path, '../');
 }
 
 // Multi-pattern transformer for TypeScript extension rewriting
