@@ -16,6 +16,7 @@
     "resolve": "*",
     "rollup": "*",
     "rollup-plugin-node-externals": "*",
-    "ts-swc-rollup-plugin": "*"
+    "ts-swc-rollup-plugin": "*",
+    "tsds-config": "*"
   }
 }
