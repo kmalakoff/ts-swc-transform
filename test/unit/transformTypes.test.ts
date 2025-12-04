@@ -1,8 +1,8 @@
 import assert from 'assert';
+import { safeRm } from 'fs-remove-compat';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
-import rimraf2 from 'rimraf2';
 import { transformTypes } from 'ts-swc-transform';
 import url from 'url';
 import checkFiles from '../lib/checkFiles.ts';
@@ -46,8 +46,8 @@ describe('transformTypes', () => {
   })();
 
   describe('clean directory', () => {
-    beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-    after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    beforeEach((cb) => safeRm(TMP_DIR, cb));
+    after((cb) => safeRm(TMP_DIR, cb));
 
     tests({ expectedCount: FILE_COUNT, options: {}, promise: false });
     tests({ expectedCount: FILE_COUNT, options: {}, promise: true });

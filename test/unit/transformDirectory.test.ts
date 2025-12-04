@@ -2,11 +2,10 @@ import assert from 'assert';
 import cr from 'cr';
 import spawn from 'cross-spawn-cb';
 import fs from 'fs';
-import { removeSync } from 'install-optional';
+import { safeRm, safeRmSync } from 'fs-remove-compat';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
-import rimraf2 from 'rimraf2';
 import { transformDirectory } from 'ts-swc-transform';
 import url from 'url';
 import checkFiles from '../lib/checkFiles.ts';
@@ -64,9 +63,8 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   })();
 
   describe('clean directory', () => {
-    before(() => removeSync('@swc/core', '@swc/core-'));
-    beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-    after(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    beforeEach(() => safeRmSync(TMP_DIR, { recursive: true, force: true }));
+    after(() => safeRmSync(TMP_DIR, { recursive: true, force: true }));
 
     tests({ type: 'cjs', testFile: './testFolder.js', expectedCount: FILE_COUNT, options: {}, promise: false });
     tests({ type: 'cjs', testFile: './test.js', expectedCount: FILE_COUNT, options: {}, promise: false });
@@ -176,8 +174,8 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   });
 
   describe('output format verification', () => {
-    beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-    afterEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    beforeEach((cb) => safeRm(TMP_DIR, cb));
+    afterEach((cb) => safeRm(TMP_DIR, cb));
 
     it('CJS output contains CommonJS exports syntax', async () => {
       await transformDirectory(SRC_DIR, TMP_DIR, 'cjs');
@@ -217,8 +215,8 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   });
 
   describe('source map validation', () => {
-    beforeEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
-    afterEach(rimraf2.bind(null, TMP_DIR, { disableGlob: true }));
+    beforeEach((cb) => safeRm(TMP_DIR, cb));
+    afterEach((cb) => safeRm(TMP_DIR, cb));
 
     it('source map has valid structure', async () => {
       await transformDirectory(SRC_DIR, TMP_DIR, 'cjs', { sourceMaps: true });
