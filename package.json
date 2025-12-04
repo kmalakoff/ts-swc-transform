@@ -57,7 +57,6 @@
     "queue-cb": "*",
     "read-tsconfig-sync": "*",
     "resolve": "*",
-    "rimraf2": "*",
     "test-match": "*",
     "ts-node": "*",
     "typescript": "*"
@@ -68,6 +67,7 @@
     "core-js": "*",
     "cr": "*",
     "cross-spawn-cb": "*",
+    "fs-remove-compat": "*",
     "node-version-use": "*",
     "pinkie-promise": "*",
     "react": "*",

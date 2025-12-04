@@ -1,6 +1,5 @@
 import assert from 'assert';
 import fs from 'fs';
-import { removeSync } from 'install-optional';
 import path from 'path';
 import loadConfigSync from 'read-tsconfig-sync';
 import { transformSync } from 'ts-swc-transform';
@@ -11,8 +10,6 @@ const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 const tsconfig = loadConfigSync(SRC_DIR);
 
 describe('transformSync', () => {
-  before(() => removeSync('@swc/core', '@swc/core-'));
-
   it('test.ts', () => {
     const filePath = path.join(SRC_DIR, 'test.ts');
     const contents = fs.readFileSync(filePath, 'utf8');
