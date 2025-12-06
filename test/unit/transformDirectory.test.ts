@@ -35,7 +35,7 @@ function tests({ type, testFile, expectedCount, options, promise }) {
         spawn(process.execPath, [testFile], { cwd: TMP_DIR, encoding: 'utf8' }, (err, res) => {
           if (err) console.log(err, res);
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.equal(cr(res.stdout).split('\n').slice(-2)[0], 'Success!');
