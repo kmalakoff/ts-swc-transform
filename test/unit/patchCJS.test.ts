@@ -11,7 +11,7 @@ describe('patchCJS', () => {
   describe('interop code injection', () => {
     it('appends CJS interop code to output', () => {
       const entry = { basename: 'test.ts', path: 'test.ts', fullPath: path.join(SRC_DIR, 'test.ts') };
-      const output = { code: 'var x = 1;', map: undefined };
+      const output = { code: 'let x = 1;', map: undefined };
       const options = {
         tsconfig: {
           config: { compilerOptions: {} },
@@ -28,7 +28,7 @@ describe('patchCJS', () => {
 
     it('preserves original code before interop', () => {
       const entry = { basename: 'test.ts', path: 'test.ts', fullPath: path.join(SRC_DIR, 'test.ts') };
-      const originalCode = 'var x = 1;\nexports.x = x;';
+      const originalCode = 'let x = 1;\nexports.x = x;';
       const output = { code: originalCode, map: undefined };
       const options = {
         tsconfig: {
