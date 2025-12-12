@@ -35,15 +35,33 @@ export default function transformFile(entry: Entry, dest: string, type: TargetTy
       filename: entry.basename,
     })
     .then((output: Output) => {
-      const extTarget = type === 'esm' ? patchESM(entry, output, options) : patchCJS(entry, output, options);
-      const ext = path.extname(entry.path);
-      const outPath = path.join(dest, (ext ? entry.path.slice(0, -ext.length) : entry.path) + extTarget);
+      // Get source file mode to preserve executable permissions
+      fs.stat(entry.fullPath, (statErr, stats) => {
+        if (statErr) return callback(statErr);
 
-      mkdirp(path.dirname(outPath), () => {
-        const queue = new Queue();
-        queue.defer(fs.writeFile.bind(null, outPath, output.code, 'utf8'));
-        if (output.map && options.sourceMaps) queue.defer(fs.writeFile.bind(null, `${outPath}.map`, output.map, 'utf8'));
-        queue.await((err) => (err ? callback(err) : callback(null, outPath)));
+        const extTarget = type === 'esm' ? patchESM(entry, output, options) : patchCJS(entry, output, options);
+        const ext = path.extname(entry.path);
+        const outPath = path.join(dest, (ext ? entry.path.slice(0, -ext.length) : entry.path) + extTarget);
+
+        mkdirp(path.dirname(outPath), () => {
+          const queue = new Queue();
+          queue.defer(fs.writeFile.bind(null, outPath, output.code, 'utf8'));
+          if (output.map && options.sourceMaps) queue.defer(fs.writeFile.bind(null, `${outPath}.map`, output.map, 'utf8'));
+          queue.await((err) => {
+            if (err) return callback(err);
+
+            // Preserve executable permissions from source (only +x bits, not full mode)
+            const execBits = stats.mode & 0o111;
+            if (execBits) {
+              fs.chmod(outPath, 0o644 | execBits, (_chmodErr) => {
+                // Ignore chmod errors (e.g., on Windows)
+                callback(null, outPath);
+              });
+            } else {
+              callback(null, outPath);
+            }
+          });
+        });
       });
     })
     .catch(callback);
