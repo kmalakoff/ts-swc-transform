@@ -46,7 +46,7 @@
   "dependencies": {
     "@swc/core": "^1.15.3",
     "core-js-pure": "^3.47.0",
-    "exit-compat": "^1.0.0",
+    "exit-compat": "^1.0.1",
     "fs-iterator": "^6.1.10",
     "install-optional": "^1.0.18",
     "is-absolute": "^1.0.0",
@@ -55,9 +55,9 @@
     "mkdirp-classic": "^0.5.3",
     "node-version-call": "^1.9.19",
     "queue-cb": "^1.6.1",
-    "read-tsconfig-sync": "^1.1.6",
+    "read-tsconfig-sync": "^1.1.7",
     "resolve": "^1.22.11",
-    "test-match": "^1.1.1",
+    "test-match": "^1.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
@@ -66,13 +66,13 @@
     "@types/node": "^25.0.1",
     "core-js": "^3.47.0",
     "cr": "^0.1.0",
-    "cross-spawn-cb": "^2.4.11",
+    "cross-spawn-cb": "^2.4.12",
     "fs-remove-compat": "^0.2.1",
     "node-version-use": "^2.1.5",
     "pinkie-promise": "^2.0.1",
     "react": "^19.2.3",
     "ts-dev-stack": "^1.21.3",
-    "tsds-config": "^0.2.0"
+    "tsds-config": "^0.2.1"
   },
   "engines": {
     "node": ">=0.8"
