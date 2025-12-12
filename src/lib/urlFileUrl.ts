@@ -8,11 +8,11 @@ import url from 'url';
 import { stringReplaceAll } from '../compat.ts';
 
 // ESM-compatible require
-var _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
+const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
 // URL class - available natively in Node 7.0+, use core-js-pure for Node 0.8-6.x
 // biome-ignore lint/suspicious/noExplicitAny: Feature detection for URL class
-var URLClass: typeof URL = (url as any).URL;
+let URLClass: typeof URL = (url as any).URL;
 if (!URLClass) {
   URLClass = _require('core-js-pure/actual/url/index.js');
 }
@@ -20,7 +20,7 @@ if (!URLClass) {
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 
 export function fileURLToPath(urlInput: string | URL): string {
-  var parsedUrl: URL;
+  let parsedUrl: URL;
   if (typeof urlInput === 'string') {
     parsedUrl = new URLClass(urlInput);
   } else {
