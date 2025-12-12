@@ -41,7 +41,7 @@ describe('prepareSWCOptions', () => {
     });
   });
 
-  describe('error handling', () => {
+  (hasSWC ? describe : describe.skip)('error handling', () => {
     it('returns empty object for invalid tsconfig path', () => {
       const invalidTsconfig = {
         path: '/nonexistent/tsconfig.json',
@@ -82,7 +82,7 @@ describe('prepareSWCOptions', () => {
     });
   });
 
-  describe('tsconfig option combinations', () => {
+  (hasSWC ? describe : describe.skip)('tsconfig option combinations', () => {
     it('handles jsx: preserve', () => {
       const tsconfig = {
         path: path.join(SRC_DIR, 'tsconfig.json'),

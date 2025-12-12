@@ -35,7 +35,7 @@ function tests({ type, testFile, expectedCount, options, promise }) {
         spawn(process.execPath, [testFile], { cwd: TMP_DIR, encoding: 'utf8' }, (err, res) => {
           if (err) console.log(err, res);
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.equal(cr(res.stdout).split('\n').slice(-2)[0], 'Success!');
@@ -274,6 +274,57 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
         map.sources.some((s) => s.indexOf('test.ts') !== -1),
         'should reference original source'
       );
+    });
+  });
+
+  // Windows doesn't support Unix executable bits - git doesn't preserve them on checkout
+  (process.platform === 'win32' ? describe.skip : describe)('executable permission preservation', () => {
+    const EXEC_FIXTURE = path.join(__dirname, '..', 'data', 'exec-fixture');
+
+    beforeEach((cb) => safeRm(TMP_DIR, cb));
+    afterEach((cb) => safeRm(TMP_DIR, cb));
+
+    it('preserves executable permission on output file when source is executable', async () => {
+      // Verify fixture has executable bit (will fail on Windows if git doesn't preserve it)
+      const srcFile = path.join(EXEC_FIXTURE, 'cli.ts');
+      const srcStats = fs.statSync(srcFile);
+      const srcExecutable = (srcStats.mode & 0o111) !== 0;
+      assert.ok(srcExecutable, 'source fixture should be executable (git should preserve this)');
+
+      await transformDirectory(EXEC_FIXTURE, TMP_DIR, 'esm');
+
+      const outFile = path.join(TMP_DIR, 'cli.js');
+      const stats = fs.statSync(outFile);
+      const isExecutable = (stats.mode & 0o111) !== 0;
+      assert.ok(isExecutable, 'output file should be executable');
+    });
+
+    it('does not add executable permission when source is not executable', async () => {
+      // Transform standard test data (non-executable)
+      await transformDirectory(SRC_DIR, TMP_DIR, 'esm');
+
+      const outFile = path.join(TMP_DIR, 'test.js');
+      const stats = fs.statSync(outFile);
+      const isExecutable = (stats.mode & 0o111) !== 0;
+      assert.ok(!isExecutable, 'output file should NOT be executable');
+    });
+
+    it('source maps do not get executable permission when source is executable', async () => {
+      const results = await transformDirectory(EXEC_FIXTURE, TMP_DIR, 'esm', { sourceMaps: true });
+
+      // Check if source map was created
+      const mapFile = path.join(TMP_DIR, 'cli.js.map');
+      // Use indexOf for Node 0.8 compatibility (no String.prototype.endsWith)
+      assert.ok(
+        results.some((r) => r.indexOf('.map') === r.length - 4),
+        'source map should be in results'
+      );
+      assert.ok(fs.existsSync(mapFile), 'source map file should exist');
+
+      // Source map should NOT be executable
+      const stats = fs.statSync(mapFile);
+      const isExecutable = (stats.mode & 0o111) !== 0;
+      assert.ok(!isExecutable, 'source map should NOT be executable');
     });
   });
 });
