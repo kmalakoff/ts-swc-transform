@@ -1,5 +1,5 @@
 import assert from 'assert';
-import exit from 'exit';
+import exit from 'exit-compat';
 
 import App from './lib/App.tsx';
 import string from './lib/string.ts';
