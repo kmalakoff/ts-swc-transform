@@ -91,8 +91,8 @@ describe('rewriteExtensions', () => {
 
   describe('Dynamic import types', () => {
     it('transforms typeof import with double quotes', () => {
-      const input = `var worker: typeof import("./workers/sync.ts").default;`;
-      const expected = `var worker: typeof import("./workers/sync.js").default;`;
+      const input = `let worker: typeof import("./workers/sync.ts").default;`;
+      const expected = `let worker: typeof import("./workers/sync.js").default;`;
       assert.strictEqual(rewriteExtensions(input), expected);
     });
 

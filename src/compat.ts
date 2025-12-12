@@ -8,7 +8,7 @@
  * - Uses native startsWith on Node 4.0+ / ES2015+
  * - Falls back to indexOf on Node 0.8-3.x
  */
-var hasStartsWith = typeof String.prototype.startsWith === 'function';
+const hasStartsWith = typeof String.prototype.startsWith === 'function';
 
 export function stringStartsWith(str: string, search: string, position?: number): boolean {
   if (hasStartsWith) {
@@ -23,13 +23,13 @@ export function stringStartsWith(str: string, search: string, position?: number)
  * - Uses native endsWith on Node 4.0+ / ES2015+
  * - Falls back to lastIndexOf on Node 0.8-3.x
  */
-var hasEndsWith = typeof String.prototype.endsWith === 'function';
+const hasEndsWith = typeof String.prototype.endsWith === 'function';
 
 export function stringEndsWith(str: string, search: string, position?: number): boolean {
   if (hasEndsWith) {
     return str.endsWith(search, position);
   }
-  var len = position === undefined ? str.length : position;
+  const len = position === undefined ? str.length : position;
   return str.lastIndexOf(search) === len - search.length;
 }
 
@@ -39,7 +39,7 @@ export function stringEndsWith(str: string, search: string, position?: number): 
  * - Falls back to regex replace on older versions
  */
 // biome-ignore lint/suspicious/noExplicitAny: Feature detection for ES2021 replaceAll
-var hasReplaceAll = typeof (String.prototype as any).replaceAll === 'function';
+const hasReplaceAll = typeof (String.prototype as any).replaceAll === 'function';
 
 export function stringReplaceAll(str: string, search: string, replace: string): string {
   if (hasReplaceAll) {
@@ -47,6 +47,6 @@ export function stringReplaceAll(str: string, search: string, replace: string): 
     return (str as any).replaceAll(search, replace);
   }
   // Escape special regex characters
-  var escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return str.replace(new RegExp(escaped, 'g'), replace);
 }
