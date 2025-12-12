@@ -46,7 +46,7 @@
   "dependencies": {
     "@swc/core": "^1.15.3",
     "core-js-pure": "^3.47.0",
-    "exit-compat": "^1.0.1",
+    "exit-compat": "^1.0.2",
     "fs-iterator": "^6.1.10",
     "install-optional": "^1.0.18",
     "is-absolute": "^1.0.0",
@@ -67,7 +67,7 @@
     "core-js": "^3.47.0",
     "cr": "^0.1.0",
     "cross-spawn-cb": "^2.4.12",
-    "fs-remove-compat": "^0.2.1",
+    "fs-remove-compat": "^0.2.2",
     "node-version-use": "^2.1.5",
     "pinkie-promise": "^2.0.1",
     "react": "^19.2.3",
