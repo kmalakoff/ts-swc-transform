@@ -1,0 +1,15 @@
+{
+  "name": "mock-exports-only-pkg",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./sub": {
+      "import": "./dist/esm/sub.js",
+      "require": "./dist/cjs/sub.js"
+    }
+  }
+}
