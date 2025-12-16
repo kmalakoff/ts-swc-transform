@@ -103,6 +103,27 @@ describe('toPath', () => {
       assert.ok(file.indexOf('fs-iterator') !== -1, 'path should include fs-iterator');
     });
 
+    // Skip exports-only tests on Node < 12.2 (where module.createRequire doesn't exist)
+    // Exports-only packages can't work on old Node anyway since exports was added in Node 12.7.0
+    (useCJS ? it.skip : it)('resolves package with ONLY exports field (no main)', () => {
+      // mock-exports-only-pkg has exports field but NO main field
+      // This is a critical test case - packages with only exports should resolve correctly
+      const file = resolveFileSync('mock-exports-only-pkg', context);
+      assert.ok(file, 'should resolve exports-only package');
+      assert.ok(file.indexOf('mock-exports-only-pkg') !== -1, 'path should include mock-exports-only-pkg');
+      // Should resolve to esm/index.js when using import condition
+      assert.ok(file.indexOf('esm') !== -1, 'should resolve to esm directory');
+      assert.ok(file.indexOf('index.js') !== -1, 'should resolve to index.js');
+    });
+
+    (useCJS ? it.skip : it)('resolves subpath exports from exports-only package', () => {
+      // mock-exports-only-pkg/sub is a subpath export
+      const file = resolveFileSync('mock-exports-only-pkg/sub', context);
+      assert.ok(file, 'should resolve subpath export');
+      assert.ok(file.indexOf('mock-exports-only-pkg') !== -1, 'path should include mock-exports-only-pkg');
+      assert.ok(file.indexOf('sub') !== -1, 'path should include sub');
+    });
+
     it('resolves deeply nested scoped package', () => {
       const file = resolveFileSync('@swc/core', context);
       assert.ok(file, 'should resolve scoped package');

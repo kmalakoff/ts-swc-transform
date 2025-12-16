@@ -67,6 +67,7 @@
     "cr": "^0.1.0",
     "cross-spawn-cb": "^2.0.0",
     "fs-remove-compat": "^1.0.0",
+    "mock-exports-only-pkg": "file:test/data/mock-exports-only-pkg",
     "node-version-use": "*",
     "pinkie-promise": "*",
     "react": "^19.2.3",
