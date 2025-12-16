@@ -12,6 +12,7 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 const FILE_COUNT = 7;
+const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 
 function tests({ expectedCount, options, promise }) {
   it(`transformTypes (options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
@@ -131,7 +132,7 @@ describe('transformTypes', () => {
   });
 
   // Windows doesn't support Unix executable bits - git doesn't preserve them on checkout
-  (process.platform === 'win32' ? describe.skip : describe)('executable permission preservation', () => {
+  (isWindows ? describe.skip : describe)('executable permission preservation', () => {
     const EXEC_FIXTURE = path.join(__dirname, '..', 'data', 'exec-fixture');
 
     beforeEach((cb) => safeRm(TMP_DIR, cb));
