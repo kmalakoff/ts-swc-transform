@@ -6,7 +6,7 @@ import url from 'url';
 
 import { stringStartsWith } from './compat.ts';
 import { moduleRegEx } from './constants.ts';
-import importMetaResolve from './lib/import-meta-resolve.ts';
+import resolveWithExports from './lib/resolve-with-exports.ts';
 import * as urlPolyfills from './lib/urlFileUrl.ts';
 import type { Context } from './types.ts';
 
@@ -14,7 +14,6 @@ const resolveSync = (resolve.default ?? resolve).sync;
 
 const useCJS = !module.createRequire;
 const fileURLToPath = url.fileURLToPath || urlPolyfills.fileURLToPath;
-const pathToFileURL = url.pathToFileURL || urlPolyfills.pathToFileURL;
 
 function getParentPath(context: Context): string {
   if (context.parentPath) return path.dirname(context.parentPath);
@@ -32,8 +31,8 @@ export default function toPath(specifier: string, context?: Context): string {
     const parentPath = context ? getParentPath(context) : process.cwd();
     if (!useCJS) {
       try {
-        const entryURL = importMetaResolve(specifier, pathToFileURL(parentPath));
-        if (entryURL) return fileURLToPath(entryURL);
+        const entryPath = resolveWithExports(specifier, parentPath);
+        if (entryPath) return entryPath;
       } catch (_) {
         /* it may fail due to commonjs edge cases */
       }
