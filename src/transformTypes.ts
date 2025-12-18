@@ -21,7 +21,12 @@ function dispatch(version, src, dest, options, callback) {
 }
 
 import type { ConfigOptions, TransformTypesCallback } from './types.ts';
-export default function transformTypes(src: string, dest: string, options?: ConfigOptions | TransformTypesCallback, callback?: TransformTypesCallback): undefined | Promise<string[]> {
+
+export default function transformTypes(src: string, dest: string, callback: TransformTypesCallback): void;
+export default function transformTypes(src: string, dest: string, options: ConfigOptions, callback: TransformTypesCallback): void;
+export default function transformTypes(src: string, dest: string): Promise<string[]>;
+export default function transformTypes(src: string, dest: string, options: ConfigOptions): Promise<string[]>;
+export default function transformTypes(src: string, dest: string, options?: ConfigOptions | TransformTypesCallback, callback?: TransformTypesCallback): void | Promise<string[]> {
   try {
     if (typeof src !== 'string') throw new Error('transformTypes: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformTypes: unexpected destination directory');

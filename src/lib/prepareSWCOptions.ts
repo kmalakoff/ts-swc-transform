@@ -1,5 +1,5 @@
 import type { Options } from '@swc/core';
-import { installSync } from 'install-optional';
+import { installSync, matchesLibc } from 'install-optional';
 import debounce from 'lodash.debounce';
 import Module from 'module';
 import path from 'path';
@@ -18,7 +18,7 @@ export interface TranspilerOptions {
 const installSyncSWC = debounce(installSync, 300, { leading: true, trailing: false });
 
 export default function prepareSWCOptions(tsconfig: TSConfig): TranspilerOptions {
-  installSyncSWC('@swc/core', `${process.platform}-${process.arch}`, { cwd: __dirname });
+  installSyncSWC('@swc/core', `${process.platform}-${process.arch}`, { cwd: __dirname, filter: matchesLibc });
   try {
     const ts = _require('typescript');
     const swc = _require('@swc/core');
