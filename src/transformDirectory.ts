@@ -1,26 +1,22 @@
+import Module from 'module';
+import { bind } from 'node-version-call';
 import path from 'path';
 import loadConfigSync from 'read-tsconfig-sync';
 import url from 'url';
 
+import type { ConfigOptions, TargetType, TransformDirectoryCallback } from './types.ts';
+
 const major = +process.versions.node.split('.')[0];
-const version = major < 14 ? 'stable' : 'local';
+const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
 const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformDirectory.js');
 
-import Module from 'module';
-
-const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-
-import type { ConfigOptions, TargetType, TransformDirectoryCallback } from './types.ts';
-
-function dispatch(version: string, src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback) {
-  if (version === 'local') return _require(workerPath)(src, dest, type, options, callback);
-  try {
-    callback(null, _require('node-version-call')({ version, callbacks: true }, workerPath, src, dest, type, options));
-  } catch (err) {
-    callback(err);
-  }
+function run(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback) {
+  return _require(workerPath)(src, dest, type, options, callback);
 }
+
+// spawnOptions: false - no node/npm spawn (library call only)
+const worker = major >= 20 ? run : bind('>=20', workerPath, { callbacks: true, spawnOptions: false });
 
 export default function transformDirectory(src: string, dest: string, type: TargetType, callback: TransformDirectoryCallback): void;
 export default function transformDirectory(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): void;
@@ -33,16 +29,16 @@ export default function transformDirectory(src: string, dest: string, type: Targ
     if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
 
     if (typeof options === 'function') {
-      callback = options as TransformDirectoryCallback;
-      options = null;
+      callback = options;
+      options = undefined;
     }
-    options = (options || {}) as ConfigOptions;
-    const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
-    options = { tsconfig, ...options };
+    const baseOpts = (options || {}) as ConfigOptions;
+    const tsconfig = baseOpts.tsconfig ? baseOpts.tsconfig : loadConfigSync(src);
+    const opts: ConfigOptions = { tsconfig, ...baseOpts };
 
-    if (typeof callback === 'function') return dispatch(version, src, dest, type, options, callback);
+    if (typeof callback === 'function') return worker(src, dest, type, opts, callback);
     return new Promise((resolve, reject) =>
-      dispatch(version, src, dest, type, options as ConfigOptions, (err, result) => {
+      worker(src, dest, type, opts, (err, result) => {
         err ? reject(err) : resolve(result);
       })
     );
