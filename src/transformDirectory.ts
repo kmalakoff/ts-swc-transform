@@ -13,7 +13,7 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 
 import type { ConfigOptions, TargetType, TransformDirectoryCallback } from './types.ts';
 
-function dispatch(version: string, src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): undefined {
+function dispatch(version: string, src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback) {
   if (version === 'local') return _require(workerPath)(src, dest, type, options, callback);
   try {
     callback(null, _require('node-version-call')({ version, callbacks: true }, workerPath, src, dest, type, options));
@@ -22,7 +22,11 @@ function dispatch(version: string, src: string, dest: string, type: TargetType, 
   }
 }
 
-export default function transformDirectory(src: string, dest: string, type: TargetType, options?: ConfigOptions | TransformDirectoryCallback, callback?: TransformDirectoryCallback): undefined | Promise<string[]> {
+export default function transformDirectory(src: string, dest: string, type: TargetType, callback: TransformDirectoryCallback): void;
+export default function transformDirectory(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): void;
+export default function transformDirectory(src: string, dest: string, type: TargetType): Promise<string[]>;
+export default function transformDirectory(src: string, dest: string, type: TargetType, options: ConfigOptions): Promise<string[]>;
+export default function transformDirectory(src: string, dest: string, type: TargetType, options?: ConfigOptions | TransformDirectoryCallback, callback?: TransformDirectoryCallback): void | Promise<string[]> {
   try {
     if (typeof src !== 'string') throw new Error('transformDirectory: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
@@ -36,7 +40,7 @@ export default function transformDirectory(src: string, dest: string, type: Targ
     const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
     options = { tsconfig, ...options };
 
-    if (typeof callback === 'function') return dispatch(version, src, dest, type, options, callback) as undefined;
+    if (typeof callback === 'function') return dispatch(version, src, dest, type, options, callback);
     return new Promise((resolve, reject) =>
       dispatch(version, src, dest, type, options as ConfigOptions, (err, result) => {
         err ? reject(err) : resolve(result);
