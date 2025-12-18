@@ -1,26 +1,22 @@
+import Module from 'module';
+import { bind } from 'node-version-call';
 import path from 'path';
 import loadConfigSync from 'read-tsconfig-sync';
 import url from 'url';
 
+import type { ConfigOptions, TransformTypesCallback } from './types.ts';
+
 const major = +process.versions.node.split('.')[0];
-const version = major < 14 ? 'stable' : 'local';
+const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
 const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformTypes.js');
 
-import Module from 'module';
-
-const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-
-function dispatch(version, src, dest, options, callback) {
-  if (version === 'local') return _require(workerPath)(src, dest, options, callback);
-  try {
-    callback(null, _require('node-version-call')({ version, callbacks: true }, workerPath, src, dest, options));
-  } catch (err) {
-    callback(err);
-  }
+function run(src: string, dest: string, options: ConfigOptions, callback: TransformTypesCallback) {
+  return _require(workerPath)(src, dest, options, callback);
 }
 
-import type { ConfigOptions, TransformTypesCallback } from './types.ts';
+// spawnOptions: false - no node/npm spawn (library call only)
+const worker = major >= 20 ? run : bind('>=20', workerPath, { callbacks: true, spawnOptions: false });
 
 export default function transformTypes(src: string, dest: string, callback: TransformTypesCallback): void;
 export default function transformTypes(src: string, dest: string, options: ConfigOptions, callback: TransformTypesCallback): void;
@@ -32,15 +28,15 @@ export default function transformTypes(src: string, dest: string, options?: Conf
     if (typeof dest !== 'string') throw new Error('transformTypes: unexpected destination directory');
 
     if (typeof options === 'function') {
-      callback = options as TransformTypesCallback;
-      options = null;
+      callback = options;
+      options = undefined;
     }
-    options = (options || {}) as ConfigOptions;
-    const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
-    options = { tsconfig, ...options };
+    const baseOpts = (options || {}) as ConfigOptions;
+    const tsconfig = baseOpts.tsconfig ? baseOpts.tsconfig : loadConfigSync(src);
+    const opts: ConfigOptions = { tsconfig, ...baseOpts };
 
-    if (typeof callback === 'function') return dispatch(version, src, dest, options, callback);
-    return new Promise((resolve, reject) => dispatch(version, src, dest, options, (err, result) => (err ? reject(err) : resolve(result))));
+    if (typeof callback === 'function') return worker(src, dest, opts, callback);
+    return new Promise((resolve, reject) => worker(src, dest, opts, (err, result) => (err ? reject(err) : resolve(result))));
   } catch (err) {
     if (callback) callback(err);
     else return Promise.reject(err);
