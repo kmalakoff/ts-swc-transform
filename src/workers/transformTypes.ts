@@ -13,7 +13,7 @@ import { rewriteExtensions } from '../lib/rewriteExtensions.ts';
 
 import type { ConfigOptions, TransformTypesCallback } from '../types.ts';
 
-export default function transformTypesWorker(src: string, dest: string, options: ConfigOptions, callback: TransformTypesCallback): undefined {
+export default function transformTypesWorker(src: string, dest: string, options: ConfigOptions, callback: TransformTypesCallback) {
   const tsconfig = options.tsconfig;
   const matcher = createMatcher(tsconfig);
   const ts = _require('typescript');
@@ -21,7 +21,7 @@ export default function transformTypesWorker(src: string, dest: string, options:
   const entries = [];
   const iterator = new Iterator(src);
   iterator.forEach(
-    (entry: Entry): undefined => {
+    (entry: Entry): void => {
       if (!entry.stats.isFile()) return;
       if (entry.basename[0] === '.') return;
       if (typeFileRegEx.test(entry.basename)) return;
@@ -29,11 +29,8 @@ export default function transformTypesWorker(src: string, dest: string, options:
       entries.push(entry);
     },
     { concurrency: Infinity },
-    (err): undefined => {
-      if (err) {
-        callback(err);
-        return;
-      }
+    (err) => {
+      if (err) return callback(err);
 
       // Step 1: Stat all source files to get their modes (async)
       const sourceModes = new Map<string, number>();
@@ -48,10 +45,7 @@ export default function transformTypesWorker(src: string, dest: string, options:
       });
 
       statQueue.await((statErr) => {
-        if (statErr) {
-          callback(statErr);
-          return;
-        }
+        if (statErr) return callback(statErr);
 
         // Step 2: TypeScript emit (inherently sync - cannot change)
         const compilerOptions = ts.convertCompilerOptionsFromJson(tsconfig.config.compilerOptions, '');

@@ -13,7 +13,7 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 
 import type { ConfigOptions, TargetType, TransformFileCallback } from '../types.ts';
 
-export default function transformFile(entry: Entry, dest: string, type: TargetType, options: ConfigOptions, callback: TransformFileCallback): undefined {
+export default function transformFile(entry: Entry, dest: string, type: TargetType, options: ConfigOptions, callback: TransformFileCallback): void {
   let tsconfig = options.tsconfig;
 
   // overrides for cjs

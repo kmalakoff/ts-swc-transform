@@ -8,14 +8,14 @@ import transformFile from '../lib/transformFile.ts';
 
 import type { ConfigOptions, TargetType, TransformDirectoryCallback } from '../types.ts';
 
-export default function transformDirectoryWorker(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback): undefined {
+export default function transformDirectoryWorker(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback) {
   const tsconfig = options.tsconfig;
   const matcher = createMatcher(tsconfig);
 
   const entries: Entry[] = [];
   const iterator = new Iterator(src);
   iterator.forEach(
-    (entry: Entry): undefined => {
+    (entry: Entry): void => {
       if (!entry.stats.isFile()) return;
       if (entry.basename[0] === '.') return;
       if (typeFileRegEx.test(entry.basename)) return;
@@ -24,11 +24,8 @@ export default function transformDirectoryWorker(src: string, dest: string, type
       if (ext && extensions.indexOf(ext) < 0) return;
       entries.push(entry);
     },
-    (err): undefined => {
-      if (err) {
-        callback(err);
-        return;
-      }
+    (err) => {
+      if (err) return callback(err);
       const results = [];
       options = { ...options, tsconfig };
 
