@@ -1,5 +1,5 @@
 import Module from 'module';
-import { bind } from 'node-version-call';
+import { bindSync } from 'node-version-call';
 import path from 'path';
 import loadConfigSync from 'read-tsconfig-sync';
 import url from 'url';
@@ -16,7 +16,7 @@ function run(contents: string, fileName: string, tsconfig: TSConfig) {
 }
 
 // spawnOptions: false - no node/npm spawn (library call only)
-const worker = major >= 20 ? run : bind('>=20', workerPath, { spawnOptions: false });
+const worker = major >= 20 ? run : bindSync('>=20', workerPath, { spawnOptions: false });
 
 import type { Output } from '@swc/core';
 export default function transformSync(contents: string, fileName: string, tsconfig?: TSConfig): Output {
