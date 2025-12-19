@@ -11,6 +11,7 @@
 
 import fs from 'fs';
 import Module from 'module';
+import findRoot from 'module-root-sync';
 import path from 'path';
 
 // Lazy-load resolve.exports
@@ -71,32 +72,6 @@ function findPackageInNodeModules(pkgName: string, basedir: string): { dir: stri
 }
 
 /**
- * Find the containing package.json by walking up from a file path
- * Used for # subpath imports which are scoped to the containing package
- */
-function findContainingPackage(filePath: string): { dir: string; json: Record<string, unknown> } | null {
-  let dir = path.dirname(filePath);
-  const root = path.parse(dir).root;
-
-  while (dir !== root) {
-    const pkgJsonPath = path.join(dir, 'package.json');
-    try {
-      if (fs.existsSync(pkgJsonPath)) {
-        const content = fs.readFileSync(pkgJsonPath, 'utf8');
-        return { dir, json: JSON.parse(content) };
-      }
-    } catch (_) {
-      // Ignore filesystem errors
-    }
-    const parent = path.dirname(dir);
-    if (parent === dir) break;
-    dir = parent;
-  }
-
-  return null;
-}
-
-/**
  * Resolve an ESM specifier to an absolute file path
  *
  * @param specifier - The import specifier (e.g., 'lodash', 'lodash/get', '#internal')
@@ -118,7 +93,14 @@ export default function resolveESM(specifier: string, parentPath: string, condit
 
   if (specifier.startsWith('#')) {
     // Subpath import - find containing package
-    pkg = findContainingPackage(parentPath);
+    try {
+      const dir = findRoot(parentPath, { includeSynthetic: true });
+      const pkgJsonPath = path.join(dir, 'package.json');
+      const content = fs.readFileSync(pkgJsonPath, 'utf8');
+      pkg = { dir, json: JSON.parse(content) };
+    } catch (_) {
+      pkg = null;
+    }
     subpath = specifier; // resolve.exports expects the full #specifier
   } else {
     // External package - find in node_modules
