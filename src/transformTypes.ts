@@ -27,16 +27,17 @@ export default function transformTypes(src: string, dest: string, options?: Conf
     if (typeof src !== 'string') throw new Error('transformTypes: unexpected source');
     if (typeof dest !== 'string') throw new Error('transformTypes: unexpected destination directory');
 
-    if (typeof options === 'function') {
-      callback = options;
-      options = undefined;
-    }
-    const baseOpts = (options || {}) as ConfigOptions;
-    const tsconfig = baseOpts.tsconfig ? baseOpts.tsconfig : loadConfigSync(src);
-    const opts: ConfigOptions = { tsconfig, ...baseOpts };
+    callback = typeof options === 'function' ? options : callback;
+    options = typeof options === 'function' ? {} : ((options || {}) as ConfigOptions);
+    const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
+    const opts: ConfigOptions = { tsconfig, ...options };
 
     if (typeof callback === 'function') return worker(src, dest, opts, callback);
-    return new Promise((resolve, reject) => worker(src, dest, opts, (err, result) => (err ? reject(err) : resolve(result))));
+    return new Promise((resolve, reject) =>
+      worker(src, dest, opts, (err, result) => {
+        err ? reject(err) : resolve(result);
+      })
+    );
   } catch (err) {
     if (callback) callback(err);
     else return Promise.reject(err);
