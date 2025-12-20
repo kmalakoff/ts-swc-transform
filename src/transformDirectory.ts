@@ -28,13 +28,10 @@ export default function transformDirectory(src: string, dest: string, type: Targ
     if (typeof dest !== 'string') throw new Error('transformDirectory: unexpected destination directory');
     if (typeof type !== 'string') throw new Error('transformDirectory: unexpected type');
 
-    if (typeof options === 'function') {
-      callback = options;
-      options = undefined;
-    }
-    const baseOpts = (options || {}) as ConfigOptions;
-    const tsconfig = baseOpts.tsconfig ? baseOpts.tsconfig : loadConfigSync(src);
-    const opts: ConfigOptions = { tsconfig, ...baseOpts };
+    callback = typeof options === 'function' ? options : callback;
+    options = typeof options === 'function' ? {} : ((options || {}) as ConfigOptions);
+    const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
+    const opts: ConfigOptions = { tsconfig, ...options };
 
     if (typeof callback === 'function') return worker(src, dest, type, opts, callback);
     return new Promise((resolve, reject) =>
