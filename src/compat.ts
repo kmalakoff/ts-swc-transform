@@ -9,11 +9,8 @@
  * - Falls back to indexOf on Node 0.8-3.x
  */
 const hasStartsWith = typeof String.prototype.startsWith === 'function';
-
 export function stringStartsWith(str: string, search: string, position?: number): boolean {
-  if (hasStartsWith) {
-    return str.startsWith(search, position);
-  }
+  if (hasStartsWith) return str.startsWith(search, position);
   position = position || 0;
   return str.indexOf(search, position) === position;
 }
@@ -24,11 +21,8 @@ export function stringStartsWith(str: string, search: string, position?: number)
  * - Falls back to lastIndexOf on Node 0.8-3.x
  */
 const hasEndsWith = typeof String.prototype.endsWith === 'function';
-
 export function stringEndsWith(str: string, search: string, position?: number): boolean {
-  if (hasEndsWith) {
-    return str.endsWith(search, position);
-  }
+  if (hasEndsWith) return str.endsWith(search, position);
   const len = position === undefined ? str.length : position;
   return str.lastIndexOf(search) === len - search.length;
 }
