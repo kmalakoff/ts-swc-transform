@@ -33,13 +33,9 @@ export default function transformTypes(src: string, dest: string, options?: Conf
     const opts: ConfigOptions = { tsconfig, ...options };
 
     if (typeof callback === 'function') return worker(src, dest, opts, callback);
-    return new Promise((resolve, reject) =>
-      worker(src, dest, opts, (err, result) => {
-        err ? reject(err) : resolve(result);
-      })
-    );
+    return new Promise((resolve, reject) => worker(src, dest, opts, (err, result) => (err ? reject(err) : resolve(result))));
   } catch (err) {
-    if (callback) callback(err);
-    else return Promise.reject(err);
+    if (typeof callback === 'function') return callback(err);
+    return Promise.reject(err);
   }
 }
