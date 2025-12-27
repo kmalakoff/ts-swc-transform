@@ -34,13 +34,9 @@ export default function transformDirectory(src: string, dest: string, type: Targ
     const opts: ConfigOptions = { tsconfig, ...options };
 
     if (typeof callback === 'function') return worker(src, dest, type, opts, callback);
-    return new Promise((resolve, reject) =>
-      worker(src, dest, type, opts, (err, result) => {
-        err ? reject(err) : resolve(result);
-      })
-    );
+    return new Promise((resolve, reject) => worker(src, dest, type, opts, (err, result) => (err ? reject(err) : resolve(result))));
   } catch (err) {
-    if (callback) callback(err);
-    else return Promise.reject(err);
+    if (typeof callback === 'function') return callback(err);
+    return Promise.reject(err);
   }
 }
