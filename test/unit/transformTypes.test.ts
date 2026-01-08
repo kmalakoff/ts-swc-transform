@@ -11,7 +11,6 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 const FILE_COUNT = 7;
-const _isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 
 function tests({ expectedCount, options, promise }) {
   it(`transformTypes (options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
