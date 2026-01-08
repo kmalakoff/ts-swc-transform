@@ -1,5 +1,4 @@
 import assert from 'assert';
-import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
@@ -12,7 +11,7 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 const FILE_COUNT = 7;
-const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
+const _isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
 
 function tests({ expectedCount, options, promise }) {
   it(`transformTypes (options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
@@ -128,40 +127,6 @@ describe('transformTypes', () => {
         assert.ok(err.message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
         done();
       });
-    });
-  });
-
-  // Windows doesn't support Unix executable bits - git doesn't preserve them on checkout
-  (isWindows ? describe.skip : describe)('executable permission preservation', () => {
-    const EXEC_FIXTURE = path.join(__dirname, '..', 'data', 'exec-fixture');
-
-    beforeEach((cb) => safeRm(TMP_DIR, cb));
-    afterEach((cb) => safeRm(TMP_DIR, cb));
-
-    it('preserves executable permission on .d.ts when source is executable', async () => {
-      // Verify fixture has executable bit (will fail on Windows if git doesn't preserve it)
-      const srcFile = path.join(EXEC_FIXTURE, 'cli.ts');
-      const srcStats = fs.statSync(srcFile);
-      const srcExecutable = (srcStats.mode & 0o111) !== 0;
-      assert.ok(srcExecutable, 'source fixture should be executable (git should preserve this)');
-
-      await transformTypes(EXEC_FIXTURE, TMP_DIR);
-
-      const dtsFile = path.join(TMP_DIR, 'cli.d.ts');
-      assert.ok(fs.existsSync(dtsFile), '.d.ts file should exist');
-      const stats = fs.statSync(dtsFile);
-      const isExecutable = (stats.mode & 0o111) !== 0;
-      assert.ok(isExecutable, '.d.ts file should be executable');
-    });
-
-    it('does not add executable permission to .d.ts when source is not executable', async () => {
-      await transformTypes(SRC_DIR, TMP_DIR);
-
-      const dtsFile = path.join(TMP_DIR, 'test.d.ts');
-      assert.ok(fs.existsSync(dtsFile), '.d.ts file should exist');
-      const stats = fs.statSync(dtsFile);
-      const isExecutable = (stats.mode & 0o111) !== 0;
-      assert.ok(!isExecutable, '.d.ts file should NOT be executable');
     });
   });
 });

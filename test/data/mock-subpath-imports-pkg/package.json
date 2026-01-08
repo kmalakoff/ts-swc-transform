@@ -2,9 +2,9 @@
   "name": "mock-subpath-imports-pkg",
   "version": "1.0.0",
   "type": "module",
-  "exports": "./dist/esm/index.js",
+  "exports": "./lib/index.js",
   "imports": {
-    "#internal": "./dist/esm/vendor/internal.js",
-    "#utils/*": "./dist/esm/vendor/utils/*.js"
+    "#internal": "./lib/vendor/internal.js",
+    "#utils/*": "./lib/vendor/utils/*.js"
   }
 }
