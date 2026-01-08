@@ -4,12 +4,12 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js"
     },
     "./sub": {
-      "import": "./dist/esm/sub.js",
-      "require": "./dist/cjs/sub.js"
+      "import": "./lib/esm/sub.js",
+      "require": "./lib/cjs/sub.js"
     }
   }
 }

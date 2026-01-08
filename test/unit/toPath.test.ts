@@ -190,7 +190,7 @@ describe('toPath', () => {
   describe('subpath imports (#prefix)', () => {
     // Context must be from within the package that defines the imports
     const subpathPkgDir = path.join(NODE_MODULES, 'mock-subpath-imports-pkg');
-    const subpathContext = { parentPath: path.join(subpathPkgDir, 'dist', 'esm', 'index.js') };
+    const subpathContext = { parentPath: path.join(subpathPkgDir, 'lib', 'index.js') };
 
     (hasMockSubpathImportsPkg ? it : it.skip)('resolves #internal subpath import', () => {
       const file = resolveFileSync('#internal', subpathContext);
