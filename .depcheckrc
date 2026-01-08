@@ -1,1 +1,1 @@
-ignores: ["node-version-use", "ts-dev-stack", "ts-swc-transform", "ts-node", "typescript", "react", "getopts-compat", "core-js-pure", "node-version-call", "resolve.exports", "mock-exports-only-pkg", "mock-subpath-imports-pkg"]
+ignores: ["node-version-use", "ts-dev-stack", "ts-swc-transform", "@typescript/native-preview", "ts-node", "typescript", "react", "getopts-compat", "core-js-pure", "node-version-call", "resolve.exports", "mock-exports-only-pkg", "mock-subpath-imports-pkg"]
