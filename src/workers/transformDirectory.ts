@@ -1,3 +1,4 @@
+import type fs from 'fs';
 import Iterator, { type Entry } from 'fs-iterator';
 import path from 'path';
 import Queue from 'queue-cb';
@@ -13,7 +14,8 @@ export default function transformDirectoryWorker(src: string, dest: string, type
   const matcher = createMatcher(tsconfig);
 
   const entries: Entry[] = [];
-  const iterator = new Iterator(src);
+  const modeByPath = new Map<string, number>();
+  const iterator = new Iterator(src, { alwaysStat: true });
   iterator.forEach(
     (entry: Entry): void => {
       if (!entry.stats.isFile()) return;
@@ -23,6 +25,11 @@ export default function transformDirectoryWorker(src: string, dest: string, type
       const ext = path.extname(entry.basename);
       if (ext && extensions.indexOf(ext) < 0) return;
       entries.push(entry);
+
+      const stats = entry.stats as fs.Stats;
+      if (stats.mode) {
+        modeByPath.set(entry.fullPath, stats.mode);
+      }
     },
     (err) => {
       if (err) return callback(err);
@@ -31,8 +38,9 @@ export default function transformDirectoryWorker(src: string, dest: string, type
 
       const queue = new Queue();
       entries.forEach((entry: Entry) => {
+        const mode = modeByPath.get(entry.fullPath);
         queue.defer((cb) =>
-          transformFile(entry, dest, type, options, (err, outPath) => {
+          transformFile(entry, dest, type, options, mode, (err, outPath) => {
             if (err) return cb(err);
             results.push(path.normalize(outPath));
             if (options.sourceMaps) results.push(`${path.normalize(outPath)}.map`);

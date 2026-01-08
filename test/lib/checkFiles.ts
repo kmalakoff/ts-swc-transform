@@ -1,6 +1,9 @@
 import assert from 'assert';
 import Iterator from 'fs-iterator';
+import os from 'os';
 import path from 'path';
+
+const concurrency = Math.min(64, Math.max(8, (os.cpus()?.length ?? 4) * 8));
 
 function worker(dir, results, expectedCount, options, callback) {
   let found = [];
@@ -10,7 +13,7 @@ function worker(dir, results, expectedCount, options, callback) {
       if (entry.stats.isFile()) found.push(entry.fullPath);
       cb();
     },
-    { callbacks: true, concurrency: Infinity },
+    { callbacks: true, concurrency },
     (err) => {
       if (err) return callback(err);
       const fullyExpected = options.sourceMaps ? 2 * expectedCount : expectedCount;
