@@ -7,9 +7,9 @@ import type { Context } from './types.ts';
 
 const indexExtensions = extensions.map((x) => `index${x}`);
 
-export default function resolveFileSync(specifier: string, context?: Context): string {
+export default function resolveFileSync(specifier: string, context?: Context): string | null {
   const filePath = toPath(specifier, context);
-  let stat: fs.Stats;
+  let stat: fs.Stats | undefined;
   try {
     stat = fs.statSync(filePath);
   } catch (_err) {}

@@ -1,33 +1,33 @@
 import type { Output } from '@swc/core';
 import fs from 'fs';
 import type { Entry } from 'fs-iterator';
-import mkdirp from 'mkdirp-classic';
 import Module from 'module';
 import path from 'path';
 import Queue from 'queue-cb';
+
 import patchCJS from '../lib/patchCJS.ts';
 import patchESM from '../lib/patchESM.ts';
 import prepareSWCOptions from '../lib/prepareSWCOptions.ts';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 
-import type { ConfigOptions, TargetType, TransformFileCallback } from '../types.ts';
+// mkdirp-classic ships no types and @types/mkdirp-classic does not exist on npm — load via require to keep type-checking clean
+const mkdirp: (p: string, cb: (err: Error | null) => void) => void = _require('mkdirp-classic');
 
-export default function transformFile(entry: Entry, dest: string, type: TargetType, options: ConfigOptions, mode: number | undefined, callback: TransformFileCallback): void {
+import type { InternalConfigOptions, TargetType, TransformFileCallback } from '../types.ts';
+
+export default function transformFile(entry: Entry, dest: string, type: TargetType, options: InternalConfigOptions, mode: number | undefined, callback: TransformFileCallback): void {
   let tsconfig = options.tsconfig;
 
   // overrides for cjs
   if (type === 'cjs') {
-    tsconfig = { ...tsconfig };
-    tsconfig.config = { ...tsconfig.config };
-    tsconfig.config.compilerOptions = { ...(tsconfig.config.compilerOptions || {}) };
-    tsconfig.config.compilerOptions.module = 'commonjs';
-    tsconfig.config.compilerOptions.target = 'es5';
+    const compilerOptions = { ...(tsconfig.config.compilerOptions || {}), module: 'commonjs' as const, target: 'es5' as const };
+    tsconfig = { ...tsconfig, config: { ...tsconfig.config, compilerOptions } };
   }
 
   const swcOptions = prepareSWCOptions(tsconfig);
   const swc = _require('@swc/core');
-  const ext = path.extname(entry.basename);
+  const ext = path.extname(entry.basename as string);
 
   swc
     .transformFile(entry.fullPath, {
@@ -41,8 +41,8 @@ export default function transformFile(entry: Entry, dest: string, type: TargetTy
 
       mkdirp(path.dirname(outPath), () => {
         const queue = new Queue();
-        queue.defer(fs.writeFile.bind(null, outPath, output.code, 'utf8'));
-        if (output.map && options.sourceMaps) queue.defer(fs.writeFile.bind(null, `${outPath}.map`, output.map, 'utf8'));
+        queue.defer((cb) => fs.writeFile(outPath, output.code, 'utf8', (err) => cb(err ?? undefined)));
+        if (output.map && options.sourceMaps) queue.defer((cb) => fs.writeFile(`${outPath}.map`, output.map as string, 'utf8', (err) => cb(err ?? undefined)));
         queue.await((err) => {
           if (err) return callback(err);
 
