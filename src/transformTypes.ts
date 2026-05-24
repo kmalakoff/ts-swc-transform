@@ -4,7 +4,7 @@ import path from 'path';
 import loadConfigSync from 'read-tsconfig-sync';
 import url from 'url';
 
-import type { ConfigOptions, TransformTypesCallback } from './types.ts';
+import type { ConfigOptions, InternalConfigOptions, TransformTypesCallback } from './types.ts';
 
 const major = +process.versions.node.split('.')[0];
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
@@ -30,12 +30,12 @@ export default function transformTypes(src: string, dest: string, options?: Conf
     callback = typeof options === 'function' ? options : callback;
     options = typeof options === 'function' ? {} : ((options || {}) as ConfigOptions);
     const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
-    const opts: ConfigOptions = { tsconfig, ...options };
+    const opts: InternalConfigOptions = { ...options, tsconfig };
 
     if (typeof callback === 'function') return worker(src, dest, opts, callback);
-    return new Promise((resolve, reject) => worker(src, dest, opts, (err, result) => (err ? reject(err) : resolve(result))));
+    return new Promise<string[]>((resolve, reject) => worker(src, dest, opts, (err, result) => (err ? reject(err) : resolve(result ?? []))));
   } catch (err) {
-    if (typeof callback === 'function') return callback(err);
+    if (typeof callback === 'function') return callback(err as Error);
     return Promise.reject(err);
   }
 }

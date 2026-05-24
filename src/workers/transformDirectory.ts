@@ -7,9 +7,9 @@ import { extensions, typeFileRegEx } from '../constants.ts';
 import createMatcher from '../createMatcher.ts';
 import transformFile from '../lib/transformFile.ts';
 
-import type { ConfigOptions, TargetType, TransformDirectoryCallback } from '../types.ts';
+import type { InternalConfigOptions, TargetType, TransformDirectoryCallback } from '../types.ts';
 
-export default function transformDirectoryWorker(src: string, dest: string, type: TargetType, options: ConfigOptions, callback: TransformDirectoryCallback) {
+export default function transformDirectoryWorker(src: string, dest: string, type: TargetType, options: InternalConfigOptions, callback: TransformDirectoryCallback) {
   const tsconfig = options.tsconfig;
   const matcher = createMatcher(tsconfig);
 
@@ -18,32 +18,35 @@ export default function transformDirectoryWorker(src: string, dest: string, type
   const iterator = new Iterator(src, { alwaysStat: true });
   iterator.forEach(
     (entry: Entry): void => {
-      if (!entry.stats.isFile()) return;
-      if (entry.basename[0] === '.') return;
-      if (typeFileRegEx.test(entry.basename)) return;
+      const stats = entry.stats as fs.Stats | undefined;
+      if (!stats || !stats.isFile()) return;
+      const basename = entry.basename as string;
+      if (basename[0] === '.') return;
+      if (typeFileRegEx.test(basename)) return;
       if (!matcher(entry.fullPath)) return;
-      const ext = path.extname(entry.basename);
+      const ext = path.extname(basename);
       if (ext && extensions.indexOf(ext) < 0) return;
       entries.push(entry);
 
-      const stats = entry.stats as fs.Stats;
       if (stats.mode) {
         modeByPath.set(entry.fullPath, stats.mode);
       }
     },
     (err) => {
       if (err) return callback(err);
-      const results = [];
-      options = { ...options, tsconfig };
+      const results: string[] = [];
+      const opts: InternalConfigOptions = { ...options, tsconfig };
 
       const queue = new Queue();
       entries.forEach((entry: Entry) => {
         const mode = modeByPath.get(entry.fullPath);
         queue.defer((cb) =>
-          transformFile(entry, dest, type, options, mode, (err, outPath) => {
+          transformFile(entry, dest, type, opts, mode, (err, outPath) => {
             if (err) return cb(err);
-            results.push(path.normalize(outPath));
-            if (options.sourceMaps) results.push(`${path.normalize(outPath)}.map`);
+            if (outPath) {
+              results.push(path.normalize(outPath));
+              if (opts.sourceMaps) results.push(`${path.normalize(outPath)}.map`);
+            }
             cb();
           })
         );

@@ -15,7 +15,7 @@ import { typeFileRegEx } from '../constants.ts';
 import createMatcher from '../createMatcher.ts';
 import { rewriteExtensions } from '../lib/rewriteExtensions.ts';
 
-import type { ConfigOptions, TransformTypesCallback } from '../types.ts';
+import type { InternalConfigOptions, TransformTypesCallback } from '../types.ts';
 
 /* ---------------- root file filtering ---------------- */
 
@@ -70,7 +70,7 @@ function parseEmittedFiles(res: SpawnResult, dest: string): string[] {
   return out;
 }
 
-export default function transformTypesWorker(src: string, dest: string, options: ConfigOptions, callback: TransformTypesCallback) {
+export default function transformTypesWorker(src: string, dest: string, options: InternalConfigOptions, callback: TransformTypesCallback) {
   const tsconfig = options.tsconfig;
   const matcher = createMatcher(tsconfig);
 
@@ -79,10 +79,12 @@ export default function transformTypesWorker(src: string, dest: string, options:
 
   iterator.forEach(
     (entry: Entry): void => {
-      if (!entry.stats.isFile()) return;
-      if (entry.basename[0] === '.') return;
-      if (typeFileRegEx.test(entry.basename)) return;
-      if (!isAllowedRootFile(entry.basename)) return;
+      const stats = entry.stats as fs.Stats | undefined;
+      if (!stats || !stats.isFile()) return;
+      const basename = entry.basename as string;
+      if (basename[0] === '.') return;
+      if (typeFileRegEx.test(basename)) return;
+      if (!isAllowedRootFile(basename)) return;
       if (!matcher(entry.fullPath)) return;
 
       rootFiles.push(entry.fullPath);
@@ -100,11 +102,11 @@ export default function transformTypesWorker(src: string, dest: string, options:
         allowJs: true,
         declaration: true,
         emitDeclarationOnly: true,
-        downlevelIteration: undefined,
+        // Suppress TS6 deprecation warnings (TS5101/TS5107) for consumers still on legacy Node-targeted options.
         ignoreDeprecations: '6.0',
       };
 
-      const rewrite = tsconfig.config.compilerOptions?.rewriteRelativeImportExtensions === true;
+      const rewrite = (tsconfig.config.compilerOptions as { rewriteRelativeImportExtensions?: boolean } | undefined)?.rewriteRelativeImportExtensions === true;
 
       // Avoid collisions across concurrent runs.
       const tempDir = path.join(dest, '.ts-swc-transform-temp', String(process.pid), String(Date.now()));
@@ -130,9 +132,15 @@ export default function transformTypesWorker(src: string, dest: string, options:
           const args = ['--project', tempConfigPath, '--listEmittedFiles', '--pretty', 'false'];
 
           runCompiler(tscPath, args, (runErr, res) => {
-            if (runErr || res.status !== 0) {
-              const msg = `TypeScript compiler failed (status=${res?.status}).\n${`stderr:\n${String(res?.stderr ?? '')}`.slice(0, 20_000)}`;
-              safeRm(tempDir, { recursive: true, force: true }, () => callback(runErr ?? new Error(msg)));
+            if (runErr || !res || res.status !== 0) {
+              // cross-spawn-cb sets runErr (with stdout/stderr/status copied onto it) on non-zero exit
+              // and does NOT pass res — read from runErr first, then fall back to res.
+              const source = (runErr as unknown as SpawnResult | undefined) ?? res;
+              const status = source?.status;
+              const stdout = String(source?.stdout ?? '');
+              const stderr = String(source?.stderr ?? '');
+              const detail = `TypeScript compiler failed (status=${status}).\nstdout:\n${stdout.slice(0, 100_000)}\nstderr:\n${stderr.slice(0, 20_000)}`;
+              safeRm(tempDir, { recursive: true, force: true }, () => callback(new Error(detail)));
               return;
             }
 
@@ -150,7 +158,8 @@ export default function transformTypesWorker(src: string, dest: string, options:
                   fs.readFile(file, 'utf8', (readErr, content) => {
                     if (readErr) return cb();
                     const updated = rewriteExtensions(content);
-                    updated === content ? cb() : fs.writeFile(file, updated, 'utf8', cb);
+                    if (updated === content) cb();
+                    else fs.writeFile(file, updated, 'utf8', (err) => cb(err ?? undefined));
                   });
                 });
               }
