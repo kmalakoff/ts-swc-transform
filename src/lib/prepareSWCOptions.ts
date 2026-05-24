@@ -26,7 +26,7 @@ export default function prepareSWCOptions(tsconfig: TSConfig): TranspilerOptions
     const parsed = ts.parseJsonConfigFileContent(tsconfig.config, ts.sys, path.dirname(tsconfig.path));
     return transpiler.createSwcOptions(parsed.options, undefined, swc, 'swc');
   } catch (err) {
-    console.log(`prepareSWCOptions failed: ${err.message}`);
+    console.log(`prepareSWCOptions failed: ${err instanceof Error ? err.message : String(err)}`);
     return {} as TranspilerOptions;
   }
 }

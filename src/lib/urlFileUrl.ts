@@ -17,7 +17,7 @@ if (!URLClass) {
   URLClass = _require('core-js-pure/actual/url/index.js');
 }
 
-const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
+const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE ?? '');
 
 export function fileURLToPath(urlInput: string | URL): string {
   let parsedUrl: URL;
