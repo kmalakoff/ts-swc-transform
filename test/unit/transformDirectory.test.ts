@@ -5,7 +5,8 @@ import fs from 'fs';
 import { safeRm, safeRmSync } from 'fs-remove-compat';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
-import Queue from 'queue-cb';
+import Queue, { type DeferCallback } from 'queue-cb';
+import type { ConfigOptions, TargetType } from 'ts-swc-transform';
 import { transformDirectory } from 'ts-swc-transform';
 import url from 'url';
 import checkFiles from '../lib/checkFiles.ts';
@@ -15,13 +16,13 @@ const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 const FILE_COUNT = 7;
 const hasRequire = typeof require !== 'undefined';
-const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE);
+const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE ?? '');
 
-function tests({ type, testFile, expectedCount, options, promise }) {
+function tests({ type, testFile, expectedCount, options, promise }: { type: TargetType; testFile: string; expectedCount: number; options: ConfigOptions; promise: boolean }) {
   it(`transformDirectory (${type} options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
     const queue = new Queue(1);
     queue.defer(async (cb) => {
-      if (!promise) return transformDirectory(SRC_DIR, TMP_DIR, type, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results, expectedCount, options, cb)));
+      if (!promise) return transformDirectory(SRC_DIR, TMP_DIR, type, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results ?? [], expectedCount, options, cb)));
       try {
         const results = await transformDirectory(SRC_DIR, TMP_DIR, type, options);
         await checkFiles(TMP_DIR, results, expectedCount, options);
@@ -30,7 +31,7 @@ function tests({ type, testFile, expectedCount, options, promise }) {
         done(err);
       }
     });
-    queue.defer(fs.writeFile.bind(null, path.join(TMP_DIR, 'package.json'), `{"type":"${type === 'cjs' ? 'commonjs' : 'module'}"}`, 'utf8'));
+    queue.defer((fs.writeFile as unknown as (f: fs.PathOrFileDescriptor, d: string, e: BufferEncoding, cb: DeferCallback) => void).bind(null, path.join(TMP_DIR, 'package.json'), `{"type":"${type === 'cjs' ? 'commonjs' : 'module'}"}`, 'utf8'));
     hasRequire ||
       queue.defer((cb) => {
         spawn(process.execPath, [testFile], { cwd: TMP_DIR, encoding: 'utf8' }, (err, res) => {
@@ -39,7 +40,8 @@ function tests({ type, testFile, expectedCount, options, promise }) {
             done(err);
             return;
           }
-          assert.equal(cr(res.stdout).split('\n').slice(-2)[0], 'Success!');
+          if (!res) return;
+          assert.equal(cr(String(res.stdout)).split('\n').slice(-2)[0], 'Success!');
           cb();
         });
       });
@@ -75,82 +77,80 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
   describe('validation errors (promise)', () => {
     it('rejects when src is null', async () => {
       try {
-        await transformDirectory(null, TMP_DIR, 'cjs');
+        await transformDirectory(null as unknown as string, TMP_DIR, 'cjs');
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
+        assert.ok((err as Error).message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
       }
     });
 
     it('rejects when src is undefined', async () => {
       try {
-        await transformDirectory(undefined, TMP_DIR, 'cjs');
+        await transformDirectory(undefined as unknown as string, TMP_DIR, 'cjs');
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
+        assert.ok((err as Error).message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
       }
     });
 
     it('rejects when src is a number', async () => {
       try {
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
-        await transformDirectory(123 as any, TMP_DIR, 'cjs');
+        await transformDirectory(123 as unknown as string, TMP_DIR, 'cjs');
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
+        assert.ok((err as Error).message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
       }
     });
 
     it('rejects when dest is null', async () => {
       try {
-        await transformDirectory(SRC_DIR, null, 'cjs');
+        await transformDirectory(SRC_DIR, null as unknown as string, 'cjs');
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
+        assert.ok((err as Error).message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
       }
     });
 
     it('rejects when dest is undefined', async () => {
       try {
-        await transformDirectory(SRC_DIR, undefined, 'cjs');
+        await transformDirectory(SRC_DIR, undefined as unknown as string, 'cjs');
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
+        assert.ok((err as Error).message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
       }
     });
 
     it('rejects when type is null', async () => {
       try {
-        await transformDirectory(SRC_DIR, TMP_DIR, null);
+        await transformDirectory(SRC_DIR, TMP_DIR, null as unknown as TargetType);
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected type') !== -1, 'should mention unexpected type');
+        assert.ok((err as Error).message.indexOf('unexpected type') !== -1, 'should mention unexpected type');
       }
     });
 
     it('rejects when type is undefined', async () => {
       try {
-        await transformDirectory(SRC_DIR, TMP_DIR, undefined);
+        await transformDirectory(SRC_DIR, TMP_DIR, undefined as unknown as TargetType);
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected type') !== -1, 'should mention unexpected type');
+        assert.ok((err as Error).message.indexOf('unexpected type') !== -1, 'should mention unexpected type');
       }
     });
 
     it('rejects when type is a number', async () => {
       try {
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
-        await transformDirectory(SRC_DIR, TMP_DIR, 123 as any);
+        await transformDirectory(SRC_DIR, TMP_DIR, 123 as unknown as TargetType);
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected type') !== -1, 'should mention unexpected type');
+        assert.ok((err as Error).message.indexOf('unexpected type') !== -1, 'should mention unexpected type');
       }
     });
   });
 
   describe('validation errors (callback)', () => {
     it('calls callback with error when src is invalid', (done) => {
-      transformDirectory(null, TMP_DIR, 'cjs', {}, (err) => {
+      transformDirectory(null as unknown as string, TMP_DIR, 'cjs', {}, (err) => {
         assert.ok(err, 'should have error');
         assert.ok(err.message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
         done();
@@ -158,7 +158,7 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
     });
 
     it('calls callback with error when dest is invalid', (done) => {
-      transformDirectory(SRC_DIR, null, 'cjs', {}, (err) => {
+      transformDirectory(SRC_DIR, null as unknown as string, 'cjs', {}, (err) => {
         assert.ok(err, 'should have error');
         assert.ok(err.message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
         done();
@@ -166,7 +166,7 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
     });
 
     it('calls callback with error when type is invalid', (done) => {
-      transformDirectory(SRC_DIR, TMP_DIR, null, {}, (err) => {
+      transformDirectory(SRC_DIR, TMP_DIR, null as unknown as TargetType, {}, (err) => {
         assert.ok(err, 'should have error');
         assert.ok(err.message.indexOf('unexpected type') !== -1, 'should mention unexpected type');
         done();
@@ -237,7 +237,7 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
 
       // Source should reference the original .ts file
       assert.ok(
-        map.sources.some((s) => s.indexOf('test.ts') !== -1),
+        (map.sources as string[]).some((s) => s.indexOf('test.ts') !== -1),
         'should reference original source'
       );
     });
@@ -272,7 +272,7 @@ describe(`transformDirectory (${hasRequire ? 'cjs' : 'esm'})`, () => {
       assert.equal(map.version, 3, 'should be source map v3');
       assert.ok(Array.isArray(map.sources), 'should have sources array');
       assert.ok(
-        map.sources.some((s) => s.indexOf('test.ts') !== -1),
+        (map.sources as string[]).some((s) => s.indexOf('test.ts') !== -1),
         'should reference original source'
       );
     });

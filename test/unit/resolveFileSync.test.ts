@@ -86,7 +86,7 @@ describe('resolveFileSync', () => {
 
     it('resolves file without extension to .ts file', () => {
       const file = resolveFileSync('./test', context);
-      assert.ok(stringEndsWith(file, '.ts'), 'should resolve to .ts file');
+      assert.ok(file !== null && stringEndsWith(file, '.ts'), 'should resolve to .ts file');
     });
 
     it('exact file takes priority over extension search', () => {

@@ -3,6 +3,7 @@ import { safeRm } from 'fs-remove-compat';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
+import type { ConfigOptions } from 'ts-swc-transform';
 import { transformTypes } from 'ts-swc-transform';
 import url from 'url';
 import checkFiles from '../lib/checkFiles.ts';
@@ -12,11 +13,11 @@ const TMP_DIR = path.join(__dirname, '..', '..', '.tmp');
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 const FILE_COUNT = 7;
 
-function tests({ expectedCount, options, promise }) {
+function tests({ expectedCount, options, promise }: { expectedCount: number; options: ConfigOptions; promise: boolean }) {
   it(`transformTypes (options: ${JSON.stringify(options)}) promise: ${!!promise}`, (done) => {
     const queue = new Queue(1);
     queue.defer(async (cb) => {
-      if (!promise) return transformTypes(SRC_DIR, TMP_DIR, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results, expectedCount, options, cb)));
+      if (!promise) return transformTypes(SRC_DIR, TMP_DIR, options, (err, results) => (err ? cb(err) : checkFiles(TMP_DIR, results ?? [], expectedCount, options, cb)));
       try {
         const results = await transformTypes(SRC_DIR, TMP_DIR, options);
         await checkFiles(TMP_DIR, results, expectedCount, options);
@@ -56,64 +57,62 @@ describe('transformTypes', () => {
   describe('validation errors (promise)', () => {
     it('rejects when src is null', async () => {
       try {
-        await transformTypes(null, TMP_DIR);
+        await transformTypes(null as unknown as string, TMP_DIR);
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
+        assert.ok((err as Error).message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
       }
     });
 
     it('rejects when src is undefined', async () => {
       try {
-        await transformTypes(undefined, TMP_DIR);
+        await transformTypes(undefined as unknown as string, TMP_DIR);
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
+        assert.ok((err as Error).message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
       }
     });
 
     it('rejects when src is a number', async () => {
       try {
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
-        await transformTypes(123 as any, TMP_DIR);
+        await transformTypes(123 as unknown as string, TMP_DIR);
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
+        assert.ok((err as Error).message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
       }
     });
 
     it('rejects when dest is null', async () => {
       try {
-        await transformTypes(SRC_DIR, null);
+        await transformTypes(SRC_DIR, null as unknown as string);
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
+        assert.ok((err as Error).message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
       }
     });
 
     it('rejects when dest is undefined', async () => {
       try {
-        await transformTypes(SRC_DIR, undefined);
+        await transformTypes(SRC_DIR, undefined as unknown as string);
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
+        assert.ok((err as Error).message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
       }
     });
 
     it('rejects when dest is a number', async () => {
       try {
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
-        await transformTypes(SRC_DIR, 123 as any);
+        await transformTypes(SRC_DIR, 123 as unknown as string);
         assert.fail('should have rejected');
       } catch (err) {
-        assert.ok(err.message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
+        assert.ok((err as Error).message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
       }
     });
   });
 
   describe('validation errors (callback)', () => {
     it('calls callback with error when src is invalid', (done) => {
-      transformTypes(null, TMP_DIR, {}, (err) => {
+      transformTypes(null as unknown as string, TMP_DIR, {}, (err) => {
         assert.ok(err, 'should have error');
         assert.ok(err.message.indexOf('unexpected source') !== -1, 'should mention unexpected source');
         done();
@@ -121,7 +120,7 @@ describe('transformTypes', () => {
     });
 
     it('calls callback with error when dest is invalid', (done) => {
-      transformTypes(SRC_DIR, null, {}, (err) => {
+      transformTypes(SRC_DIR, null as unknown as string, {}, (err) => {
         assert.ok(err, 'should have error');
         assert.ok(err.message.indexOf('unexpected destination') !== -1, 'should mention unexpected destination');
         done();
