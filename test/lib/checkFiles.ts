@@ -1,16 +1,18 @@
 import assert from 'assert';
+import type { Stats } from 'fs';
 import Iterator from 'fs-iterator';
 import os from 'os';
 import path from 'path';
 
 const concurrency = Math.min(64, Math.max(8, (os.cpus()?.length ?? 4) * 8));
 
-function worker(dir, results, expectedCount, options, callback) {
-  let found = [];
+function worker(dir: string, results: string[], expectedCount: number, options: { sourceMaps?: boolean }, callback: (err?: Error) => void) {
+  let found: string[] = [];
   const iterator = new Iterator(dir);
   iterator.forEach(
     (entry, cb) => {
-      if (entry.stats.isFile()) found.push(entry.fullPath);
+      const stats = entry.stats as Stats | undefined;
+      if (stats && stats.isFile()) found.push(entry.fullPath as string);
       cb();
     },
     { callbacks: true, concurrency },
@@ -29,7 +31,7 @@ function worker(dir, results, expectedCount, options, callback) {
   );
 }
 
-export default function checkFiles(dir, results, expectedCount, options, callback?) {
+export default function checkFiles(dir: string, results: string[], expectedCount: number, options: { sourceMaps?: boolean }, callback?: (err?: Error) => void) {
   if (typeof callback === 'function') return worker(dir, results, expectedCount, options, callback);
   return new Promise((resolve, reject) => worker(dir, results, expectedCount, options, (err) => (err ? reject(err) : resolve(undefined))));
 }
