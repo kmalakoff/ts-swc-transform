@@ -7,13 +7,13 @@ export const interop = "/* CJS INTEROP */ if (exports.__esModule && exports.defa
 import type { Output } from '@swc/core';
 import type { Entry } from 'fs-iterator';
 import type { CompilerOptions } from 'typescript';
-import type { ConfigOptions } from '../types.ts';
+import type { InternalConfigOptions } from '../types.ts';
 
 interface InternalCompilerOptions extends CompilerOptions {
   rewriteRelativeImportExtensions?: boolean;
 }
 
-export default function patchCJS(entry: Entry, output: Output, options: ConfigOptions): string {
+export default function patchCJS(entry: Entry, output: Output, options: InternalConfigOptions): string {
   const rewrite = ((options.tsconfig.config.compilerOptions || {}) as unknown as InternalCompilerOptions).rewriteRelativeImportExtensions;
   if (rewrite) output.code = rewriteExtensionsCJS(output.code);
   output.code += interop;
