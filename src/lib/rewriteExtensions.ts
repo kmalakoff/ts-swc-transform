@@ -1,6 +1,6 @@
 import { stringStartsWith } from '../compat.ts';
 
-export const extensions = {
+export const extensions: Record<string, string> = {
   '.ts': '.js',
   '.tsx': '.js',
   '.mts': '.mjs',

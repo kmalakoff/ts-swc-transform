@@ -64,9 +64,12 @@
     "typescript": "^6.0.0"
   },
   "devDependencies": {
+    "@types/is-absolute": "^1.0.2",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/mocha": "*",
     "@types/node": "*",
     "@types/react": "*",
+    "@types/resolve": "^1.20.6",
     "cr": "^0.1.0",
     "cross-spawn-cb": "^3.0.0",
     "fs-remove-compat": "^1.0.0",
