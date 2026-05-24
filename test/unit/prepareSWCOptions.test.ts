@@ -1,6 +1,6 @@
 import assert from 'assert';
 import path from 'path';
-import loadConfigSync from 'read-tsconfig-sync';
+import loadConfigSync, { type TSConfig } from 'read-tsconfig-sync';
 import url from 'url';
 import prepareSWCOptions from '../../src/lib/prepareSWCOptions.ts';
 
@@ -58,7 +58,7 @@ describe('prepareSWCOptions', () => {
       const malformedTsconfig = {
         path: path.join(SRC_DIR, 'tsconfig.json'),
         config: null,
-      };
+      } as unknown as TSConfig;
 
       const options = prepareSWCOptions(malformedTsconfig);
       assert.ok(typeof options === 'object', 'should return an object');
@@ -73,8 +73,7 @@ describe('prepareSWCOptions', () => {
             module: 'not-a-valid-module',
           },
         },
-        // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
-      } as any;
+      } as unknown as TSConfig;
 
       // Should not throw - returns empty object on error
       const options = prepareSWCOptions(invalidTsconfig);

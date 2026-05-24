@@ -171,7 +171,7 @@ describe('toPath', () => {
         assert.ok(result === specifier || result === null, 'should return specifier or null');
       } catch (err) {
         // Throwing is also acceptable
-        assert.ok(err.message.indexOf('Cannot find') !== -1, 'should throw cannot find error');
+        assert.ok((err as Error).message.indexOf('Cannot find') !== -1, 'should throw cannot find error');
       }
     });
   });
