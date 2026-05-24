@@ -62,7 +62,7 @@
     "resolve.exports": "^2.0.3",
     "test-match": "^1.0.0",
     "ts-node": "^10.9.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.0"
   },
   "devDependencies": {
     "@types/mocha": "*",
