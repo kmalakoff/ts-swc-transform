@@ -10,12 +10,6 @@ import resolveBin from 'resolve-bin-sync';
 const concurrency = Math.min(64, Math.max(8, (os.cpus()?.length ?? 4) * 8));
 
 const tscPath = resolveBin('typescript', 'tsc');
-let tsgoPath: string | null = null;
-try {
-  tsgoPath = resolveBin('@typescript/native-preview', 'tsgo');
-} catch {
-  tsgoPath = null;
-}
 
 import { typeFileRegEx } from '../constants.ts';
 import createMatcher from '../createMatcher.ts';
@@ -45,18 +39,6 @@ function isAllowedRootFile(basename: string): boolean {
 
 function runCompiler(cmdPath: string, args: string[], cb: SpawnCallback): void {
   spawn(process.execPath, [cmdPath, ...args], { encoding: 'utf8' }, cb);
-}
-
-function runTsgoThenTsc(args: string[], cb: SpawnCallback): void {
-  if (tsgoPath) {
-    runCompiler(tsgoPath, args, (err, res) => {
-      // Prefer status code over "err" for deciding success/fallback
-      if (!err && res.status === 0) return cb(null, res);
-      runCompiler(tscPath, args, cb);
-    });
-  } else {
-    runCompiler(tscPath, args, cb);
-  }
 }
 
 /* ---------------- emitted file parsing ---------------- */
@@ -112,11 +94,14 @@ export default function transformTypesWorker(src: string, dest: string, options:
 
       const compilerOptions = {
         ...tsconfig.config.compilerOptions,
+        rootDir: src,
         outDir: dest,
         noEmit: false,
         allowJs: true,
         declaration: true,
         emitDeclarationOnly: true,
+        downlevelIteration: undefined,
+        ignoreDeprecations: '6.0',
       };
 
       const rewrite = tsconfig.config.compilerOptions?.rewriteRelativeImportExtensions === true;
@@ -144,7 +129,7 @@ export default function transformTypesWorker(src: string, dest: string, options:
 
           const args = ['--project', tempConfigPath, '--listEmittedFiles', '--pretty', 'false'];
 
-          runTsgoThenTsc(args, (runErr, res) => {
+          runCompiler(tscPath, args, (runErr, res) => {
             if (runErr || res.status !== 0) {
               const msg = `TypeScript compiler failed (status=${res?.status}).\n${`stderr:\n${String(res?.stderr ?? '')}`.slice(0, 20_000)}`;
               safeRm(tempDir, { recursive: true, force: true }, () => callback(runErr ?? new Error(msg)));
