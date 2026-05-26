@@ -16,6 +16,7 @@ describe('prepareSWCOptions', () => {
   (hasSWC ? describe : describe.skip)('valid tsconfig', () => {
     it('returns TranspilerOptions with tsxOptions and nonTsxOptions', () => {
       const tsconfig = loadConfigSync(SRC_DIR);
+      if (!tsconfig) throw new Error('Failed to load tsconfig for test');
       const options = prepareSWCOptions(tsconfig);
 
       assert.ok(options, 'should return options object');
@@ -25,6 +26,7 @@ describe('prepareSWCOptions', () => {
 
     it('tsxOptions and nonTsxOptions are different', () => {
       const tsconfig = loadConfigSync(SRC_DIR);
+      if (!tsconfig) throw new Error('Failed to load tsconfig for test');
       const options = prepareSWCOptions(tsconfig);
 
       // TSX options should have JSX configuration different from non-TSX
@@ -33,6 +35,7 @@ describe('prepareSWCOptions', () => {
 
     it('returns consistent results for same tsconfig', () => {
       const tsconfig = loadConfigSync(SRC_DIR);
+      if (!tsconfig) throw new Error('Failed to load tsconfig for test');
       const options1 = prepareSWCOptions(tsconfig);
       const options2 = prepareSWCOptions(tsconfig);
 

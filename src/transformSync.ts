@@ -22,6 +22,7 @@ import type { Output } from '@swc/core';
 export default function transformSync(contents: string, fileName: string, tsconfig?: TSConfig): Output {
   if (typeof contents !== 'string') throw new Error('transformSync: unexpected contents');
   if (typeof fileName !== 'string') throw new Error('transformSync: unexpected fileName');
-  if (!tsconfig) tsconfig = loadConfigSync(process.cwd());
+  if (!tsconfig) tsconfig = loadConfigSync(process.cwd()) ?? undefined;
+  if (!tsconfig) throw new Error('transformSync: failed to load tsconfig');
   return worker(contents, fileName, tsconfig) as Output;
 }
