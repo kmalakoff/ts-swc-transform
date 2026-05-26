@@ -157,7 +157,7 @@ export default function transformTypesWorker(src: string, dest: string, options:
                     if (readErr) return cb();
                     const updated = rewriteExtensions(content);
                     if (updated === content) cb();
-                    else fs.writeFile(file, updated, 'utf8', (err) => cb(err ?? undefined));
+                    else fs.writeFile(file, updated, 'utf8', (err) => cb(err));
                   });
                 });
               }
