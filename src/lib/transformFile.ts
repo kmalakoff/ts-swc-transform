@@ -39,8 +39,8 @@ export default function transformFile(entry: Entry, dest: string, type: TargetTy
 
       mkdirp(path.dirname(outPath), () => {
         const queue = new Queue();
-        queue.defer((cb) => fs.writeFile(outPath, output.code, 'utf8', (err) => cb(err ?? undefined)));
-        if (output.map && options.sourceMaps) queue.defer((cb) => fs.writeFile(`${outPath}.map`, output.map as string, 'utf8', (err) => cb(err ?? undefined)));
+        queue.defer((cb) => fs.writeFile(outPath, output.code, 'utf8', (err) => cb(err)));
+        if (output.map && options.sourceMaps) queue.defer((cb) => fs.writeFile(`${outPath}.map`, output.map as string, 'utf8', (err) => cb(err)));
         queue.await((err) => {
           if (err) return callback(err);
 

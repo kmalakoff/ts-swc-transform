@@ -6,7 +6,7 @@ import path from 'path';
 
 const concurrency = Math.min(64, Math.max(8, (os.cpus()?.length ?? 4) * 8));
 
-function worker(dir: string, results: string[], expectedCount: number, options: { sourceMaps?: boolean }, callback: (err?: Error) => void) {
+function worker(dir: string, results: string[], expectedCount: number, options: { sourceMaps?: boolean }, callback: (err?: Error | null) => void) {
   let found: string[] = [];
   const iterator = new Iterator(dir);
   iterator.forEach(
@@ -31,7 +31,7 @@ function worker(dir: string, results: string[], expectedCount: number, options: 
   );
 }
 
-export default function checkFiles(dir: string, results: string[], expectedCount: number, options: { sourceMaps?: boolean }, callback?: (err?: Error) => void) {
+export default function checkFiles(dir: string, results: string[], expectedCount: number, options: { sourceMaps?: boolean }, callback?: (err?: Error | null) => void) {
   if (typeof callback === 'function') return worker(dir, results, expectedCount, options, callback);
   return new Promise((resolve, reject) => worker(dir, results, expectedCount, options, (err) => (err ? reject(err) : resolve(undefined))));
 }
