@@ -7,7 +7,7 @@ import url from 'url';
 
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
-const tsconfig = loadConfigSync(SRC_DIR);
+const tsconfig = loadConfigSync(SRC_DIR) ?? undefined;
 
 describe('transformSync', () => {
   it('test.ts', () => {

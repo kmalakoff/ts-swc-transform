@@ -29,7 +29,8 @@ export default function transformTypes(src: string, dest: string, options?: Conf
 
     callback = typeof options === 'function' ? options : callback;
     options = typeof options === 'function' ? {} : ((options || {}) as ConfigOptions);
-    const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
+    const tsconfig = options.tsconfig ? options.tsconfig : (loadConfigSync(src) ?? undefined);
+    if (!tsconfig) throw new Error('transformTypes: failed to load tsconfig');
     const opts: InternalConfigOptions = { ...options, tsconfig };
 
     if (typeof callback === 'function') return worker(src, dest, opts, callback);

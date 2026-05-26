@@ -30,7 +30,8 @@ export default function transformDirectory(src: string, dest: string, type: Targ
 
     callback = typeof options === 'function' ? options : callback;
     options = typeof options === 'function' ? {} : ((options || {}) as ConfigOptions);
-    const tsconfig = options.tsconfig ? options.tsconfig : loadConfigSync(src);
+    const tsconfig = options.tsconfig ? options.tsconfig : (loadConfigSync(src) ?? undefined);
+    if (!tsconfig) throw new Error('transformDirectory: failed to load tsconfig');
     const opts: InternalConfigOptions = { ...options, tsconfig };
 
     if (typeof callback === 'function') return worker(src, dest, type, opts, callback);
