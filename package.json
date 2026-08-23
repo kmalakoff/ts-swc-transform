@@ -60,8 +60,9 @@
     "resolve-bin-sync": "^1.0.13",
     "resolve.exports": "^2.0.3",
     "test-match": "^1.0.0",
+    "ts-constants": "^1.1.13",
     "ts-node": "^10.9.0",
-    "typescript": "^6.0.0"
+    "typescript": "^7.0.2"
   },
   "devDependencies": {
     "@types/is-absolute": "^1.0.2",
