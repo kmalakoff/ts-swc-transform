@@ -11,6 +11,26 @@ const concurrency = Math.min(64, Math.max(8, (os.cpus()?.length ?? 4) * 8));
 
 const tscPath = resolveBin('typescript', 'tsc');
 
+function compilerMajor(): number {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(path.dirname(tscPath), '..', 'package.json'), 'utf8'));
+    return +String(pkg.version).split('.')[0] || 0;
+  } catch {
+    return 0;
+  }
+}
+
+// TypeScript 7 removed options that only ever affected JS emit, which swc handles.
+// Older compilers still accept them, so only rewrite when the installed tsc would reject them.
+function sanitizeForCompiler(options: Record<string, unknown>): Record<string, unknown> {
+  if (compilerMajor() < 7) return options;
+  const sanitized = { ...options };
+  delete sanitized.downlevelIteration;
+  if (sanitized.moduleResolution === 'node' || sanitized.moduleResolution === 'node10') sanitized.moduleResolution = 'bundler';
+  if (typeof sanitized.target === 'string' && /^es[35]$/i.test(sanitized.target)) sanitized.target = 'es2015';
+  return sanitized;
+}
+
 import createMatcher from '../createMatcher.ts';
 import { rewriteExtensions } from '../lib/rewriteExtensions.ts';
 
@@ -92,7 +112,7 @@ export default function transformTypesWorker(src: string, dest: string, options:
       if (err) return callback(err);
       if (rootFiles.length === 0) return callback(null, []);
 
-      const compilerOptions = {
+      const compilerOptions = sanitizeForCompiler({
         ...tsconfig.config.compilerOptions,
         rootDir: src,
         outDir: dest,
@@ -102,7 +122,7 @@ export default function transformTypesWorker(src: string, dest: string, options:
         emitDeclarationOnly: true,
         // Suppress TS6 deprecation warnings (TS5101/TS5107) for consumers still on legacy Node-targeted options.
         ignoreDeprecations: '6.0',
-      };
+      });
 
       const rewrite = (tsconfig.config.compilerOptions as { rewriteRelativeImportExtensions?: boolean } | undefined)?.rewriteRelativeImportExtensions === true;
 
