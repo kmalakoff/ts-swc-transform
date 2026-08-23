@@ -6,10 +6,11 @@ export const interop = "/* CJS INTEROP */ if (exports.__esModule && exports.defa
 
 import type { Output } from '@swc/core';
 import type { Entry } from 'fs-iterator';
-import type { CompilerOptions } from 'typescript';
 import type { InternalConfigOptions } from '../types.ts';
 
-interface InternalCompilerOptions extends CompilerOptions {
+// Read straight off the parsed tsconfig JSON, which is arbitrary data rather
+// than typescript's own CompilerOptions.
+interface InternalCompilerOptions {
   rewriteRelativeImportExtensions?: boolean;
 }
 

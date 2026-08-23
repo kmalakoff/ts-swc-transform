@@ -1,11 +1,12 @@
 import type { Output } from '@swc/core';
 import type { Entry } from 'fs-iterator';
 import path from 'path';
-import type { CompilerOptions } from 'typescript';
 import type { InternalConfigOptions } from '../types.ts';
 import { replaceExtension, rewriteExtensions } from './rewriteExtensions.ts';
 
-interface InternalCompilerOptions extends CompilerOptions {
+// Read straight off the parsed tsconfig JSON, which is arbitrary data rather
+// than typescript's own CompilerOptions.
+interface InternalCompilerOptions {
   rewriteRelativeImportExtensions?: boolean;
 }
 
