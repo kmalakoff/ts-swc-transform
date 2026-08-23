@@ -62,7 +62,7 @@
     "test-match": "^1.0.0",
     "ts-constants": "^1.1.13",
     "ts-node": "^10.9.0",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.0"
   },
   "devDependencies": {
     "@types/is-absolute": "^1.0.2",
