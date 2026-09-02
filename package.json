@@ -77,7 +77,7 @@
     "cr": "^0.1.0",
     "react": "^19.0.0",
     "rimraf2": "^2.8.2",
-    "ts-dev-stack": "^1.2.4",
+    "ts-dev-stack": "^1.2.5",
     "ts-node": "^10.8.2",
     "typescript": "^5.7.2"
   },
