@@ -1,6 +1,7 @@
 import type { Output } from '@swc/core';
 import fs from 'fs';
 import type { Entry } from 'fs-iterator';
+import mkdirp from 'mkdirp-classic';
 import Module from 'module';
 import path from 'path';
 import Queue from 'queue-cb';
@@ -10,9 +11,6 @@ import patchESM from '../lib/patchESM.ts';
 import prepareSWCOptions from '../lib/prepareSWCOptions.ts';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-
-// mkdirp-classic ships no types and @types/mkdirp-classic does not exist on npm — load via require to keep type-checking clean
-const mkdirp: (p: string, cb: (err: Error | null) => void) => void = _require('mkdirp-classic');
 
 import type { InternalConfigOptions, TargetType, TransformFileCallback } from '../types.ts';
 
