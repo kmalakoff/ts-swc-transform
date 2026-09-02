@@ -11,7 +11,6 @@ const concurrency = Math.min(64, Math.max(8, (os.cpus()?.length ?? 4) * 8));
 
 const tscPath = resolveBin('typescript', 'tsc');
 
-import { typeFileRegEx } from '../constants.ts';
 import createMatcher from '../createMatcher.ts';
 import { rewriteExtensions } from '../lib/rewriteExtensions.ts';
 
@@ -83,7 +82,6 @@ export default function transformTypesWorker(src: string, dest: string, options:
       if (!stats || !stats.isFile()) return;
       const basename = entry.basename as string;
       if (basename[0] === '.') return;
-      if (typeFileRegEx.test(basename)) return;
       if (!isAllowedRootFile(basename)) return;
       if (!matcher(entry.fullPath)) return;
 
