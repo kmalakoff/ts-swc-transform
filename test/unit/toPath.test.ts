@@ -1,5 +1,4 @@
 import assert from 'assert';
-import fs from 'fs';
 import module from 'module';
 import path from 'path';
 import { resolveFileSync } from 'ts-swc-transform';
@@ -9,37 +8,9 @@ const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : 
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 const NODE_MODULES = path.join(__dirname, '..', '..', 'node_modules');
 const useCJS = !module.createRequire;
-
-// Check if mock-exports-only-pkg is properly installed and resolvable
-// file: deps may not work on all CI environments, and the package must be
-// resolvable from the test context (walking up from test/data/src to project root)
-function canResolveMockPkg(): boolean {
-  try {
-    // Check package exists in node_modules
-    if (!fs.existsSync(path.join(NODE_MODULES, 'mock-exports-only-pkg', 'package.json'))) {
-      return false;
-    }
-    // Try to actually resolve it from the test context
-    const result = resolveFileSync('mock-exports-only-pkg', { parentPath: `${SRC_DIR}/index.ts` });
-    return !!result;
-  } catch (_) {
-    return false;
-  }
-}
-const hasMockExportsOnlyPkg = !useCJS && canResolveMockPkg();
-
-// Check if mock-subpath-imports-pkg is properly installed
-function canResolveSubpathImportsPkg(): boolean {
-  try {
-    if (!fs.existsSync(path.join(NODE_MODULES, 'mock-subpath-imports-pkg', 'package.json'))) {
-      return false;
-    }
-    return true;
-  } catch (_) {
-    return false;
-  }
-}
-const hasMockSubpathImportsPkg = !useCJS && canResolveSubpathImportsPkg();
+const [nodeMajor, nodeMinor] = process.versions.node.split('.').map(Number);
+const supportsPackageExports = nodeMajor > 12 || (nodeMajor === 12 && nodeMinor >= 7);
+const supportsPackageImports = nodeMajor > 12 || (nodeMajor === 12 && nodeMinor >= 19);
 
 describe('toPath', () => {
   const context = { parentPath: `${SRC_DIR}/index.ts` };
@@ -135,20 +106,17 @@ describe('toPath', () => {
       assert.ok(file.indexOf('fs-iterator') !== -1, 'path should include fs-iterator');
     });
 
-    // Skip exports-only tests on Node < 12.2 or when mock package isn't resolvable
-    // (file: deps may not work on all CI environments)
-    (hasMockExportsOnlyPkg ? it : it.skip)('resolves package with ONLY exports field (no main)', () => {
+    (supportsPackageExports ? it : it.skip)('resolves package with ONLY exports field (no main)', () => {
       // mock-exports-only-pkg has exports field but NO main field
       // This is a critical test case - packages with only exports should resolve correctly
       const file = resolveFileSync('mock-exports-only-pkg', context);
       assert.ok(file, 'should resolve exports-only package');
       assert.ok(file.indexOf('mock-exports-only-pkg') !== -1, 'path should include mock-exports-only-pkg');
-      // Should resolve to esm/index.js when using import condition
-      assert.ok(file.indexOf('esm') !== -1, 'should resolve to esm directory');
+      assert.ok(file.indexOf(useCJS ? 'cjs' : 'esm') !== -1, 'should resolve the active module condition');
       assert.ok(file.indexOf('index.js') !== -1, 'should resolve to index.js');
     });
 
-    (hasMockExportsOnlyPkg ? it : it.skip)('resolves subpath exports from exports-only package', () => {
+    (supportsPackageExports ? it : it.skip)('resolves subpath exports from exports-only package', () => {
       // mock-exports-only-pkg/sub is a subpath export
       const file = resolveFileSync('mock-exports-only-pkg/sub', context);
       assert.ok(file, 'should resolve subpath export');
@@ -192,7 +160,7 @@ describe('toPath', () => {
     const subpathPkgDir = path.join(NODE_MODULES, 'mock-subpath-imports-pkg');
     const subpathContext = { parentPath: path.join(subpathPkgDir, 'lib', 'index.js') };
 
-    (hasMockSubpathImportsPkg ? it : it.skip)('resolves #internal subpath import', () => {
+    (supportsPackageImports ? it : it.skip)('resolves #internal subpath import', () => {
       const file = resolveFileSync('#internal', subpathContext);
       assert.ok(file, 'should resolve #internal');
       assert.ok(file.indexOf('mock-subpath-imports-pkg') !== -1, 'path should include mock-subpath-imports-pkg');
@@ -200,7 +168,7 @@ describe('toPath', () => {
       assert.ok(file.indexOf('internal.js') !== -1, 'path should resolve to internal.js');
     });
 
-    (hasMockSubpathImportsPkg ? it : it.skip)('resolves #utils/* wildcard subpath import', () => {
+    (supportsPackageImports ? it : it.skip)('resolves #utils/* wildcard subpath import', () => {
       const file = resolveFileSync('#utils/helper', subpathContext);
       assert.ok(file, 'should resolve #utils/helper');
       assert.ok(file.indexOf('mock-subpath-imports-pkg') !== -1, 'path should include mock-subpath-imports-pkg');
@@ -209,7 +177,7 @@ describe('toPath', () => {
       assert.ok(file.indexOf('helper.js') !== -1, 'path should resolve to helper.js');
     });
 
-    (hasMockSubpathImportsPkg ? it : it.skip)('throws for undefined subpath import', () => {
+    (supportsPackageImports ? it : it.skip)('throws for undefined subpath import', () => {
       assert.throws(() => resolveFileSync('#nonexistent', subpathContext), /Cannot find module/);
     });
   });

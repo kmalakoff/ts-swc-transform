@@ -1,19 +1,34 @@
-## ts-swc-transform
+# ts-swc-transform
 
-Typescript transformers for swc. Supports Node >= 0.8.
+TypeScript transformers for SWC. Supports Node.js 0.8 and newer.
 
-Promise
+## Install
+
+```bash
+npm install ts-swc-transform
 ```
+
+## Promise
+
+```js
 import { transformDirectory } from 'ts-swc-transform';
 
-await transformDirectory('src', 'dist', 'cjs', { sourceMaps: true });
+const files = await transformDirectory('src', 'dist', 'esm', { sourceMaps: true });
+console.log(`Wrote ${files.length} files`);
 ```
 
-Callback
-```
-import { transformDirectory } from 'ts-swc-transform';
+## Callback
 
-transformDirectory('src', 'dist', 'esm', { sourceMaps: true }, function (err) {
-  if (err) /* handle error */
+```js
+var transformDirectory = require('ts-swc-transform').transformDirectory;
+
+transformDirectory('src', 'dist', 'cjs', { sourceMaps: true }, function (err, files) {
+  if (err) throw err;
+  console.log('Wrote ' + files.length + ' files');
 });
 ```
+
+The target must be `cjs` or `esm`. The package also exports lower-level
+single-file, declaration, path-resolution, and matching helpers; see the
+[API documentation](https://kmalakoff.github.io/ts-swc-transform/) for their
+signatures.
