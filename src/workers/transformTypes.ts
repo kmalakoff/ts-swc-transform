@@ -112,9 +112,13 @@ export default function transformTypesWorker(src: string, dest: string, options:
       if (err) return callback(err);
       if (rootFiles.length === 0) return callback(null, []);
 
+      // An explicit rootDir in the tsconfig wins: a package whose sources import siblings above
+      // it (a skills tree) names the common ancestor; otherwise the emit is rooted at src.
+      const configured = (tsconfig.config.compilerOptions as { rootDir?: string } | undefined)?.rootDir;
+      const rootDir = configured === undefined ? src : path.resolve(path.dirname(tsconfig.path), configured);
       const compilerOptions = sanitizeForCompiler({
         ...tsconfig.config.compilerOptions,
-        rootDir: src,
+        rootDir,
         outDir: dest,
         noEmit: false,
         allowJs: true,
