@@ -46,7 +46,7 @@ export default function prepareSWCOptions(tsconfig: TSConfig): TranspilerOptions
     const transpiler = _require('ts-node/transpilers/swc');
     // TypeScript 7 dropped the compiler API from the package root, so fall back
     // to resolving the enum-valued fields directly.
-    const options = typeof ts.parseJsonConfigFileContent === 'function' ? ts.parseJsonConfigFileContent(tsconfig.config, ts.sys, path.dirname(tsconfig.path)).options : normalizeCompilerOptions((tsconfig.config.compilerOptions || {}) as Record<string, unknown>);
+    const options = typeof ts.parseJsonConfigFileContent === 'function' ? ts.parseJsonConfigFileContent({ ...tsconfig.config }, ts.sys, path.dirname(tsconfig.path)).options : normalizeCompilerOptions((tsconfig.config.compilerOptions || {}) as Record<string, unknown>);
     return transpiler.createSwcOptions(options, undefined, swc, 'swc');
   } catch (err) {
     console.log(`prepareSWCOptions failed: ${err instanceof Error ? err.message : String(err)}`);

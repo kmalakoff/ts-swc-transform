@@ -44,6 +44,18 @@ describe('prepareSWCOptions', () => {
     });
   });
 
+  (hasSWC ? describe : describe.skip)('caller object', () => {
+    it('leaves the tsconfig object unchanged', () => {
+      const tsconfig = loadConfigSync(SRC_DIR);
+      if (!tsconfig) throw new Error('Failed to load tsconfig for test');
+      const before = JSON.stringify(tsconfig);
+      prepareSWCOptions(tsconfig);
+      assert.equal(JSON.stringify(tsconfig), before, 'first call changed the object');
+      prepareSWCOptions(tsconfig);
+      assert.equal(JSON.stringify(tsconfig), before, 'second call changed the object');
+    });
+  });
+
   (hasSWC ? describe : describe.skip)('error handling', () => {
     it('returns empty object for invalid tsconfig path', () => {
       const invalidTsconfig = {
