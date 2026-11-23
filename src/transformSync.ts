@@ -7,8 +7,10 @@ import url from 'url';
 import type { TSConfig } from './types.ts';
 
 const major = +process.versions.node.split('.')[0];
-const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
+// `node -e`, `node -p` and stdin scripts define require and __filename as globals, so a typeof check alone
+// sends the ESM build down the CJS branch there; only the CJS build has module-scoped bindings that differ from the globals.
+const _require = typeof require !== 'undefined' && require !== global.require ? require : Module.createRequire(import.meta.url);
+const __dirname = path.dirname(typeof __filename !== 'undefined' && __filename !== global.__filename ? __filename : url.fileURLToPath(import.meta.url));
 const workerPath = path.join(__dirname, '..', 'cjs', 'workers', 'transformSync.js');
 
 function run(contents: string, fileName: string, tsconfig: TSConfig) {

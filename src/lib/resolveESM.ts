@@ -21,7 +21,9 @@ let _resolveExports: ResolveExportsModule | null = null;
 function getResolveExports(): ResolveExportsModule | null {
   if (_resolveExports === null) {
     try {
-      const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
+      // `node -e`, `node -p` and stdin scripts define require as a global, so a typeof check alone
+      // sends the ESM build down the CJS branch there; only the CJS build has a module-scoped require that differs from the global.
+      const _require = typeof require !== 'undefined' && require !== global.require ? require : Module.createRequire(import.meta.url);
       _resolveExports = _require('resolve.exports') as ResolveExportsModule;
     } catch (_) {
       _resolveExports = null;
