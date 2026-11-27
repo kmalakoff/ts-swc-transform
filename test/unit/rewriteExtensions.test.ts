@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { rewriteExtensions, rewriteExtensionsCJS } from '../../src/lib/rewriteExtensions.ts';
+import { rewriteExtensions } from '../../src/lib/rewriteExtensions.ts';
 
 describe('rewriteExtensions', () => {
   describe('Import statements', () => {
@@ -114,23 +114,43 @@ describe('rewriteExtensions', () => {
     });
   });
 
-  describe('Triple-slash references', () => {
-    it('transforms triple-slash path reference with .ts', () => {
+  describe('Declaration-file specifiers (TypeScript leaves them as written)', () => {
+    it('does NOT transform .d.ts import type', () => {
+      const input = `import type { D } from './decl.d.ts';`;
+      assert.strictEqual(rewriteExtensions(input), input);
+    });
+
+    it('does NOT transform .d.mts and .d.cts exports', () => {
+      const input = `export type * from './esm.d.mts';\nexport type * from './cjs.d.cts';`;
+      assert.strictEqual(rewriteExtensions(input), input);
+    });
+
+    it('does NOT transform arbitrary-extension declaration files', () => {
+      const input = `import type styles from './styles.d.css.ts';`;
+      assert.strictEqual(rewriteExtensions(input), input);
+    });
+
+    it('does NOT transform typeof import of a declaration file', () => {
+      const input = `export type Decl = typeof import('./decl.d.ts');`;
+      assert.strictEqual(rewriteExtensions(input), input);
+    });
+
+    it('transforms a file whose name only contains .d.', () => {
+      const input = `import { x } from './a.d.b.c.ts';\nimport { y } from './data.ts';`;
+      const expected = `import { x } from './a.d.b.c.js';\nimport { y } from './data.js';`;
+      assert.strictEqual(rewriteExtensions(input), expected);
+    });
+  });
+
+  describe('Triple-slash references (left as tsc emits them)', () => {
+    it('does NOT transform triple-slash path reference with .ts', () => {
       const input = `/// <reference path="./globals.ts" />`;
-      const expected = `/// <reference path="./globals.js" />`;
-      assert.strictEqual(rewriteExtensions(input), expected);
+      assert.strictEqual(rewriteExtensions(input), input);
     });
 
-    it('transforms triple-slash path reference with .d.ts', () => {
-      const input = `/// <reference path="./types.d.ts" />`;
-      const expected = `/// <reference path="./types.d.js" />`;
-      assert.strictEqual(rewriteExtensions(input), expected);
-    });
-
-    it('transforms triple-slash path reference with parent directory', () => {
-      const input = `/// <reference path="../types/index.d.ts" />`;
-      const expected = `/// <reference path="../types/index.d.js" />`;
-      assert.strictEqual(rewriteExtensions(input), expected);
+    it('does NOT transform triple-slash path reference with .d.ts', () => {
+      const input = `/// <reference path="../types/index.d.ts" preserve="true" />`;
+      assert.strictEqual(rewriteExtensions(input), input);
     });
 
     it('does NOT transform triple-slash lib reference', () => {
@@ -186,7 +206,7 @@ describe('rewriteExtensions', () => {
 
     it('handles type file with triple-slash and imports', () => {
       const input = `/// <reference path="./globals.d.ts" />\nimport { X } from './types.ts';`;
-      const expected = `/// <reference path="./globals.d.js" />\nimport { X } from './types.js';`;
+      const expected = `/// <reference path="./globals.d.ts" />\nimport { X } from './types.js';`;
       assert.strictEqual(rewriteExtensions(input), expected);
     });
 
@@ -255,33 +275,6 @@ describe('rewriteExtensions', () => {
     it('does NOT transform .ts in template literal string', () => {
       const input = 'const ext = `.ts`;';
       assert.strictEqual(rewriteExtensions(input), input);
-    });
-  });
-});
-
-describe('rewriteExtensionsCJS', () => {
-  describe('CommonJS require statements', () => {
-    it('transforms require with single quotes', () => {
-      const input = `const foo = require('./module.ts');`;
-      const expected = `const foo = require('./module.js');`;
-      assert.strictEqual(rewriteExtensionsCJS(input), expected);
-    });
-
-    it('transforms require with double quotes', () => {
-      const input = `require("./path.ts")`;
-      const expected = `require("./path.js")`;
-      assert.strictEqual(rewriteExtensionsCJS(input), expected);
-    });
-
-    it('does NOT transform require with module name', () => {
-      const input = `const foo = require('external-package');`;
-      assert.strictEqual(rewriteExtensionsCJS(input), input);
-    });
-
-    it('handles require + import together', () => {
-      const input = `const a = require('./a.ts');\nimport { b } from './b.ts';`;
-      const expected = `const a = require('./a.js');\nimport { b } from './b.js';`;
-      assert.strictEqual(rewriteExtensionsCJS(input), expected);
     });
   });
 });

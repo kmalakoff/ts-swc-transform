@@ -7,19 +7,16 @@ import patchCJS, { interop } from '../../src/lib/patchCJS.ts';
 const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 const SRC_DIR = path.join(__dirname, '..', 'data', 'src');
 
+function entry(basename: string) {
+  return { basename, path: basename, fullPath: path.join(SRC_DIR, basename) };
+}
+
 describe('patchCJS', () => {
   describe('interop code injection', () => {
     it('appends CJS interop code to output', () => {
-      const entry = { basename: 'test.ts', path: 'test.ts', fullPath: path.join(SRC_DIR, 'test.ts') };
       const output = { code: 'let x = 1;', map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: {} },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
 
-      patchCJS(entry, output, options);
+      patchCJS(entry('test.ts'), output);
 
       assert.ok(output.code.indexOf('CJS INTEROP') !== -1, 'should contain CJS INTEROP comment');
       assert.ok(output.code.indexOf('module.exports = exports.default') !== -1, 'should reassign module.exports');
@@ -27,141 +24,31 @@ describe('patchCJS', () => {
     });
 
     it('preserves original code before interop', () => {
-      const entry = { basename: 'test.ts', path: 'test.ts', fullPath: path.join(SRC_DIR, 'test.ts') };
-      const originalCode = 'let x = 1;\nexports.x = x;';
+      const originalCode = `let x = require('./x.ts');\nexports.x = x;`;
       const output = { code: originalCode, map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: {} },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
 
-      patchCJS(entry, output, options);
+      patchCJS(entry('test.ts'), output);
 
       assert.ok(stringStartsWith(output.code, originalCode), 'should preserve original code');
       assert.ok(stringEndsWith(output.code, interop), 'should end with interop code');
     });
   });
 
-  describe('extension rewriting', () => {
-    it('rewrites require paths when rewriteRelativeImportExtensions is true', () => {
-      const entry = { basename: 'test.ts', path: 'test.ts', fullPath: path.join(SRC_DIR, 'test.ts') };
-      const output = { code: `const foo = require('./foo.ts');`, map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: { rewriteRelativeImportExtensions: true } },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
-
-      patchCJS(entry, output, options);
-
-      assert.ok(output.code.indexOf(`require('./foo.js')`) !== -1, 'should rewrite .ts to .js in require');
-      assert.ok(output.code.indexOf(`require('./foo.ts')`) === -1, 'should not contain original .ts extension');
-    });
-
-    it('rewrites import paths when rewriteRelativeImportExtensions is true', () => {
-      const entry = { basename: 'test.ts', path: 'test.ts', fullPath: path.join(SRC_DIR, 'test.ts') };
-      const output = { code: `import { bar } from './bar.ts';`, map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: { rewriteRelativeImportExtensions: true } },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
-
-      patchCJS(entry, output, options);
-
-      assert.ok(output.code.indexOf(`'./bar.js'`) !== -1, 'should rewrite .ts to .js in import');
-    });
-
-    it('does NOT rewrite paths when rewriteRelativeImportExtensions is false', () => {
-      const entry = { basename: 'test.ts', path: 'test.ts', fullPath: path.join(SRC_DIR, 'test.ts') };
-      const output = { code: `const foo = require('./foo.ts');`, map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: { rewriteRelativeImportExtensions: false } },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
-
-      patchCJS(entry, output, options);
-
-      assert.ok(output.code.indexOf(`require('./foo.ts')`) !== -1, 'should NOT rewrite when option is false');
-    });
-
-    it('does NOT rewrite paths when rewriteRelativeImportExtensions is undefined', () => {
-      const entry = { basename: 'test.ts', path: 'test.ts', fullPath: path.join(SRC_DIR, 'test.ts') };
-      const output = { code: `const foo = require('./foo.ts');`, map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: {} },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
-
-      patchCJS(entry, output, options);
-
-      assert.ok(output.code.indexOf(`require('./foo.ts')`) !== -1, 'should NOT rewrite when option is undefined');
-    });
-  });
-
   describe('extension mapping', () => {
     it('returns .js for .ts files', () => {
-      const entry = { basename: 'test.ts', path: 'test.ts', fullPath: path.join(SRC_DIR, 'test.ts') };
-      const output = { code: '', map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: {} },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
-
-      const ext = patchCJS(entry, output, options);
-      assert.equal(ext, '.js');
+      assert.equal(patchCJS(entry('test.ts'), { code: '', map: undefined }), '.js');
     });
 
     it('returns .js for .tsx files', () => {
-      const entry = { basename: 'Component.tsx', path: 'Component.tsx', fullPath: path.join(SRC_DIR, 'Component.tsx') };
-      const output = { code: '', map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: {} },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
-
-      const ext = patchCJS(entry, output, options);
-      assert.equal(ext, '.js');
+      assert.equal(patchCJS(entry('Component.tsx'), { code: '', map: undefined }), '.js');
     });
 
     it('returns .mjs for .mts files', () => {
-      const entry = { basename: 'module.mts', path: 'module.mts', fullPath: path.join(SRC_DIR, 'module.mts') };
-      const output = { code: '', map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: {} },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
-
-      const ext = patchCJS(entry, output, options);
-      assert.equal(ext, '.mjs');
+      assert.equal(patchCJS(entry('module.mts'), { code: '', map: undefined }), '.mjs');
     });
 
     it('returns .cjs for .cts files', () => {
-      const entry = { basename: 'config.cts', path: 'config.cts', fullPath: path.join(SRC_DIR, 'config.cts') };
-      const output = { code: '', map: undefined };
-      const options = {
-        tsconfig: {
-          config: { compilerOptions: {} },
-          path: path.join(SRC_DIR, 'tsconfig.json'),
-        },
-      };
-
-      const ext = patchCJS(entry, output, options);
-      assert.equal(ext, '.cjs');
+      assert.equal(patchCJS(entry('config.cts'), { code: '', map: undefined }), '.cjs');
     });
   });
 });

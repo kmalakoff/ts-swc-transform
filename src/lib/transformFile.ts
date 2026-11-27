@@ -1,4 +1,4 @@
-import type { Output } from '@swc/core';
+import type { JscConfig, Output } from '@swc/core';
 import fs from 'fs';
 import type { Entry } from 'fs-iterator';
 import mkdirp from 'mkdirp-classic';
@@ -14,6 +14,14 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 
 import type { InternalConfigOptions, TargetType, TransformFileCallback } from '../types.ts';
 
+// Read straight off the parsed tsconfig JSON, which is arbitrary data rather than typescript's own CompilerOptions.
+interface InternalCompilerOptions {
+  rewriteRelativeImportExtensions?: boolean;
+}
+
+// swc supports this option (TypeScript's semantics and runtime helper), but @swc/types does not declare it yet.
+type RewriteJscConfig = JscConfig & { rewriteRelativeImportExtensions?: boolean };
+
 export default function transformFile(entry: Entry, dest: string, type: TargetType, options: InternalConfigOptions, mode: number | undefined, callback: TransformFileCallback): void {
   let tsconfig = options.tsconfig;
 
@@ -26,14 +34,14 @@ export default function transformFile(entry: Entry, dest: string, type: TargetTy
   const swcOptions = prepareSWCOptions(tsconfig);
   const swc = _require('@swc/core');
   const ext = path.extname(entry.basename as string);
+  const baseOptions = ext === '.tsx' || ext === '.jsx' ? swcOptions.tsxOptions : swcOptions.nonTsxOptions;
+  const rewrite = ((tsconfig.config.compilerOptions || {}) as unknown as InternalCompilerOptions).rewriteRelativeImportExtensions;
+  const jsc: RewriteJscConfig | undefined = rewrite ? { ...baseOptions.jsc, rewriteRelativeImportExtensions: true } : baseOptions.jsc;
 
   swc
-    .transformFile(entry.fullPath, {
-      ...(ext === '.tsx' || ext === '.jsx' ? swcOptions.tsxOptions : swcOptions.nonTsxOptions),
-      filename: entry.basename,
-    })
+    .transformFile(entry.fullPath, { ...baseOptions, jsc, filename: entry.basename })
     .then((output: Output) => {
-      const extTarget = type === 'esm' ? patchESM(entry, output, options) : patchCJS(entry, output, options);
+      const extTarget = type === 'esm' ? patchESM(entry) : patchCJS(entry, output);
       const ext = path.extname(entry.path);
       const outPath = path.join(dest, (ext ? entry.path.slice(0, -ext.length) : entry.path) + extTarget);
 

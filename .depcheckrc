@@ -1,1 +1,3 @@
 ignores: ["ts-swc-transform", "node-version-use", "ts-dev-stack", "@typescript/native-preview", "ts-node", "typescript", "react", "getopts-compat", "core-js-pure", "node-version-call", "resolve.exports", "mock-exports-only-pkg", "mock-subpath-imports-pkg"]
+# specifiers that must stay unresolvable: the rewrite leaves non-relative .ts paths alone
+ignorePatterns: ["test/data/rewrite-extensions/src/untouched.ts"]
